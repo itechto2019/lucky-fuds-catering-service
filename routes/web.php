@@ -1,0 +1,109 @@
+<?php
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PrintController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    // ADMIN
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    // reservation
+    Route::get('/reservation/schedule-events', [AdminController::class, 'ScheduleEvents'])->name('schedule_events');
+
+    Route::get('/reservation/schedule-reservation',[AdminController::class, 'ScheduleReservation'])->name('schedule_reservation');
+    Route::get('/reservation/schedule-reports',[AdminController::class, 'ScheduleReports'])->name('schedule_reports');
+    Route::get('/get-event/{id}', [ScheduleController::class, 'getEvent'])->name('getEvent');
+
+
+    // inventory
+    Route::get('/inventory/stocks', [AdminController::class, 'InventoryStocks'])->name('inventory_stocks');
+    Route::get('/inventory/for-rents',[AdminController::class, 'ForRents'])->name('inventory_for_rents');
+    Route::get('/inventory/rents', [AdminController::class, "ForRented"])->name('inventory_rents');
+    Route::get('/inventory/approves',[AdminController::class, 'Approves'])->name('inventory_approves');
+    Route::get('/inventory/return', [AdminController::class, 'Returned'])->name('inventory_return');
+    Route::get('/inventory/extends', [AdminController::class, 'Extends'])->name('inventory_extends');
+    Route::get('/inventory/reports', [AdminController::class, 'Reports'])->name('inventory_reports');
+    
+    // Add Package
+    Route::post('/add-package', [PackageController::class, 'createPackage'])->name('add_package');
+
+    // Stocks
+    Route::post('/add-supply', [StockController::class, 'createSupply'])->name('add_supply');
+    Route::put('/set-rent/{id}', [StockController::class, 'toRent'])->name('to_rent');
+    Route::delete('/delete-supply/{id}', [StockController::class, 'deleteSupply'])->name('delete_supply');
+    Route::put('/add-to-return/{id}', [StockController::class, 'toReturn'])->name('to_return');
+    Route::put('/update-supply/{id}', [StockController::class, 'updateSupply'])->name('to_update');
+
+    // Reservation
+    Route::put('/reserve-to-approve/{id}', [ScheduleController::class, 'ApproveReserve'])->name('to_approve');
+    Route::put('/reserve-to-reject/{id}', [ScheduleController::class, 'RejectReserve'])->name('to_reject_reserve');
+    
+
+    // Approve / Decline
+    Route::put('/add-to-checkout/{id}', [StockController::class, 'toCheckOut'])->name('to_checkout');
+    Route::put('/add-to-rejected/{id}', [StockController::class, 'toReject'])->name('to_reject');
+
+    // Returns
+    Route::post('/add-to-items/{id}', [StockController::class, 'addToItems'])->name('add_to_items');
+    Route::post('/add-to-rents/{id}', [StockController::class, 'addToRents'])->name('add_to_rents');
+
+    // Reports
+    Route::get('/export-reports', [PrintController::class, 'InventoryReport'])->name('export_inventory');
+    Route::get('/reservation-reports/{id}', [PrintController::class, 'ReservationReport'])->name('export_reservation');
+    Route::get('/reservation-reports-download/{id}', [PrintController::class, 'ReservationReportDownload'])->name('download_reservation');
+
+});
+Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
+    // USER
+    Route::get('/dashboard', [UserController::class, 'index'])->name('user_dashboard');
+
+    // reservation
+    Route::get('/reservation/schedule-events', [UserController::class, 'ScheduleEvents'])->name('user_schedule_events');
+    Route::get('/reservation/schedule-reservation',[UserController::class, 'ScheduleReservation'])->name('user_schedule_reservation');
+
+    Route::post('/reservation/reserve-schedule-event', [ScheduleController::class, 'CreateEvent'])->name('user_create_event');
+    Route::get('/get-event/{id}', [ScheduleController::class, 'getEvent'])->name('user_getEvent');
+
+    
+    // inventory
+    Route::get('/inventory/for-rents', [UserController::class, 'ForRents'])->name('user_inventory_for_rents');
+    Route::get('/inventory/rented', [UserController::class, 'Rented'])->name('user_inventory_rents');
+    Route::get('/inventory/summary', [UserController::class, 'Summary'])->name('user_inventory_summary');
+
+
+    // User Rent
+    Route::post('/user-rent/{rent_id}/{id}', [StockController::class, 'userRent'])->name('user_rent');
+    
+    // Extends
+    Route::post('/rent-extends/{id}', [StockController::class, 'userExtends'])->name('user_extends');
+
+});
+Route::get('/auth/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
+
+Route::get('/', function () {
+    if(Auth::check()) {
+        if (Auth::user()->is_admin) {
+            return redirect()->intended(route('dashboard'));
+        } else {
+            return redirect()->intended(route('user_dashboard'));
+        }
+    } else {
+        return view('auth.login');
+    }
+});
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+Route::post('/auth/signin', [AuthController::class, 'signin'])->name('signin');
+Route::post('/auth/signup', [AuthController::class, 'register'])->name('signup');
