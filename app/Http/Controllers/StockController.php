@@ -76,37 +76,18 @@ class StockController extends Controller
         } else {
             $stock = Stock::where('id', $id)->get()->first();
             if (file_exists(public_path("stocks/" . $stock->image))) {
-                $quantity = $request->quantity;
-                if(!$quantity > 0) {
-                    Stock::where('id', $id)->update([
-                        'item' => $form['item'],
-                        'quantity' => 0,
-                        'price' => $form['price'],
-                    ]);
-                }else {
-                    Stock::where('id', $id)->update([
-                        'item' => $form['item'],
-                        'quantity' => $form['quantity'],
-                        'price' => $form['price'],
-                    ]);
-                }
+                Stock::where('id', $id)->update([
+                    'item' => $form['item'],
+                    'quantity' => $form['quantity'],
+                    'price' => $form['price'],
+                ]);
             } else {
-                $quantity = $request->quantity;
-                if(!$quantity > 0) {
-                    Stock::where('id', $id)->update([
-                        'item' => $form['item'],
-                        'image' => "no_image.png",
-                        'quantity' => 0,
-                        'price' => $form['price'],
-                    ]);
-                }else {
-                    Stock::where('id', $id)->update([
-                        'item' => $form['item'],
-                        'image' => "no_image.png",
-                        'quantity' => $form['quantity'],
-                        'price' => $form['price'],
-                    ]);
-                }
+                Stock::where('id', $id)->update([
+                    'item' => $form['item'],
+                    'image' => "no_image.png",
+                    'quantity' => $form['quantity'],
+                    'price' => $form['price'],
+                ]);
             }
         }
 
@@ -121,10 +102,10 @@ class StockController extends Controller
     {
         $stock = Stock::where('id', $id)->get()->first();
         $form = $request->only('quantity');
-        if(!$form['quantity'] > 0) {
+        if($form['quantity'] < $stock->quantity) {
             ForRent::create([
                 'stock_id' => $id,
-                'quantity' => 0,
+                'quantity' => $form['quantity'],
                 'is_rented' => 1
             ]);
             Stock::where('id', $id)->update([
@@ -137,9 +118,10 @@ class StockController extends Controller
                 'is_rented' => 1
             ]);
             Stock::where('id', $id)->update([
-                'quantity' => $stock->quantity - $form['quantity']
+                'quantity' => 0
             ]);
         }
+        
         return redirect()->back();
     }
     protected function userRent(Request $request, $rentId, $stockId)
