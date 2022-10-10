@@ -130,7 +130,7 @@ class StockController extends Controller
         // $forRent = ForRent::where('id', $rent->for_rent_id)->get()->first();
         $stock = Stock::where('id', $forRent->stock_id)->get()->first();
 
-        if ($rent->status == "pending" || $rent->status == "extending") {
+        if ($rent->status == "pending") {
             Rent::where('id', $id)->update([
                 'status' => 'approved'
             ]);
