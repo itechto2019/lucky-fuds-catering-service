@@ -57,27 +57,56 @@ class StockController extends Controller
         if ($request->image) {
             $filename = $form['item'] . '_' . time() . '.' . $request->image->extension();
             $request->image->move(public_path('stocks'), $filename);
-            Stock::where('id', $id)->update([
-                'item' => $form['item'],
-                'image' => $filename,
-                'quantity' => $form['quantity'],
-                'price' => $form['price'],
-            ]);
+            $quantity = $request->quantity;
+            if(!$quantity > 0) {
+                Stock::where('id', $id)->update([
+                    'item' => $form['item'],
+                    'image' => $filename,
+                    'quantity' => 0,
+                    'price' => $form['price'],
+                ]);
+            }else {
+                Stock::where('id', $id)->update([
+                    'item' => $form['item'],
+                    'image' => $filename,
+                    'quantity' => $form['quantity'],
+                    'price' => $form['price'],
+                ]);
+            }
         } else {
             $stock = Stock::where('id', $id)->get()->first();
             if (file_exists(public_path("stocks/" . $stock->image))) {
-                Stock::where('id', $id)->update([
-                    'item' => $form['item'],
-                    'quantity' => $form['quantity'],
-                    'price' => $form['price'],
-                ]);
+                $quantity = $request->quantity;
+                if(!$quantity > 0) {
+                    Stock::where('id', $id)->update([
+                        'item' => $form['item'],
+                        'quantity' => 0,
+                        'price' => $form['price'],
+                    ]);
+                }else {
+                    Stock::where('id', $id)->update([
+                        'item' => $form['item'],
+                        'quantity' => $form['quantity'],
+                        'price' => $form['price'],
+                    ]);
+                }
             } else {
-                Stock::where('id', $id)->update([
-                    'item' => $form['item'],
-                    'image' => "no_image.png",
-                    'quantity' => $form['quantity'],
-                    'price' => $form['price'],
-                ]);
+                $quantity = $request->quantity;
+                if(!$quantity > 0) {
+                    Stock::where('id', $id)->update([
+                        'item' => $form['item'],
+                        'image' => "no_image.png",
+                        'quantity' => 0,
+                        'price' => $form['price'],
+                    ]);
+                }else {
+                    Stock::where('id', $id)->update([
+                        'item' => $form['item'],
+                        'image' => "no_image.png",
+                        'quantity' => $form['quantity'],
+                        'price' => $form['price'],
+                    ]);
+                }
             }
         }
 
