@@ -121,14 +121,25 @@ class StockController extends Controller
     {
         $stock = Stock::where('id', $id)->get()->first();
         $form = $request->only('quantity');
-        ForRent::create([
-            'stock_id' => $id,
-            'quantity' => $form['quantity'],
-            'is_rented' => 1
-        ]);
-        Stock::where('id', $id)->update([
-            'quantity' => $stock->quantity - $form['quantity']
-        ]);
+        if(!$form['quantity'] > 0) {
+            ForRent::create([
+                'stock_id' => $id,
+                'quantity' => 0,
+                'is_rented' => 1
+            ]);
+            Stock::where('id', $id)->update([
+                'quantity' => $stock->quantity - $form['quantity']
+            ]);
+        }else {
+            ForRent::create([
+                'stock_id' => $id,
+                'quantity' => $form['quantity'],
+                'is_rented' => 1
+            ]);
+            Stock::where('id', $id)->update([
+                'quantity' => $stock->quantity - $form['quantity']
+            ]);
+        }
         return redirect()->back();
     }
     protected function userRent(Request $request, $rentId, $stockId)
