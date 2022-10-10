@@ -114,7 +114,7 @@ class StockController extends Controller
         }else {
             ForRent::create([
                 'stock_id' => $id,
-                'quantity' => $form['quantity'],
+                'quantity' => $stock->quantity,
                 'is_rented' => 1
             ]);
             Stock::where('id', $id)->update([
