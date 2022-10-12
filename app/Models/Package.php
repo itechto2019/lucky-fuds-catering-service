@@ -10,5 +10,9 @@ class Package extends Model
     use HasFactory;
     protected $table = "packages";
     protected $primaryKey = "id";
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'details',
+        'price'
+    ];
 }

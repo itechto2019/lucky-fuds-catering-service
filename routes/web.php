@@ -7,6 +7,8 @@ use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
+use App\Models\Package;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +65,24 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     
     Route::get('/inventory-reports/{id}', [PrintController::class, 'InventoryReport'])->name('export_inventory');
     Route::get('/inventory-reports-download/{id}', [PrintController::class, 'InventoryReportDownload'])->name('download_report');
+
+    Route::put('/edit-package/{id}', function (Request $request, $id) {
+        $form = $request->validate([
+            'name' => "min:25",
+            'details' => "min:50",
+            'price' => "min:0"
+        ]);
+        Package::where('id', $id)->update([
+            'name' => $form['name'],
+            'details' => $form['details'],
+            'price' => $form['price']
+        ]);
+        return back();
+    })->name('edit_package');
+    Route::delete('/delete-package/{id}',  function ($id) {
+        Package::where('id', $id)->delete();
+        return back();
+    })->name('delete_package');
 
 });
 Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
