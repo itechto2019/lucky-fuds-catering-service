@@ -280,6 +280,7 @@
     }
     function onChangeRentSupply(event, id, q) {
         if(event.target.value > q) {
+            $(`#max-quantity-${id}`).show()
             $('#quantity-' + id).val(q)
             $(`#max-quantity-${id}`).text("You can't rent above the quantity")
         }else {
