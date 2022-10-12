@@ -16,6 +16,7 @@ class AuthController extends Controller
             $credential = $request->validated();
             $remember = $request['remember'] ?? true;
             if(Auth::attempt($credential, $remember)) {
+                Auth::logoutOtherDevices($credential['password']);
                 return redirect('/');
             }else {
                 return redirect()->back();
