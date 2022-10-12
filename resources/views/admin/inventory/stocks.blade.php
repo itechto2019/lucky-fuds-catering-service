@@ -157,7 +157,7 @@
                                                     <div class="input-group">
                                                         <input type="number" name="quantity" placeholder="Quantity" value="{{ $supply->quantity }}" onchange="onChangeRentSupply(event, {{ $supply->id }}, {{ $supply->quantity }})">
                                                     </div>
-                                                    <div style="padding: 5px 0px">
+                                                    <div style="padding: 10px">
                                                         <span style="color:#FF1E1E;" id="max-quantity-{{ $supply->id }}"></span>
                                                     </div>
 
@@ -282,6 +282,8 @@
         if(event.target.value > q) {
             $('#quantity-' + id).val(q)
             $(`#max-quantity-${id}`).text("You can't rent above the quantity")
+        }else {
+            $(`#max-quantity-${id}`).hide()
         }
         if(event.target.value === 0) {
             $('#quantity-' + id).val(1)
