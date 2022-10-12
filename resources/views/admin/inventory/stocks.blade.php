@@ -110,7 +110,7 @@
                                                         <input type="text" name="item" placeholder="Item" value="{{ $supply->item }}">
                                                     </div>
                                                     <div class="input-group">
-                                                        <input type="number" name="quantity" placeholder="Quantity" id="quantity-{{ $supply->id }}" value="{{ $supply->quantity }}">
+                                                        <input type="number" name="quantity" placeholder="Quantity" value="{{ $supply->quantity }}">
                                                     </div>
                                                     <div class="input-group">
                                                         <input type="number" name="price" placeholder="Price" value="{{ $supply->price }}">
@@ -155,7 +155,7 @@
                                                     @method('put')
                                                     <span style="padding: 10px">Enter quantity to be rent</span>
                                                     <div class="input-group">
-                                                        <input type="number" name="quantity" placeholder="Quantity" value="{{ $supply->quantity }}" onchange="onChangeRentSupply(event, {{ $supply->id }}, {{ $supply->quantity }})">
+                                                        <input type="number" name="quantity" placeholder="Quantity" id="quantity-{{ $supply->id }}" value="{{ $supply->quantity }}" onchange="onChangeRentSupply(event, {{ $supply->id }}, {{ $supply->quantity }})">
                                                     </div>
                                                     <div style="padding: 10px">
                                                         <span style="color:#FF1E1E;" id="max-quantity-{{ $supply->id }}"></span>
