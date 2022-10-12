@@ -21,8 +21,6 @@ class PrintController extends Controller
         $pdf = PDF::loadView('admin.pdf',['report' => $report])->setPaper('a4', 'landscape');
         // return $pdf->download('teknowize.pdf');
         return $pdf->download(md5($report->client) . '.pdf');
-
-        return $pdf->stream();
     }
     protected function ReservationReport($id) {
         $client = Reserve::where('id', $id)->get()->first();
