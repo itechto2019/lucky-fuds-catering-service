@@ -157,7 +157,7 @@
                                                     <div class="input-group">
                                                         <input type="number" name="quantity" placeholder="Quantity" value="{{ $supply->quantity }}" onchange="onChangeRentSupply(event, {{ $supply->id }}, {{ $supply->quantity }})">
                                                         <div style="padding: 5px 0px">
-                                                            <span style="color:#FF1E1E;" id="max-quantity-{{ $quantity->id }}"></span>
+                                                            <span style="color:#FF1E1E;" id="max-quantity-{{ $supply->id }}"></span>
                                                         </div>
                                                     </div>
 
