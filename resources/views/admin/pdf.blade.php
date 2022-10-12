@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="css/app.css"> --}}
 
 <head>
+    <title>{{ $report->client }} | Receipt {{ today()->format('Y-m-d') }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 {{-- <style>
