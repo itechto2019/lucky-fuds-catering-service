@@ -6,7 +6,6 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use TypeError;
 
 class AuthController extends Controller
@@ -16,7 +15,7 @@ class AuthController extends Controller
             $credential = $request->validated();
             $remember = $request['remember'] ?? true;
             if(Auth::attempt($credential, $remember)) {
-                Auth::logoutOtherDevices($credential['password']);
+                Auth::logoutOtherDevices($request->password);
                 return redirect('/');
             }else {
                 return redirect()->back();
