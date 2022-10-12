@@ -30,7 +30,6 @@
     </div>
     <div class="receipt-box">
         <table >
-
             <tr>
                 <td>Event</td>
                 <td align="right">{{ $client->event }}</td>
@@ -57,7 +56,5 @@
                 <td align="right">{{ $client->email }}</td>
             </tr>
         </table>
-
     </div>
-    
 </div>

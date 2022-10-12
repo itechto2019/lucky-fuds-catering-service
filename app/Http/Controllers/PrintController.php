@@ -10,10 +10,18 @@ use PDF;
 
 class PrintController extends Controller
 {
-    protected function InventoryReport() {
-        $reports = Report::get();
-        $pdf = PDF::loadView('admin.pdf',['reports' => $reports])->setPaper('a4', 'landscape');
+    protected function InventoryReport($id) {
+        $report = Report::where('id', $id)->get()->first();
+        $pdf = PDF::loadView('admin.pdf',['report' => $report])->setPaper('a4', 'landscape');
         // return $pdf->download('teknowize.pdf');
+        return $pdf->stream();
+    }
+    protected function InventoryReportDownload($id) {
+        $report = Report::where('id', $id)->get()->first();
+        $pdf = PDF::loadView('admin.pdf',['report' => $report])->setPaper('a4', 'landscape');
+        // return $pdf->download('teknowize.pdf');
+        return $pdf->download(md5($report->client) . '.pdf');
+
         return $pdf->stream();
     }
     protected function ReservationReport($id) {

@@ -56,9 +56,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/add-to-rents/{id}', [StockController::class, 'addToRents'])->name('add_to_rents');
 
     // Reports
-    Route::get('/export-reports', [PrintController::class, 'InventoryReport'])->name('export_inventory');
+    // Route::get('/export-reports', [PrintController::class, 'InventoryReport'])->name('export_inventory');
     Route::get('/reservation-reports/{id}', [PrintController::class, 'ReservationReport'])->name('export_reservation');
     Route::get('/reservation-reports-download/{id}', [PrintController::class, 'ReservationReportDownload'])->name('download_reservation');
+    
+    
+    Route::get('/inventory-reports/{id}', [PrintController::class, 'InventoryReport'])->name('export_inventory');
+    Route::get('/inventory-reports-download/{id}', [PrintController::class, 'InventoryReportDownload'])->name('download_report');
 
 });
 Route::middleware(['auth', 'user'])->prefix('user')->group(function () {

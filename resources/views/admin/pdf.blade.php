@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-<style>
+{{-- <style>
     * {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     }
@@ -91,57 +91,62 @@
         place-items: center;
         place-content: center;
     }
-</style>
-<div class="receipt-report">
-    <div class="receipt">
-        <div style="
-        padding:10px;
-        ">
-            <p>Date: {{ date('Y-m-d') }}</p>
-        </div>
-        <div>
-            <h3 style="text-align: center" class="">Lucky Fuds | Catering Services</h3>
-        </div>
-        <div>
-            <h4 style="text-align: center" class="">REPORTS</h4>
-        </div>
-        <div class="table-form">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col" style="padding:10px">#</th>
-                        <th scope="col" style="padding:10px">Image</th>
-                        <th scope="col" style="padding:10px">Item</th>
-                        <th scope="col" style="padding:10px">Client</th>
-                        <th scope="col" style="padding:10px">Quantity</th>
-                        <th scope="col" style="padding:10px">Amount</th>
-                        <th scope="col" style="padding:10px">Date for use(?)</th>
-                        <th scope="col" style="padding:10px">Date for return(?)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- @if (is_array($result) || is_object($result)) --}}
-                    @forelse ($reports as $report)
-                    <tr>
-                        <td class="text-center" scope="row" style="padding:10px">{{ $report->id}}</td>
-                        <td class="text-center" style="padding:10px"><img
-                                src="{{ public_path('stocks/'). $report->image }}" width="40" height="50" /></td>
-                        <td style="padding:10px">{{ $report->item }}</td>
-                        <td style="padding:10px">{{ $report->client }}</td>
-                        <td style="padding:10px">{{ $report->quantity }}</td>
-                        <td style="padding:10px">{{ $report->amount }}</td>
-                        <td style="padding:10px"><small>{{ $report->date }}</small></td>
-                        <td style="padding:10px"><small>{{ $report->return }}</small></td>
-                    </tr>
+</style> --}}
+<style>
+    body {
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 17px;
+        width: 400px;
+    }
+    .receipt {
+        padding: 10px;
+        border: 1px solid #36AE7C;
+        width: auto;
+    }
 
-                    @empty
-                    <div class="alert-warning p-3">
-                        <h4>No result found!</h4>
-                    </div>
-                    @endforelse
-                    {{-- @endif --}}
-                </tbody>
-            </table>
-        </div>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    td {
+        padding: 10px;
+        border: 1px solid #D0D0D0;
+    }
+</style>
+<div class="receipt">
+    <div class="receipt-container" style="text-align: center; border: 1px solid #D0D0D0;background-color: #F6F6F6;">
+        <img src="{{ public_path('assets') . '/logo.jpg' }}" width="60" alt="">
+        <h3>Lucky Fuds | Catering Services - Official Receipt</h3>
+    </div>
+    <div class="receipt-box">
+        <table >
+
+            <tr>
+                <td>Item</td>
+                <td align="right">{{ $report->Item }}</td>
+            </tr>
+            <tr>
+                <td>Client</td>
+                <td align="right">{{ $report->client }}</td>
+            </tr>
+            <tr>
+                <td>Quantity</td>
+                <td align="right">{{ $report->quantity }}</td>
+            </tr>
+
+            <tr>
+                <td>Amount</td>
+                <td align="right">{{ $report->amount }}</td>
+            </tr>
+
+            <tr>
+                <td>Date for use</td>
+                <td align="right">{{ $report->date }}</td>
+            </tr>
+            <tr>
+                <td>Date for return</td>
+                <td align="right">{{ $report->return }}</td>
+            </tr>
+        </table>
     </div>
 </div>
