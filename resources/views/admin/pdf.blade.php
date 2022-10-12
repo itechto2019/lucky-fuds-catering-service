@@ -123,7 +123,7 @@
 
             <tr>
                 <td>Item</td>
-                <td align="right">{{ $report->Item }}</td>
+                <td align="right">{{ $report->item }}</td>
             </tr>
             <tr>
                 <td>Client</td>
