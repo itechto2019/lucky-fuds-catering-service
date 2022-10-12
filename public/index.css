@@ -253,8 +253,10 @@ main {
 }
 
 .events {
+    display: grid;
+    place-content: center;
     padding: 10px;
-    width: 100%;
+    margin: 0px 5px;
 }
 
 .dates {
