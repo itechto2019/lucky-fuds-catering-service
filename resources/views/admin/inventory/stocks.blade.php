@@ -335,5 +335,11 @@
     function closeRentSupply(id) {
         $(`#rent-${id}`).hide()
     }
+    function editPackage(){
+        $('.form-package.edit').show();
+    }
+    function closeEditPackage() {
+        $('.form-package.edit').hide()
+    }
 
 </script>
