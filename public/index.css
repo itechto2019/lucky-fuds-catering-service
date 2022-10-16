@@ -404,6 +404,8 @@ main {
 }
 .input-group.a {
     background-color: #019267;
+    margin: 5px;
+    border-radius: 20px;
 }
 .input-group.a a {
     text-decoration: none;
