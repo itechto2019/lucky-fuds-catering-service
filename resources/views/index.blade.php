@@ -89,6 +89,9 @@
                         </div>
                     </div>
                     <div class="for-link-container">
+                        <div class="for-link {{ Route::currentRouteName() === 'user_home' ? 'active' : '' }}">
+                            <a href="{{ route('user_home') }}">Home</a>                                          
+                        </div> 
                         <div class="for-link {{ Route::currentRouteName() === 'user_dashboard' ? 'active' : '' }}" id="dashboard">
                             <a href="{{ route('user_dashboard') }}">Dashboard</a>                                          
                         </div> 
@@ -164,7 +167,9 @@
             </section>
         @else
             <section class="for-page">
-                @if (Route::currentRouteName() === "user_dashboard")
+                @if (Route::currentRouteName() === "user_home")
+                    @yield('user_home')
+                @elseif (Route::currentRouteName() === "user_dashboard")
                     @yield('user_dashboard')
                 @elseif(Route::currentRouteName() === "user_schedule_events")
                     @yield('user_schedule_events')
