@@ -6,11 +6,11 @@
 </div>
 <div class="for-dashboard-data" style="position: relative">
     <div class="home-control-body">
-        <div class="input-group">
-            <a type="button" href="{{ route('user_home') }}">Reservation</a>
+        <div class="input-group a">
+            <a type="button" href="{{ route('user_schedule_reservation') }}">Reservation</a>
         </div>
-        <div class="input-group">
-            <a type="button" href="{{ route('user_home') }}">Rent</a>
+        <div class="input-group a">
+            <a type="button" href="{{ route('user_inventory_for_rents') }}">Rent</a>
         </div>
     </div>
 </div>

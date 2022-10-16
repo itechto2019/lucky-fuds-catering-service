@@ -397,6 +397,18 @@ main {
     align-items: center;
     padding: 10px;
 }
+.home-control-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.input-group.a {
+    background-color: #019267;
+}
+.input-group.a a {
+    text-decoration: none;
+    color: #1A1A1A;
+}
 
 .input-group.textarea textarea {
     padding: 10px;
