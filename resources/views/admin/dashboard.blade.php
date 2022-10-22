@@ -5,8 +5,8 @@
     <div style="padding: 5px"><small>Welcome {{ Auth::user()->name }}</small></div>
 </div>
 <div class="for-dashboard-data" style="position: relative">
+    <h1>Reservation Requests</h1>
     <div class="card-body">
-        <h1>Reservation Requests</h1>
         <div class="cardbox">
             <h3>Confirmed</h3>
             <span>
@@ -40,9 +40,10 @@
             </span>
         </div>
     </div>
+</div>
+<div class="for-dashboard-data" style="position: relative">
+    <h1>Extend Requests</h1>
     <div class="card-body">
-        <h1>Extend Requests</h1>
-
         <div class="cardbox">
             <h3>Confirmed</h3>
             <span>
