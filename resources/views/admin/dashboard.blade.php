@@ -6,6 +6,43 @@
 </div>
 <div class="for-dashboard-data" style="position: relative">
     <div class="card-body">
+        <h1>Reservation Requests</h1>
+        <div class="cardbox">
+            <h3>Confirmed</h3>
+            <span>
+                <div class="notif">
+                    {{ $approved }}
+                </div>
+            </span>
+        </div>
+        <div class="cardbox">
+            <h3>Declined</h3>
+            <span>
+                <div class="notif">
+                    {{ $declined }}
+                </div>
+            </span>
+        </div>
+        <div class="cardbox">
+            <h3>Pending</h3>
+            <span>
+                <div class="notif">
+                    {{ $pending }}
+                </div>
+            </span>
+        </div>
+        <div class="cardbox">
+            <h3>Total Request</h3>
+            <span>
+                <div class="notif">
+                    {{ $request }}
+                </div>
+            </span>
+        </div>
+    </div>
+    <div class="card-body">
+        <h1>Extend Requests</h1>
+
         <div class="cardbox">
             <h3>Confirmed</h3>
             <span>
