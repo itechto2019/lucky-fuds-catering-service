@@ -112,7 +112,6 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
 
 });
 Route::get('/auth/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
-
 Route::get('/', function () {
     if(Auth::check()) {
         if (Auth::user()->is_admin) {

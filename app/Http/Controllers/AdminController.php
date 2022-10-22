@@ -41,6 +41,10 @@ class AdminController extends Controller
         $declined = count(Reserve::where('status', 'declined')->get());
         $pending = count(Reserve::where('status', 'pending')->get());
         $request = count(Reserve::get());
+        $confirmedExtend = count(Rent::where('status', 'extended')->get());
+        $pendingExtend = count(Rent::where('status', 'extending')->get());
+        $declinedExtend = count(Rent::where('status', 'declined')->get());
+        $totalRequest = count(Rent::get());
 
         $reserves = Reserve::where('status', 'approved')->get();
 
@@ -53,7 +57,11 @@ class AdminController extends Controller
             'declined',
             'pending',
             'request',
-            'reserves'
+            'reserves',
+            'confirmedExtend',
+            'pendingExtend',
+            'declinedExtend',
+            'totalRequest'
         ]));
     }
     public function ScheduleEvents()

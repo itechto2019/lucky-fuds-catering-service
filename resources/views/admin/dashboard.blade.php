@@ -48,7 +48,7 @@
             <h3>Confirmed</h3>
             <span>
                 <div class="notif">
-                    {{ $approved }}
+                    {{ $confirmedExtend }}
                 </div>
             </span>
         </div>
@@ -56,7 +56,7 @@
             <h3>Declined</h3>
             <span>
                 <div class="notif">
-                    {{ $declined }}
+                    {{ $declinedExtend }}
                 </div>
             </span>
         </div>
@@ -64,7 +64,7 @@
             <h3>Pending</h3>
             <span>
                 <div class="notif">
-                    {{ $pending }}
+                    {{ $pendingExtend }}
                 </div>
             </span>
         </div>
@@ -72,7 +72,7 @@
             <h3>Total Request</h3>
             <span>
                 <div class="notif">
-                    {{ $request }}
+                    {{ $totalRequest }}
                 </div>
             </span>
         </div>
