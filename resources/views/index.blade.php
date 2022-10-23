@@ -89,9 +89,6 @@
                         </div>
                     </div>
                     <div class="for-link-container">
-                        <div class="for-link {{ Route::currentRouteName() === 'user_home' ? 'active' : '' }}">
-                            <a href="{{ route('user_home') }}">Home</a>                                          
-                        </div> 
                         <div class="for-link {{ Route::currentRouteName() === 'user_dashboard' ? 'active' : '' }}" id="dashboard">
                             <a href="{{ route('user_dashboard') }}">Dashboard</a>                                          
                         </div> 
@@ -113,7 +110,7 @@
                         </div>   
                         <div class="for-link {{ Route::currentRouteName() === 'inventory' ? 'active' : '' }}" id="inventory">
                             <a href="" onclick="openInventory(event)">
-                                Inventory
+                                Rentals
                                 <svg id="inventory_icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                 </svg>
@@ -167,9 +164,7 @@
             </section>
         @else
             <section class="for-page">
-                @if (Route::currentRouteName() === "user_home")
-                    @yield('user_home')
-                @elseif (Route::currentRouteName() === "user_dashboard")
+                @if (Route::currentRouteName() === "user_dashboard")
                     @yield('user_dashboard')
                 @elseif(Route::currentRouteName() === "user_schedule_events")
                     @yield('user_schedule_events')

@@ -18,9 +18,7 @@ class UserController extends Controller
     {
         $this->middleware('user');
     }
-    public function home() {
-        return view('user.home');
-    }
+
     public function index()
     {
         // $noOfDays = today()->daysInMonth;

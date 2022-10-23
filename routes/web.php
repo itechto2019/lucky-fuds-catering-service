@@ -87,7 +87,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     // USER
-    Route::get('/home', [UserController::class, 'home'])->name('user_home');
     Route::get('/dashboard', [UserController::class, 'index'])->name('user_dashboard');
 
     // reservation
@@ -117,7 +116,7 @@ Route::get('/', function () {
         if (Auth::user()->is_admin) {
             return redirect()->intended(route('dashboard'));
         } else {
-            return redirect()->intended(route('user_home'));
+            return redirect()->intended(route('user_dashboard'));
         }
     } else {
         return view('auth.login');

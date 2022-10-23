@@ -5,38 +5,20 @@
     <div style="padding: 5px"><small>Welcome {{ Auth::user()->name }}</small></div>
 </div>
 <div class="for-dashboard-data" style="position: relative">
-    <div class="card-body">
-        <div class="cardbox">
-            <h3>Confirmed</h3>
-            <span>
-                <div class="notif">
-                    {{ $approved }}
-                </div>
-            </span>
+    <div class="home-control-body">
+        <div class="input-group a">
+            <a type="button" href="{{ route('user_schedule_reservation') }}">Reservation</a>
         </div>
-        <div class="cardbox">
-            <h3>Declined</h3>
-            <span>
-                <div class="notif">
-                    {{ $declined }}
-                </div>
-            </span>
+        <div class="input-group a">
+            <a type="button" href="{{ route('user_inventory_for_rents') }}">Rent</a>
         </div>
-        <div class="cardbox">
-            <h3>Pending</h3>
-            <span>
-                <div class="notif">
-                    {{ $pending }}
-                </div>
-            </span>
+    </div>
+    <div class="home-control-body">
+        <div class="input-group a">
+            <a type="button" href="{{ route('user_inventory_rents') }}">Confirmation Request</a>
         </div>
-        <div class="cardbox">
-            <h3>Total Request</h3>
-            <span>
-                <div class="notif">
-                    {{ $request}}
-                </div>
-            </span>
+        <div class="input-group a">
+            <a type="button" href="{{ route('user_inventory_rents') }}">Extend Request</a>
         </div>
     </div>
 </div>
