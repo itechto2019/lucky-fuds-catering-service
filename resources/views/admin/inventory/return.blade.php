@@ -31,7 +31,7 @@
                     <td>₱{{ $rent->amount }}</td>
                     <td>{{ $rent->date }}</td>
                     <td>{{ $rent->return }}</td>
-                    <td>{{ $rent->status }}</td>
+                    <td>{{ $rent->status === "extended" ? "returned" : $rent->status}}</td>
                     <td>
                         @if (!$rent->is_returned)
                         <div class="action-form">

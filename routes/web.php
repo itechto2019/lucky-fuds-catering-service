@@ -26,13 +26,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
 
     // inventory
-    Route::get('/inventory/stocks', [AdminController::class, 'InventoryStocks'])->name('inventory_stocks');
-    Route::get('/inventory/for-rents',[AdminController::class, 'ForRents'])->name('inventory_for_rents');
-    Route::get('/inventory/rents', [AdminController::class, "ForRented"])->name('inventory_rents');
-    Route::get('/inventory/approves',[AdminController::class, 'Approves'])->name('inventory_approves');
-    Route::get('/inventory/return', [AdminController::class, 'Returned'])->name('inventory_return');
-    Route::get('/inventory/extends', [AdminController::class, 'Extends'])->name('inventory_extends');
-    Route::get('/inventory/reports', [AdminController::class, 'Reports'])->name('inventory_reports');
+    Route::get('/invenotry/stocks', [AdminController::class, 'InventoryStocks'])->name('inventory_stocks');
+    Route::get('/rentals/for-rents',[AdminController::class, 'ForRents'])->name('inventory_for_rents');
+    Route::get('/rentals/rents', [AdminController::class, "ForRented"])->name('inventory_rents');
+    Route::get('/rentals/approves',[AdminController::class, 'Approves'])->name('inventory_approves');
+    Route::get('/rentals/return', [AdminController::class, 'Returned'])->name('inventory_return');
+    Route::get('/rentals/extends', [AdminController::class, 'Extends'])->name('inventory_extends');
+    Route::get('/rentals/reports', [AdminController::class, 'Reports'])->name('inventory_reports');
     
     // Add Package
     Route::post('/add-package', [PackageController::class, 'createPackage'])->name('add_package');
@@ -63,8 +63,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/reservation-reports-download/{id}', [PrintController::class, 'ReservationReportDownload'])->name('download_reservation');
     
     
-    Route::get('/inventory-reports/{id}', [PrintController::class, 'InventoryReport'])->name('export_inventory');
-    Route::get('/inventory-reports-download/{id}', [PrintController::class, 'InventoryReportDownload'])->name('download_report');
+    Route::get('/rentals-reports/{id}', [PrintController::class, 'InventoryReport'])->name('export_inventory');
+    Route::get('/rentals-reports-download/{id}', [PrintController::class, 'InventoryReportDownload'])->name('download_report');
 
     Route::put('/edit-package/{id}', function (Request $request, $id) {
         $form = $request->validate([
@@ -122,11 +122,8 @@ Route::get('/', function () {
         return view('auth.login');
     }
 });
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
-Route::post('/auth/signin', [AuthController::class, 'signin'])->name('signin');
-Route::post('/auth/signup', [AuthController::class, 'register'])->name('signup');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+
+Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
+Route::post('/signup', [AuthController::class, 'signup'])->name('signup');

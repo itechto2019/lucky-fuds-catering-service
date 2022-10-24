@@ -26,7 +26,7 @@
                 <input type="checkbox" class="for-input" name="remember">
                 <label for="checkbox">Remember</label>
             </div>
-            <a style="padding: 10px;color:#1A1A1A" href="{{ url('register') }}">Register</a>
+            <a style="padding: 10px;color:#1A1A1A" href="{{ route('register') }}">Register</a>
             <div class="for-group-input submit">
                 <input type="submit" class="for-input" value="Sign in">
             </div>

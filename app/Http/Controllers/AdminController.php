@@ -132,21 +132,23 @@ class AdminController extends Controller
     // approval
     public function Approves()
     {
-        $rents = Rent::where('status', 'approved')->orWhere('status', 'extended')->with('extends')->get();
+        $rents = Rent::where('status', 'approved')->orWhere('status', 'extend')->with('extends')->get();
         return view('admin.inventory.approves')->with(compact(['rents']));
-    }
-    // retured
-    public function Returned()
-    {
-        $rents = Rent::where('status', 'returned')->orWhere('is_returned', true)->with('returns')->get();
-        return view('admin.inventory.return')->with(compact(['rents']));
     }
     // extended
     public function Extends()
     {
-        $rents = Rent::where('status', 'returned')->with(['extends', 'returns'])->get();
+        $rents = Rent::where('status', 'extended')->with(['extends', 'returns'])->get();
+        // $rents = Rent::where('status', 'extend')->with('extends')->get();
         return view('admin.inventory.extends')->with(compact(['rents']));
     }
+    // retured
+    public function Returned()
+    {
+        $rents = Rent::where('status', 'returned')->orWhere('status', 'extended')->orWhere('is_returned', true)->with('returns')->get();
+        return view('admin.inventory.return')->with(compact(['rents']));
+    }
+    
     public function Reports()
     {
         $reports = Report::get();

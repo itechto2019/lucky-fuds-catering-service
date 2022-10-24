@@ -10,6 +10,12 @@ use TypeError;
 
 class AuthController extends Controller
 {
+    public function login() {
+        return view('auth.login');
+    }
+    public function register() {
+        return view('auth.register');
+    }
     public function signin(LoginRequest $request) {
         try {
             $credential = $request->validated();
@@ -23,7 +29,7 @@ class AuthController extends Controller
             dd($e);
         }
     }
-    public function register(Request $request) {
+    public function signup(Request $request) {
         try {
             $form = $request->validate([
                 'email' => 'required',

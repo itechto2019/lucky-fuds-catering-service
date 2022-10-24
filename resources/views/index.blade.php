@@ -18,7 +18,7 @@
                 <nav class="for-navbar">
                     <div class="for-logo">
                         <div class="for-image">
-                            <img src={{ asset('assets/logo.jpg') }} width="250" alt="">
+                            <img src={{ asset('assets/logo.jpg') }} width="230" alt="">
                         </div>
                     </div>
                     <div class="for-link-container">
@@ -47,16 +47,28 @@
                         </div>   
                         <div class="for-link {{ Route::currentRouteName() === 'inventory' ? 'active' : '' }}" id="inventory">
                             <a href="" onclick="openInventory(event)">
-                                Rentals
+                                Inventory
                                 <svg id="inventory_icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </a>
                         </div>
+                        {{-- for inventory --}}
                         <div class="for-link-panel active" id="inventory-active">
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_stocks' ? 'active' : '' }}">
                                 <a href="{{ route('inventory_stocks') }}">Stocks</a>                        
                             </div>
+                        </div>
+                        <div class="for-link {{ Route::currentRouteName() === 'rentals' ? 'active' : '' }}" id="rentals">
+                            <a href="" onclick="openInventory(event)">
+                                Rentals
+                                <svg id="rental_icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </a>
+                        </div>
+                        {{-- for rentals --}}
+                        <div class="for-link-panel active" id="rentals-active">
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_for_rents' ? 'active' : '' }}">
                                 <a href="{{ route('inventory_for_rents') }}">For Rents</a>                        
                             </div>
@@ -184,14 +196,31 @@
 </html>
 <script defer>
     $('#reservation').click(()=> {
-        $('#reservation-active').toggle()
+        $('#rentals-active').hide()
         $('#inventory-active').hide()
+        $('#reservation-active').toggle()
+        
+        $('#rental_icon').show()
+        $('#inventory_icon').show()
         $('#reservation_icon').toggle()
     })
     $('#inventory').click(()=> {
         $('#reservation-active').hide()
+        $('#rentals-active').hide()
         $('#inventory-active').toggle()
+
+        $('#rental_icon').show()
+        $('#reservation_icon').show()
         $('#inventory_icon').toggle()
+    })
+    $('#rentals').click(()=> {
+        $('#reservation-active').hide()
+        $('#inventory-active').hide()
+        $('#rentals-active').toggle()
+
+        $('#reservation_icon').show()
+        $('#inventory_icon').show()
+        $('#rental_icon').toggle()
     })
 
     function openInventory(e) {

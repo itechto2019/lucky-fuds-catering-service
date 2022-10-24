@@ -40,7 +40,7 @@
                     <span>{{ $message }}</span>
                 @enderror
             </div>
-            <a style="padding: 10px;color:#1A1A1A" href="{{ route('login') }}">Already have an account?</a>
+            <a style="padding: 10px;color:#1A1A1A" href="{{ url('login') }}">Already have an account?</a>
             <div class="for-group-input submit">
                 <input type="submit" class="for-input" value="Sign up">
             </div>
