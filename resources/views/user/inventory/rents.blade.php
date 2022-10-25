@@ -32,13 +32,13 @@
                                     <button class="action-print" onclick="extend({{ $rent->id }})">
                                         Extend
                                     </button>
-                                    @elseif($rent->status == "extended")
-                                    <p>Waiting to return</p>
+                                    @elseif($rent->status == "extend")
+                                    <p>Extending</p>
                                     @elseif($rent->status == "extending" || $rent->status == "pending")
                                     <p>Waiting for approval</p>
                                     @elseif($rent->status == "declined")
                                     <p>Admin declined your approval</p>
-                                    @elseif($rent->status == "returned")
+                                    @elseif($rent->status == "returned" || $rent->status == "extended")
                                     <p>Successfully returned</p>
                                     @endif
                                 </div>

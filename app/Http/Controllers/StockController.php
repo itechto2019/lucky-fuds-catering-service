@@ -137,7 +137,7 @@ class StockController extends Controller
         Rent::create([
             'user_id' => $user->id,
             'for_rent_id' => $rentId,
-            'client' => $form['client'],
+            'client' => Auth::user()->name,
             'amount' => $form['quantity'] * $stock->price,
             'date' => $form['date'],
             'return' => $form['return'],
@@ -159,6 +159,11 @@ class StockController extends Controller
                 'quantity' => $forRent->quantity - $rent->amount / $stock->price
             ]);
         }
+        if($rent->status == "extending"){
+            Rent::where('id', $id)->update([
+                'status' => 'extend'
+            ]);
+        }
         return redirect()->back();
     }
     protected function toReject($id)
@@ -168,7 +173,7 @@ class StockController extends Controller
         $stock = Stock::where('id', $forRent->stock_id)->get()->first();
 
 
-        if ($rent->status == "pending" || $rent->status == "extended") {
+        if ($rent->status == "pending" || $rent->status == "extending") {
             Rent::where('id', $id)->update([
                 'status' => 'declined',
             ]);
@@ -186,7 +191,7 @@ class StockController extends Controller
             'return' => 'required'
         ]);
         Rent::where('id', $id)->update([
-            'status' => 'extend',
+            'status' => 'extending',
         ]);
         Extend::create([
             'rent_id' => $id,
@@ -201,9 +206,9 @@ class StockController extends Controller
         $item = ForRent::where('id', $rent->for_rent_id)->get()->first();
         $stock = Stock::where('id', $item->stock_id)->get()->first();
 
-        if ($rent->status == "extend") {
+        if($rent->status == "approved") {
             $result = Rent::where('id', $id)->update([
-                'status' => 'extended'
+                'status' => 'returned'
             ]);
             $userId = Auth::user()->id;
             if($result) {
@@ -218,9 +223,9 @@ class StockController extends Controller
                 ]);
             }
         }
-        if($rent->status == "approved") {
+        if($rent->status == "extend") {
             $result = Rent::where('id', $id)->update([
-                'status' => 'returned'
+                'status' => 'extended'
             ]);
             $userId = Auth::user()->id;
             if($result) {
