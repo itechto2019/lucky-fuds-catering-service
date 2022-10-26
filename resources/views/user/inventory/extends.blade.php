@@ -36,7 +36,7 @@
                 <div style="padding: 10px">
                     <h3><i>No extended</i></h3>
                 </div>
-                <a href="{{ route('inventory_for_rents') }}" style="text-decoration: none; color:#06283D"> <- Check approved items</a>
+                <a href="{{ route('user_inventory_for_rents') }}" style="text-decoration: none; color:#06283D"> <- Check approved items</a>
             @endif
         </div>
     </div>
