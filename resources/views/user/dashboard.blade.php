@@ -15,10 +15,10 @@
     </div>
     <div class="home-control-body">
         <div class="input-group a">
-            <a type="button" href="{{ route('user_schedule_events') }}">Confirmation Request</a>
+            <a type="button" href="{{ route('user_schedule_confirmation') }}">Confirmation Request</a>
         </div>
         <div class="input-group a">
-            <a type="button" href="{{ route('user_inventory_rents') }}">Extend Request</a>
+            <a type="button" href="{{ route('user_inventory_extends') }}">Extend Request</a>
         </div>
     </div>
 </div>

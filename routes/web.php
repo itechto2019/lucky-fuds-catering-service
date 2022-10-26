@@ -92,6 +92,7 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     // reservation
     Route::get('/reservation/schedule-events', [UserController::class, 'ScheduleEvents'])->name('user_schedule_events');
     Route::get('/reservation/schedule-reservation',[UserController::class, 'ScheduleReservation'])->name('user_schedule_reservation');
+    Route::get('/reservation/confirmation-request',[UserController::class, 'ConfirmationRequest'])->name('user_schedule_confirmation');
 
     Route::post('/reservation/reserve-schedule-event', [ScheduleController::class, 'CreateEvent'])->name('user_create_event');
     Route::get('/get-event/{id}', [ScheduleController::class, 'getEvent'])->name('user_getEvent');
@@ -100,8 +101,11 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     // inventory
     Route::get('/inventory/for-rents', [UserController::class, 'ForRents'])->name('user_inventory_for_rents');
     Route::get('/inventory/rented', [UserController::class, 'Rented'])->name('user_inventory_rents');
+    Route::get('/inventory/extend', [UserController::class, 'Extends'])->name('user_inventory_extends');
     Route::get('/inventory/summary', [UserController::class, 'Summary'])->name('user_inventory_summary');
 
+
+    
 
     // User Rent
     Route::post('/user-rent/{rent_id}/{id}', [StockController::class, 'userRent'])->name('user_rent');
@@ -110,7 +114,6 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     Route::post('/rent-extends/{id}', [StockController::class, 'userExtends'])->name('user_extends');
 
 });
-Route::get('/auth/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
 Route::get('/', function () {
     if(Auth::check()) {
         if (Auth::user()->is_admin) {
@@ -127,3 +130,5 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 
 Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
+

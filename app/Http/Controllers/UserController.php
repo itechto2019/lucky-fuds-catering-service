@@ -55,6 +55,13 @@ class UserController extends Controller
             'user'
         ]));
     }
+    public function ConfirmationRequest() {
+        $id = Auth::id();
+        $reservations = Reserve::where('user_id', $id)->with('package')->get();
+        return view('user.schedule_confirmation')->with(compact([
+            'reservations',
+        ]));
+    }
     public function ScheduleEvents()
     {
         $date = empty($date) ? Carbon::today() : Carbon::createFromDate();
@@ -99,6 +106,11 @@ class UserController extends Controller
         $id = Auth::user()->id;
         $rents = Rent::where('user_id', $id)->with('extends')->get();
         return view('user.inventory.rents')->with(compact(['rents']));
+    }
+    public function Extends() {
+        $id = Auth::id();
+        $rents = Rent::where('user_id', $id)->where('status', 'extend')->get();
+        return view('user.inventory.extends')->with(compact(['rents']));
     }
     public function Summary()
     {

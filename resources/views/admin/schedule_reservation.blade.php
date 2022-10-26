@@ -40,9 +40,9 @@
                                     </div>
                                 </div>
                             @elseif($reservation->status == "approved")
-                                <p>Admin approved a reservation</p>
+                                <p>You've approved a reservation</p>
                             @elseif($reservation->status == "declined")
-                                <p>Admin declined a reservation</p>
+                                <p>You've declined a reservation</p>
                             @endif
                         </td>
                     </tr>

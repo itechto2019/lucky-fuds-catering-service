@@ -119,6 +119,9 @@
                             <div class="for-sub-link {{ Route::currentRouteName() === 'user_schedule_reservation' ? 'active' : '' }}">
                                 <a href="{{ route('user_schedule_reservation') }}">Schedule Reservation</a>                        
                             </div>
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'user_schedule_confirmation' ? 'active' : '' }}">
+                                <a href="{{ route('user_schedule_confirmation') }}">Confirmation Requests</a>                        
+                            </div>
                         </div>   
                         <div class="for-link {{ Route::currentRouteName() === 'inventory' ? 'active' : '' }}" id="inventory">
                             <a href="" onclick="openInventory(event)">
@@ -135,6 +138,9 @@
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'user_inventory_rents' ? 'active' : '' }}">
                                 <a href="{{ route('user_inventory_rents') }}">Rented</a>                        
+                            </div>
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'user_inventory_extends' ? 'active' : '' }}">
+                                <a href="{{ route('user_inventory_extends') }}">Extend Requests</a>                        
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'user_inventory_summary' ? 'active' : '' }}">
                                 <a href="{{ route('user_inventory_summary') }}">Summary</a>                        
@@ -182,10 +188,14 @@
                     @yield('user_schedule_events')
                 @elseif(Route::currentRouteName() === "user_schedule_reservation")
                     @yield('user_schedule_reservation')
+                @elseif(Route::currentRouteName() === "user_schedule_confirmation")
+                    @yield('user_schedule_confirmation')
                 @elseif(Route::currentRouteName() === "user_inventory_for_rents")
                     @yield('user_inventory_for_rents')
                 @elseif(Route::currentRouteName() === "user_inventory_rents")
                     @yield('inventory_rents')
+                @elseif(Route::currentRouteName() === "user_inventory_extends")
+                    @yield('user_inventory_extends')
                 @elseif(Route::currentRouteName() === "user_inventory_summary")
                     @yield('user_inventory_summary')
                 @endif

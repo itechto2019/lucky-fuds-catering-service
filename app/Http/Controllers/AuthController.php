@@ -20,6 +20,7 @@ class AuthController extends Controller
         try {
             $credential = $request->validated();
             $remember = $request['remember'] ?? true;
+            $message = "";
             if(Auth::attempt($credential, $remember)) {
                 return redirect('/');
             }else {
