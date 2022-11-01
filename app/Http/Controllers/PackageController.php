@@ -12,8 +12,8 @@ class PackageController extends Controller
     }
     public function createPackage(Request $request) {
         $form = $request->validate([
-            'name' => "required|min:25",
-            'details' => "required|min:50",
+            'name' => "required|min:8",
+            'details' => "required|min:8",
             'price' => "required|min:0"
         ]);
         $result = Package::create([
