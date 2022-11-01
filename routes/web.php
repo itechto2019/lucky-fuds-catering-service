@@ -68,9 +68,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::put('/edit-package/{id}', function (Request $request, $id) {
         $form = $request->validate([
-            'name' => "min:25",
-            'details' => "min:50",
-            'price' => "min:0"
+            'name' => "min:8",
+            'details' => "min:8",
+            'price' => "min:1"
         ]);
         Package::where('id', $id)->update([
             'name' => $form['name'],

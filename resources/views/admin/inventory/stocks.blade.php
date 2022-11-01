@@ -19,13 +19,28 @@
                 </div>
                 @csrf
                 <div class="input-group">
-                    <input type="text" name="name" placeholder="Package name">
+                    <input type="text" name="name" placeholder="Package name" value="{{ old('name') }}">
+                </div>
+                <div style="padding: 10px;color: red;">
+                    @error('name')
+                        <small>{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="input-group textarea">
-                    <textarea name="details" cols="30" rows="10" placeholder="Description"></textarea>
+                    <textarea name="details" cols="30" rows="10" placeholder="Description" value="{{ old('details') }}"></textarea>
+                </div>
+                <div style="padding: 10px;color: red;">
+                    @error('details')
+                        <small>{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="input-group">
-                    <input type="number" name="price" placeholder="Price">
+                    <input type="number" name="price" placeholder="Price" value="{{ old('price') }}">
+                </div>
+                <div style="padding: 10px;color: red;">
+                    @error('price')
+                        <small>{{ $message }}</small>
+                    @enderror
                 </div>
                 <div class="input-group">
                     <button type="submit">Submit</button>
@@ -222,7 +237,7 @@
                             <p>₱ {{ (double)$pkg->price }}</p>
                         </div>
                         <div class="input-group" style="display: grid; grid-template-columns: auto auto; column-gap: 5px">
-                            <button type="button" onclick="editPackage()">
+                            <button type="button" onclick="editPackage({{ $pkg->id }})">
                                 <svg xmlns="http://www.w3.org/2000/svg" style="width: 35px;height: 35px;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                 </svg>                                      
@@ -237,7 +252,7 @@
                                 </button>
                             </form>
                         </div>
-                        <div class="form-package edit"  style="display: none">
+                        <div class="for-form-package" style="display: none" id="edit-package-{{ $pkg->id }}">
                                 <div class="form-inputs">
                                     <form action="{{ route('edit_package', $pkg->id) }}" method="POST">
                                         <div class="input-group">
@@ -248,16 +263,31 @@
                                         <div class="input-group">
                                             <input type="text" name="name" placeholder="Package name" value="{{ $pkg->name }}">
                                         </div>
+                                        <div style="padding: 10px;color: red;">
+                                            @error('name')
+                                                <small>{{ $message }}</small>
+                                            @enderror
+                                        </div>
                                         <div class="input-group textarea">
                                             <textarea name="details" cols="30" rows="10" placeholder="Description">{{ $pkg->details }}</textarea>
+                                        </div>
+                                        <div style="padding: 10px;color: red;">
+                                            @error('details')
+                                                <small>{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <div class="input-group">
                                             <input type="number" name="price" placeholder="Price" value="{{ $pkg->price }}">
                                         </div>
+                                        <div style="padding: 10px;color: red;">
+                                            @error('price')
+                                                <small>{{ $message }}</small>
+                                            @enderror
+                                        </div>
                                         <div class="input-group">
                                             <button type="submit">Submit</button>
                                             <div class="input-group">
-                                                <button class="cancel" type="button" onclick="closeEditPackage()">Cancel</button>
+                                                <button class="cancel" type="button" onclick="closeEditPackage({{ $pkg->id }})">Cancel</button>
                                             </div>
                                         </div>
                                     </form>
@@ -336,11 +366,11 @@
     function closeRentSupply(id) {
         $(`#rent-${id}`).hide()
     }
-    function editPackage(){
-        $('.form-package.edit').show();
+    function editPackage(id){
+        $('#edit-package-'+id).show();
     }
-    function closeEditPackage() {
-        $('.form-package.edit').hide()
+    function closeEditPackage(id) {
+        $('#edit-package-' + id).hide()
     }
 
 </script>

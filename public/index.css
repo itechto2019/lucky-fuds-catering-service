@@ -617,6 +617,16 @@ main {
     top: 0%;
     width: 100%;
 }
+.for-form-package {
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    position: fixed;
+    display: grid;
+    place-content: center;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+}
 
 .form-inputs {
     background-color: #FFFFFF;
