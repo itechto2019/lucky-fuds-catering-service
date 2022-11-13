@@ -27,4 +27,12 @@ class Rent extends Model
     {
         return $this->hasOne(Returns::class);
     }
+    public function pickups()
+    {
+        return $this->hasOne(Pickup::class);
+    }
+    public function delivers()
+    {
+        return $this->hasOne(Deliver::class);
+    }
 }
