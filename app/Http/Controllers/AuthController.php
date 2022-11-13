@@ -10,27 +10,35 @@ use TypeError;
 
 class AuthController extends Controller
 {
-    public function login() {
+    public function login()
+    {
         return view('auth.login');
     }
-    public function register() {
+    public function register()
+    {
         return view('auth.register');
     }
-    public function signin(LoginRequest $request) {
-        try {
-            $credential = $request->validated();
-            $remember = $request['remember'] ?? true;
-            $message = "";
-            if(Auth::attempt($credential, $remember)) {
-                return redirect('/');
-            }else {
-                return redirect()->back();
-            }
-        } catch (TypeError $e) {
-            dd($e);
+    public function signin(LoginRequest $request)
+    {
+        $credential = $request->validated();
+        $remember = $request['remember'] ?? true;
+        $terms = $request['agree-terms'] ?? true;
+        $policy = $request['agree-policy'] ?? true;
+        if (Auth::attempt($credential, $remember) && $terms && $policy) {
+            return redirect('/');
+        } else {
+            return redirect()->back()->withErrors([
+                'message' => [
+                    'credentials' => 'Incorrect Credentials',
+                    'terms' => 'You must agree to the terms',
+                    'policy' => 'You must agree to the policy',
+                ],
+                
+            ]);
         }
     }
-    public function signup(Request $request) {
+    public function signup(Request $request)
+    {
         try {
             $form = $request->validate([
                 'email' => 'required',
@@ -38,15 +46,15 @@ class AuthController extends Controller
                 'password' => 'required|confirmed|min:8'
             ]);
             $userExist = User::where('is_admin', '1')->get();
-            if($userExist->isEmpty())  {
+            if ($userExist->isEmpty()) {
                 User::create([
                     'email' => $form['email'],
                     'name' => $form['name'],
                     'password' => password_hash($form['password'], PASSWORD_BCRYPT),
                     'is_admin' => '1'
                 ]);
-            }else {
-                
+            } else {
+
                 User::create([
                     'email' => $form['email'],
                     'name' => $form['name'],
@@ -54,16 +62,16 @@ class AuthController extends Controller
                 ]);
             }
             return redirect('/login');
-            
         } catch (TypeError $e) {
             dd($e);
         }
     }
-    public function logout() {
+    public function logout()
+    {
         try {
-            if(Auth::user()) {
+            if (Auth::user()) {
                 Auth::logout();
-                return redirect('/login');           
+                return redirect('/login');
             }
         } catch (TypeError $e) {
             dd($e);

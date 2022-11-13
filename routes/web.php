@@ -132,3 +132,6 @@ Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
 
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
