@@ -21,21 +21,50 @@ class AuthController extends Controller
     public function signin(LoginRequest $request)
     {
         $credential = $request->validated();
-        $remember = $request['remember'] ?? true;
-        $terms = $request['agree-terms'] ?? true;
-        $policy = $request['agree-policy'] ?? true;
-        if (Auth::attempt($credential, $remember) && $terms && $policy) {
-            return redirect('/');
+        $remember = $request['remember'] ? true : false;
+        $terms = $request['agree-terms'] ? true : false;
+        $policy = $request['agree-policy'] ? true : false;
+
+        if (Auth::attempt($credential, $remember)) {
+            if ($terms && $policy) {
+                return redirect('/');
+            } else {
+                return redirect()->back()->withErrors([
+                    'message' => [
+                        'terms' => 'You must agree to the Terms and Conditions',
+                        'policy' => 'You must agree to the Data Policy Policy',
+                    ],
+                ]);
+            }
         } else {
             return redirect()->back()->withErrors([
                 'message' => [
                     'credentials' => 'Incorrect Credentials',
-                    'terms' => 'You must agree to the Terms and Conditions',
-                    'policy' => 'You must agree to the Data Policy Policy',
                 ],
-
             ]);
         }
+
+
+        // if(Auth::attempt($credential, $remember)) {
+        //     if(!$terms && !$policy) {
+        //         return redirect()->back()->withErrors([
+        //             'message' => [
+        //                 'terms' => 'You must agree to the Terms and Conditions',
+        //                 'policy' => 'You must agree to the Data Policy Policy',
+        //             ],
+        //         ]);
+        //     }
+        // }else {
+        //     return redirect()->back()->withErrors([
+        //         'message' => [
+        //             'credentials' => 'Incorrect Credentials',
+        //             'terms' => 'You must agree to the Terms and Conditions',
+        //             'policy' => 'You must agree to the Data Policy Policy',
+        //         ],
+        //     ]);
+        // }
+
+
     }
     public function signup(Request $request)
     {

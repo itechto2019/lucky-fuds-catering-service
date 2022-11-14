@@ -859,3 +859,27 @@ input[type=file] {
     overflow-y: auto;
     max-height: 335px;
 }
+.error-message {
+    padding: 10px;
+    position: absolute;
+    right: 5%;
+    top: 5%;
+}
+.modal {
+    display: none;
+    padding: 5%;
+    margin: auto;
+    background-color: #FFFFFF;
+    border: 1px solid #019267;
+    box-shadow: 1px 1px 50px 5px #D0D0D0;
+    position: absolute;
+    margin: 2% 10% 10% 10%;
+    top: 0%;
+}
+.modal-container {
+    padding: 10px;
+    margin: 5%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+}

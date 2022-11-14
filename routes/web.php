@@ -135,3 +135,7 @@ Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->midd
 Route::get('/terms', function () {
     return view('terms');
 })->name('terms');
+Route::get('/policy', function () {
+    return view('policy');
+})->name('policy');
+

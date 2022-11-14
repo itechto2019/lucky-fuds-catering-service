@@ -1,10 +1,30 @@
-<div class="modal-container">
+<div class="madal-container">
     <p>
-        In 2014, Lucky Fuds Catering Services was established. Making your catering experience as stress-free as possible is our main focus. We pledged to constantly go above and beyond for our customers. Our catering services are perfect for birthdays, weddings, christenings, debuts, private parties, and more. Additionally, we have equipment rentals that you may use to transform any space at your event. We can provide tables, chairs, linens, and more. Let us make your event stand out with our finishing touches.
-        <b>Contact Info </b>
-        Address: <b>Balaoan, La Union, Philippines, 2517</b> 
-        Phone: <b>0919 222 5291</b>
-        Follow Us on <a href="https://www.facebook.com/LuckyFuds">Facebook</a>
+        <b>Privacy Policy</b>
+        <br>
+        This page informs you of our policies regarding the collection, use and disclosure of Personal Information when you use our Service.
+        We will not use or share your information with anyone except as described in this Privacy Policy.
+        Your personal information is used to provide and improve the service. By using the Service, you agree to the collection and use of information in accordance with this policy. 
+        <br>
+        <br>
+        <b>Information Collection and Use</b>
+        <br>
+        While using our service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you. Personally identifiable information ("Personal Information") may include, but is not limited to: Name, Address, Email address, Cellphone number. Rest assured that all the information is confidential to you and the company and will only be used for the service.
+        <br>
+        <br>
+        <b>Log Data</b>
+        <br>
+        We collect information that your browser sends whenever you visit our Service (“Log Data”). This Log Data may include information such as your computer’s Internet Protocol (“IP”) address, browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages and other statistics.
+        <br>
+        <br>
+        <b>Security</b>
+        <br>
+        The security of your Personal Information is important to us but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Information, we cannot guarantee its absolute security.  
+        <br>
+        <br>
+        <b>Contact Us</b>
+        <br>
+        Please contact us if you have any questions.
     </p>
-
+    <div class="close" style="text-align: center; cursor: pointer" onclick="closePolicy()">Close</div>
 </div>
