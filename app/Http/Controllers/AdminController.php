@@ -41,10 +41,12 @@ class AdminController extends Controller
         $declined = count(Reserve::where('status', 'declined')->get());
         $pending = count(Reserve::where('status', 'pending')->get());
         $request = count(Reserve::get());
-        $confirmedExtend = count(Rent::whereHas('extends')->where('status', 'returned')->get());
-        $pendingExtend = count(Rent::where('status', 'extending')->get());
-        $declinedExtend = count(Rent::where('status', 'declined')->get());
-        $totalRequest = count(Rent::whereHas('extends')->get());
+
+
+        $confirmedRent = count(Rent::where('status', 'approved')->orWhere('status', 'extended')->get());
+        $pendingRent = count(Rent::where('status', 'pending')->orWhere('status', 'extending')->get());
+        $declinedRent = count(Rent::where('status', 'declined')->get());
+        $totalRequest = count(Rent::get());
 
         $reserves = Reserve::where('status', 'approved')->get();
 
@@ -58,9 +60,9 @@ class AdminController extends Controller
             'pending',
             'request',
             'reserves',
-            'confirmedExtend',
-            'pendingExtend',
-            'declinedExtend',
+            'confirmedRent',
+            'pendingRent',
+            'declinedRent',
             'totalRequest'
         ]));
     }
