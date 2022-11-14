@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Deliver;
 use App\Models\Extend;
 use App\Models\ForRent;
+use App\Models\Pickup;
 use App\Models\Rent;
 use App\Models\Returns;
 use App\Models\Stock;
@@ -134,7 +136,7 @@ class StockController extends Controller
             'date' => 'required',
             'return' => 'required'
         ]);
-        Rent::create([
+        $result = Rent::create([
             'user_id' => $user->id,
             'for_rent_id' => $rentId,
             'client' => Auth::user()->name,
@@ -142,6 +144,17 @@ class StockController extends Controller
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
+        $method = $request->method;
+        if($method == "deliver") {
+            Deliver::create([
+                'rent_id' => $result->id
+            ]);
+        }
+        if($method == "pickup") {
+            Pickup::create([
+                'rent_id' => $result->id
+            ]);
+        }
 
         return redirect()->back();
     }
@@ -198,6 +211,7 @@ class StockController extends Controller
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
+        
         return redirect()->back();
     }
     protected function toReturn($id)

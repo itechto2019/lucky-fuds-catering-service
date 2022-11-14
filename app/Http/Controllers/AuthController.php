@@ -30,10 +30,10 @@ class AuthController extends Controller
             return redirect()->back()->withErrors([
                 'message' => [
                     'credentials' => 'Incorrect Credentials',
-                    'terms' => 'You must agree to the terms',
-                    'policy' => 'You must agree to the policy',
+                    'terms' => 'You must agree to the Terms and Conditions',
+                    'policy' => 'You must agree to the Data Policy Policy',
                 ],
-                
+
             ]);
         }
     }
@@ -68,13 +68,7 @@ class AuthController extends Controller
     }
     public function logout()
     {
-        try {
-            if (Auth::user()) {
-                Auth::logout();
-                return redirect('/login');
-            }
-        } catch (TypeError $e) {
-            dd($e);
-        }
+        Auth::logout();
+        return redirect('/login');
     }
 }

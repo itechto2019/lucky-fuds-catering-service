@@ -68,6 +68,12 @@
                                                 required>
                                         </div>
                                         <div class="input-group">
+                                            <input type="radio" name="method" value="pickup" style="cursor: pointer" required>
+                                            <label for="method" style="user-select:none">Pickup</label>
+                                            <input type="radio" style="cursor: pointer" value="deliver" name="method" required>
+                                            <label for="method" style="user-select:none">Deliver</label>
+                                        </div>
+                                        <div class="input-group">
                                             <label for="">Date to use(?): </label>
                                             <input type="date" name="date" required>
                                         </div>

@@ -8,5 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Deliver extends Model
 {
     use HasFactory;
-    protected $table = "deliver";
+    protected $table = "delivers";
+    protected $fillable = [
+        'rent_id'
+    ];
 }

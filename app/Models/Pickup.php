@@ -9,4 +9,8 @@ class Pickup extends Model
 {
     use HasFactory;
     protected $table = "pickups";
+
+    protected $fillable = [
+        'rent_id'
+    ];
 }

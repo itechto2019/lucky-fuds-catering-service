@@ -19,7 +19,13 @@
                     <tr>
                         <td>{{ $reservation->id }}</td>
                         <td>{{ $reservation->client }}</td>
-                        <td>{{ $reservation->contact }}</td>
+                        <td>
+                            {{ $reservation->contact }}
+                            <br>
+                            {{ $reservation->email }}
+                            <br>
+                            {{ $reservation->address }}
+                        </td>
                         <td>{{ $reservation->status }}</td>
                         <td>
                             @if($reservation->status == "pending")
