@@ -43,7 +43,7 @@ class AdminController extends Controller
         $request = count(Reserve::get());
 
 
-        $confirmedRent = count(Rent::where('status', 'approved')->orWhere('status', 'extended')->get());
+        $confirmedRent = count(Rent::where('status', 'approved')->orWhere('status', 'extend')->get());
         $pendingRent = count(Rent::where('status', 'pending')->orWhere('status', 'extending')->get());
         $declinedRent = count(Rent::where('status', 'declined')->get());
         $totalRequest = count(Rent::get());
