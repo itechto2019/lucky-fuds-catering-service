@@ -78,6 +78,43 @@
         </div>
     </div>
 </div>
+<div class="for-dashboard-data" style="position: relative">
+    <h1>Extend Requests</h1>
+    <div class="card-body">
+        <div class="cardbox">
+            <h3>Confirmed</h3>
+            <span>
+                <div class="notif">
+                    {{ $confirmedExtend }}
+                </div>
+            </span>
+        </div>
+        <div class="cardbox">
+            <h3>Declined</h3>
+            <span>
+                <div class="notif">
+                    {{ $declinedExtend }}
+                </div>
+            </span>
+        </div>
+        <div class="cardbox">
+            <h3>Pending</h3>
+            <span>
+                <div class="notif">
+                    {{ $pendingExtend }}
+                </div>
+            </span>
+        </div>
+        <div class="cardbox">
+            <h3>Total Request</h3>
+            <span>
+                <div class="notif">
+                    {{ $totalRequestExtend }}
+                </div>
+            </span>
+        </div>
+    </div>
+</div>
 <div class="for-event-dates">
     <div class="event-dates">
         <h1>Event Dates</h1>

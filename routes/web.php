@@ -26,7 +26,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
 
     // inventory
-    Route::get('/invenotry/stocks', [AdminController::class, 'InventoryStocks'])->name('inventory_stocks');
+    Route::get('/inventory/stocks', [AdminController::class, 'InventoryStocks'])->name('inventory_stocks');
+    Route::get('/rentals/extend-request', [AdminController::class, 'ExtendRequest'])->name('extend_request');
     Route::get('/rentals/for-rents',[AdminController::class, 'ForRents'])->name('inventory_for_rents');
     Route::get('/rentals/rents', [AdminController::class, "ForRented"])->name('inventory_rents');
     Route::get('/rentals/approves',[AdminController::class, 'Approves'])->name('inventory_approves');

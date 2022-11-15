@@ -48,6 +48,11 @@ class AdminController extends Controller
         $declinedRent = count(Rent::where('status', 'declined')->get());
         $totalRequest = count(Rent::where('status', 'approved')->orWhere('status', 'pending')->orWhere('status', 'declined')->get());
 
+        $confirmedExtend = count(Rent::where('status', 'extended')->get());
+        $pendingExtend = count(Rent::where('status', 'extending')->get());
+        $declinedExtend = count(Rent::where('status', 'declined')->whereHas('extends')->get());
+        $totalRequestExtend = count(Rent::where('status', 'extended')->orWhere('status', 'extending')->orWhere('status', 'declined')->whereHas('extends')->get());
+
         $reserves = Reserve::where('status', 'approved')->get();
 
         return view('admin.dashboard')->with(compact([
@@ -63,7 +68,11 @@ class AdminController extends Controller
             'confirmedRent',
             'pendingRent',
             'declinedRent',
-            'totalRequest'
+            'totalRequest',
+            'confirmedExtend',
+            'pendingExtend',
+            'declinedExtend',
+            'totalRequestExtend'
         ]));
     }
     public function ScheduleEvents()
@@ -128,8 +137,14 @@ class AdminController extends Controller
     // for rented
     public function ForRented()
     {
-        $rents = Rent::where('status', 'pending')->orWhere('status', 'extending')->with('extends')->get();
+        $rents = Rent::where('status', 'pending')->get();
         return view('admin.inventory.rents')->with(compact(['rents']));
+    }
+    // for extend request
+    public function ExtendRequest()
+    {
+        $rents = Rent::where('status', 'extending')->with('extends')->get();
+        return view('admin.inventory.extend_request')->with(compact(['rents']));
     }
     // approval
     public function Approves()

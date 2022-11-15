@@ -73,7 +73,10 @@
                                 <a href="{{ route('inventory_for_rents') }}">For Rents</a>                        
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_rents' ? 'active' : '' }}">
-                                <a href="{{ route('inventory_rents') }}">Rented</a>                        
+                                <a href="{{ route('inventory_rents') }}">Rented Request</a>                        
+                            </div>
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'extend_request' ? 'active' : '' }}">
+                                <a href="{{ route('extend_request') }}">Extend Request</a>                        
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_approves' ? 'active' : '' }}">
                                 <a href="{{ route('inventory_approves') }}">Approves</a>                        
@@ -172,6 +175,8 @@
                     @yield('inventory_rents')
                 @elseif(Route::currentRouteName() === "inventory_approves")
                     @yield('inventory_approves')
+                @elseif(Route::currentRouteName() === "extend_request")
+                    @yield('extend_request')
                 @elseif(Route::currentRouteName() === "inventory_extends")
                     @yield('inventory_extends')
                 @elseif(Route::currentRouteName() === "inventory_return")
