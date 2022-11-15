@@ -2,7 +2,7 @@
 @section('extend_request')
 <div class="for-inventory-rents">
     <div class="for-page-title">
-        <h1>Rented</h1>
+        <h1>Extend Request</h1>
     </div>
     <div class="table-reservation">
         <div class="table-form">
@@ -53,7 +53,7 @@
             </table>
             @else
             <div style="padding: 10px">
-                <h3><i>No rented are available!</i></h3>
+                <h3><i>No Extends are available!</i></h3>
             </div>
             <a href="{{ route('inventory_for_rents') }}" style="text-decoration: none; color:#06283D">
                 <- Check rented items</a>
