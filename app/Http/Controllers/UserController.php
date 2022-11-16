@@ -120,4 +120,9 @@ class UserController extends Controller
         $reserves = Reserve::where('user_id', $id)->get();
         return view('user.inventory.summary')->with(compact(['rents', 'returns', 'reserves']));
     }
+    public function ReservationSummary() {
+        $id = Auth::id();
+        $reserves = Reserve::where('user_id', $id)->get();
+        return view('user.schedule_summary')->with(compact(['reserves']));
+    }
 }
