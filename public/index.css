@@ -156,6 +156,14 @@ main {
     margin: 5px;
     box-shadow: 1px 1px 5px #019267;
     background-color: #FFFFFF;
+    display: flex;
+}
+.toggle-password {
+    cursor: pointer;
+}
+.toggle-password svg {
+    width: 25px;
+    height: 20px;
 }
 
 .for-input[type="email"],
