@@ -12,8 +12,6 @@
         <div class="input-group a">
             <a type="button" href="{{ route('user_inventory_for_rents') }}">Rent</a>
         </div>
-    </div>
-    <div class="home-control-body">
         <div class="input-group a">
             <a type="button" href="{{ route('user_schedule_confirmation') }}">Confirmation Request</a>
         </div>
