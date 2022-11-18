@@ -94,6 +94,7 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     Route::get('/reservation/schedule-events', [UserController::class, 'ScheduleEvents'])->name('user_schedule_events');
     Route::get('/reservation/schedule-reservation',[UserController::class, 'ScheduleReservation'])->name('user_schedule_reservation');
     Route::get('/reservation/confirmation-request',[UserController::class, 'ConfirmationRequest'])->name('user_schedule_confirmation');
+    Route::get('/reservation/summary',[UserController::class, 'ReservationSummary'])->name('user_reseravation_summary');
 
     Route::post('/reservation/reserve-schedule-event', [ScheduleController::class, 'CreateEvent'])->name('user_create_event');
     Route::get('/get-event/{id}', [ScheduleController::class, 'getEvent'])->name('user_getEvent');

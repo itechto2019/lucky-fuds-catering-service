@@ -125,6 +125,10 @@
                             <div class="for-sub-link {{ Route::currentRouteName() === 'user_schedule_confirmation' ? 'active' : '' }}">
                                 <a href="{{ route('user_schedule_confirmation') }}">Confirmation Requests</a>                        
                             </div>
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'user_reseravation_summary' ? 'active' : '' }}">
+                                <a href="{{ route('user_reseravation_summary') }}">Reservation Summary</a>                        
+                            </div>
+                            
                         </div>   
                         <div class="for-link {{ Route::currentRouteName() === 'inventory' ? 'active' : '' }}" id="inventory">
                             <a href="" onclick="openInventory(event)">
@@ -195,6 +199,8 @@
                     @yield('user_schedule_reservation')
                 @elseif(Route::currentRouteName() === "user_schedule_confirmation")
                     @yield('user_schedule_confirmation')
+                @elseif(Route::currentRouteName() === "user_reseravation_summary")
+                    @yield('user_reseravation_summary')
                 @elseif(Route::currentRouteName() === "user_inventory_for_rents")
                     @yield('user_inventory_for_rents')
                 @elseif(Route::currentRouteName() === "user_inventory_rents")
