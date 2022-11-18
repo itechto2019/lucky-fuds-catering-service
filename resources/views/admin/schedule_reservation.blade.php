@@ -25,6 +25,8 @@
                             {{ $reservation->email }}
                             <br>
                             {{ $reservation->address }}
+                            <br>
+                            <b>Date: </b>{{ date('M d, Y', strtotime($reservation->date)) }}
                         </td>
                         <td>{{ $reservation->status }}</td>
                         <td>
