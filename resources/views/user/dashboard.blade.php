@@ -16,6 +16,9 @@
             <a type="button" href="{{ route('user_schedule_confirmation') }}">Confirmation Request</a>
         </div>
         <div class="input-group a">
+            <a type="button" href="{{ route('user_inventory_rents') }}">Rent Request</a>
+        </div>
+        <div class="input-group a">
             <a type="button" href="{{ route('user_inventory_extends') }}">Extend Request</a>
         </div>
     </div>

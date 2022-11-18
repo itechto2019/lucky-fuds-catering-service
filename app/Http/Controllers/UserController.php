@@ -21,13 +21,11 @@ class UserController extends Controller
 
     public function index()
     {
-        // $noOfDays = today()->daysInMonth;
         $noOfMonths = Carbon::now()->months()->format('m');
         $noOfDays = Carbon::now()->days()->format('j');
         $noOfWeeks = 7;
         $months = [];
         $days = [];
-        // $weeks = [];
         for ($i = 1; $i <= $noOfMonths; $i++) {
             $months[] = Carbon::now()->months($i)->format('M');
         }
@@ -116,7 +114,7 @@ class UserController extends Controller
     {
         $id = $request->user()->id;
         $rents = Rent::where('user_id',$id)->get();
-        $returns = Returns::where('user_id', $id)->get();
+        $returns = Rent::with('returns')->get();
         return view('user.inventory.summary')->with(compact(['rents', 'returns']));
     }
     public function ReservationSummary() {

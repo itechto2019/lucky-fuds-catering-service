@@ -250,4 +250,7 @@
     function openReservation(e) {
         e.preventDefault();
     }
+    setTimeout(() => {
+       $('.error-message').fadeOut() 
+    }, 3000);
 </script>

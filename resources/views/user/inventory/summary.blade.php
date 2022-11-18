@@ -34,8 +34,8 @@
                             <b>Amount: </b>
                             ₱{{ $rent->amount }}
                             <br>
-                            <b>Date reservation: </b>
-                            {{ $rent->date }}
+                            <b>Date rented: </b>
+                            {{ $rent->created_at->format('Y-m-d') }}
                         </td>
                     </tr>
                     @endforeach
@@ -50,7 +50,7 @@
         </div>
         <div class="table-form" id="table-returned" style="display: none">
             <h3>Returned Summary</h3>
-            @if (!$rents->isEmpty())
+            @if (!$returns->isEmpty())
                 <table>
                     <tr>
                         <th>#</th>
@@ -61,7 +61,18 @@
                     <tr>
                         <td>{{ $return->id }}</td>
                         <td>{{ $return->created_at->format('Y-m-d') }}</td>
-                        <td><b>Item: </b>{{ $return->item }} <br> <b>Amount: </b>₱{{ $return->amount }}</td>
+                        <td>
+                            <b>Item: </b>
+                            {{ $return->items }}
+                            <br>
+                            <b>Client: </b>{{ $return->client }}
+                            <br>
+                            <b>Amount: </b>
+                            ₱{{ $return->amount }}
+                            <br>
+                            <b>Date Returned: </b>
+                            {{ $return->updated_at->format('Y-m-d') }}
+                        </td>
                     </tr>
                     @endforeach
                 </table>

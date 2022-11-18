@@ -8,6 +8,11 @@
     <div class="reserve">
         <div class="reserve form">
             <h3>Reservation Details</h3>
+            <div class="error">
+                @foreach ($errors->all() as $error)
+                <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
+                @endforeach
+            </div>
             <form action="{{ route('user_create_event') }}" method="POST">
                 @csrf
                 <div class="form-separate">
@@ -75,9 +80,6 @@
                         </div>
                         <div class="input-group submit">
                             <div>
-                                <button class="cancel">Cancel</button>
-                            </div>
-                            <div>
                                 <button type="submit">Submit</button>
                             </div>
                         </div>
@@ -89,3 +91,11 @@
     </div>
 </div>
 @endsection
+
+<script>
+    setTimeout(() => {
+       $('.error').css({
+            display: 'none'
+       })
+    }, 3000);
+</script>

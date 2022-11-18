@@ -6,6 +6,11 @@
     </div>
     <div class="table-reservation">
         <div class="table-form">
+            <div class="error-message">
+                @foreach ($errors->all() as $error)
+                <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
+                @endforeach
+            </div>
             @if (!$supplies->isEmpty())
             <table>
                 <tr>
@@ -141,5 +146,9 @@
         $(`#amount-${id}`).attr("disabled", "")
         $(`#amount-${id}`).val(q * p)
     }
-   
+    setTimeout(() => {
+       $('.error-message').css({
+            display: 'none'
+       })
+    }, 3000);
 </script>

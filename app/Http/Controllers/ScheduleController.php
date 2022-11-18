@@ -15,34 +15,44 @@ class ScheduleController extends Controller
     protected function CreateEvent(Request $request) {
 
         $id = Auth::user()->id;
-        Reserve::create([
-            'user_id' => $id,
-            'client' => Auth::user()->name,
-            'contact' => request('contact'),
-            'email' => request('email'),
-            'method' => request('method'),
-            'date' => request('date'),
-            'time' => request('time'),
-            'address' => request('address'),
-            'guest' => request('guest'),
-            'event' => request('event'),
-            'package_id' => request('package_id'),
-        ]);
+        if(!$request->package_id) {
+            return back()->withErrors([
+                "message" => "Please choose a package"
+            ]);
+        }else {
+            Reserve::create([
+                'user_id' => $id,
+                'client' => Auth::user()->name,
+                'contact' => request('contact'),
+                'email' => request('email'),
+                'method' => request('method'),
+                'date' => request('date'),
+                'time' => request('time'),
+                'address' => request('address'),
+                'guest' => request('guest'),
+                'event' => request('event'),
+                'package_id' => request('package_id'),
+            ]);
+            return back();
+        }
         
-        return back();
 
     }
     protected function ApproveReserve($id) {
         Reserve::where('id', $id)->update([
             'status' => 'approved'
         ]);
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Reservation approved"
+        ]);
     }
     protected function RejectReserve($id) {
         Reserve::where('id', $id)->update([
             'status' => 'declined'
         ]);
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Reservation declined"
+        ]);
     }
     protected function getEvent($id) {
         $event = Reserve::where('id', $id)->get()->first();

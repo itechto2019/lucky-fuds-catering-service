@@ -6,6 +6,7 @@
     </div>
     <div class="table-reservation">
         <div class="table-form">
+            
             @if (!$rents->isEmpty())
                 <table>
                     <tr>

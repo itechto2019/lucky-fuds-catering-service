@@ -47,7 +47,9 @@ class StockController extends Controller
             ]);
         }
 
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "New item created"
+        ]);
     }
     protected function updateSupply(Request $request, $id)
     {
@@ -94,12 +96,16 @@ class StockController extends Controller
             }
         }
 
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Item is updated"
+        ]);
     }
     protected function deleteSupply($id)
     {
         Stock::where('id', $id)->delete();
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Item sucessfully removed"
+        ]);
     }
     protected function toRent(Request $request, $id)
     {
@@ -125,7 +131,9 @@ class StockController extends Controller
             ]);
         }
         
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Item is now rentable"
+        ]);
     }
     protected function userRent(Request $request, $rentId, $stockId)
     {
@@ -154,18 +162,25 @@ class StockController extends Controller
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
-        $method = $request->method;
-        if($method == "deliver") {
-            Deliver::create([
-                'rent_id' => $result->id
+        if($result) {
+            $method = $request->method;
+            if($method == "deliver") {
+                Deliver::create([
+                    'rent_id' => $result->id
+                ]);
+            }
+            if($method == "pickup") {
+                Pickup::create([
+                    'rent_id' => $result->id
+                ]);
+            }
+            return redirect()->back()->withErrors([
+                'message' => 'Successfully rent, wait for approval.'
             ]);
         }
-        if($method == "pickup") {
-            Pickup::create([
-                'rent_id' => $result->id
-            ]);
-        }
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "There's something wrong with your inputs"
+        ]);
     }
     protected function toCheckOut($id)
     {
@@ -180,13 +195,19 @@ class StockController extends Controller
             ForRent::where('id', $rent->for_rent_id)->update([
                 'quantity' => $forRent->quantity - $rent->amount / $stock->price
             ]);
+            return redirect()->back()->withErrors([
+                'message' => "Rent Approved"
+            ]);
         }
         if($rent->status == "extending"){
             Rent::where('id', $id)->update([
                 'status' => 'extend'
             ]);
+            return redirect()->back()->withErrors([
+                'message' => "Rent extended"
+            ]);
         }
-        return redirect()->back();
+        
     }
     protected function toReject($id)
     {
@@ -204,7 +225,9 @@ class StockController extends Controller
             ]);
         }
 
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Rent Declined"
+        ]);
     }
     protected function userExtends(Request $request, $id)
     {
@@ -221,7 +244,9 @@ class StockController extends Controller
             'return' => $form['return'],
         ]);
         
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Rent extends, wait for approval"
+        ]);
     }
     protected function toReturn($id)
     {
@@ -263,7 +288,9 @@ class StockController extends Controller
                 ]);
             }
         }
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Rent returned, check to your returns page"
+        ]);
     }
 
     protected function addToItems($id)
@@ -290,7 +317,9 @@ class StockController extends Controller
             'date' => $rent->extends ? $rent->extends->date : $rent->date,
             'return' => $rent->extends ? $rent->extends->return : $rent->return,
         ]);
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Item successfully added in the inventory"
+        ]);
     }
     protected function addToRents($id)
     {
@@ -318,6 +347,8 @@ class StockController extends Controller
             'date' => $rent->extends ? $rent->extends->date : $rent->date,
             'return' => $rent->extends ? $rent->extends->return : $rent->return,
         ]);
-        return redirect()->back();
+        return redirect()->back()->withErrors([
+            'message' => "Item is applied to rentable items."
+        ]);
     }
 }

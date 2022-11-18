@@ -5,6 +5,11 @@
         <h1>Returned</h1>
     </div>
     <div class="table-reservation">
+        <div class="error-message">
+            @foreach ($errors->all() as $error)
+                <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #FFFFFF">{{$error}}</div>
+            @endforeach
+        </div>
         <div style="padding: 10px">
             <h3>Items</h3>
         </div>
