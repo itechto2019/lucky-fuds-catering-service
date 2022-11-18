@@ -13,6 +13,7 @@ class Rent extends Model
         'user_id',
         'for_rent_id',
         'client',
+        'items',
         'amount',
         'date',
         'return',

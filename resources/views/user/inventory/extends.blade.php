@@ -10,6 +10,7 @@
                 <table>
                     <tr>
                         <th>#</th>
+                        <th>Item</th>
                         <th>Client</th>
                         <th>Amount</th>
                         <th>Date for use</th>
@@ -22,6 +23,7 @@
                     @foreach ($rents as $rent)
                         <tr>
                             <td>{{ $rent->id }}</td>
+                            <td>{{ $rent->items }}</td>
                             <td>{{ $rent->client }}</td>
                             <td>₱{{ $rent->amount }}</td>
                             <td><small>{{ $rent->return }}</small></td>

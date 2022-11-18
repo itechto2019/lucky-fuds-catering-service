@@ -10,8 +10,8 @@
             <table>
                 <tr>
                     <th>#</th>
-                    <th>Item</th>
                     <th>Image</th>
+                    <th>Item</th>
                     <th>Quantity</th>
                     <th>Price</th>
                     <th></th>
@@ -48,9 +48,10 @@
                                         method="POST">
                                         <h3>Renting Information</h3>
                                         @csrf
+                                        <input type="hidden" name="items" value="{{$supply->item}}">
                                         <div class="input-group">
                                             <input type="text" name="client" placeholder="Name"
-                                                id="name-{{ $item->id }}" value="{{ Auth::user()->name }}" required>
+                                                id="name-{{ $item->id }}" value="{{ Auth::user()->name }}" required disabled>
                                         </div>
                                         <div class="input-group" style="display: block">
                                             <input type="number" name="quantity" id="q-{{ $item->id }}"

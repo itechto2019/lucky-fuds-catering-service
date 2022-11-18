@@ -25,7 +25,18 @@
                     <tr>
                         <td>{{ $rent->id }}</td>
                         <td>{{ $rent->created_at->format('Y-m-d') }}</td>
-                        <td><b>Client: </b>{{ $rent->client }} <br> <b>Amount: </b>₱{{ $rent->amount }} <br> <b>Date reservation: </b> {{ $rent->date }} </td>
+                        <td>
+                            <b>Item: </b>
+                            {{ $rent->items }}
+                            <br>
+                            <b>Client: </b>{{ $rent->client }}
+                            <br>
+                            <b>Amount: </b>
+                            ₱{{ $rent->amount }}
+                            <br>
+                            <b>Date reservation: </b>
+                            {{ $rent->date }}
+                        </td>
                     </tr>
                     @endforeach
                 </table>

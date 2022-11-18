@@ -12,6 +12,7 @@ use App\Models\Stock;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class StockController extends Controller
 {
@@ -130,16 +131,25 @@ class StockController extends Controller
     {
         $stock = Stock::where('id', $stockId)->get()->first();
         $user = Auth::user();
-        $form = $request->validate([
+        $validator = Validator::make($request->only(
+            'client',
+            'items',
+            'quantity',
+            'date',
+            'return'
+        ),[
             'client' => 'required|min:3',
+            'items' => 'required',
             'quantity' => 'required|min:1',
             'date' => 'required',
             'return' => 'required'
         ]);
+        $form = $validator->validated();
         $result = Rent::create([
             'user_id' => $user->id,
             'for_rent_id' => $rentId,
             'client' => Auth::user()->name,
+            'items' => $form['items'],
             'amount' => $form['quantity'] * $stock->price,
             'date' => $form['date'],
             'return' => $form['return'],
@@ -155,7 +165,6 @@ class StockController extends Controller
                 'rent_id' => $result->id
             ]);
         }
-
         return redirect()->back();
     }
     protected function toCheckOut($id)
@@ -224,7 +233,7 @@ class StockController extends Controller
             $result = Rent::where('id', $id)->update([
                 'status' => 'returned'
             ]);
-            $userId = Auth::user()->id;
+            $userId = $rent->user_id;
             if($result) {
                 Returns::create([
                     'user_id' => $userId,
@@ -241,7 +250,7 @@ class StockController extends Controller
             $result = Rent::where('id', $id)->update([
                 'status' => 'extended'
             ]);
-            $userId = Auth::user()->id;
+            $userId = $rent->user_id;
             if($result) {
                 Returns::create([
                     'user_id' => $userId,
