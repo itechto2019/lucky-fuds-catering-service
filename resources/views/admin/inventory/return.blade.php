@@ -45,6 +45,7 @@
                             <div class="action-button">
                                 <form action="{{ route('add_to_items', $rent->id) }}" method="POST">
                                     @csrf
+                                    <input type="hidden" value={{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }} name="method" />
                                     <button class="action-print">
                                         Add to Items
                                     </button>
@@ -53,6 +54,7 @@
                             <div class="action-button">
                                 <form action="{{ route('add_to_rents', $rent->id) }}" method="POST">
                                     @csrf
+                                    <input type="hidden" value={{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }} name="method" />
                                     <button class="action-print">
                                         To Rent
                                     </button>

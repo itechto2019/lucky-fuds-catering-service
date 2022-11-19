@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('item');
             $table->string('client');
+            $table->string('method');
             $table->integer('quantity');
             $table->decimal('amount', 8, 2);
             $table->date('date');

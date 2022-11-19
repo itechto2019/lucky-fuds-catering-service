@@ -293,7 +293,7 @@ class StockController extends Controller
         ]);
     }
 
-    protected function addToItems($id)
+    protected function addToItems(Request $request, $id)
     {
         $rent = Rent::where('id', $id)->with(['returns', 'extends'])->first();
         $rentAmount = $rent->amount;
@@ -312,6 +312,7 @@ class StockController extends Controller
             'image' => $stock->image,
             'item' => $stock->item,
             'client' => $rent->client,
+            'method' => $request->method,
             'quantity' => $rentQuantity,
             'amount' => $rentAmount,
             'date' => $rent->extends ? $rent->extends->date : $rent->date,
@@ -321,7 +322,7 @@ class StockController extends Controller
             'message' => "Item successfully added in the inventory"
         ]);
     }
-    protected function addToRents($id)
+    protected function addToRents(Request $request, $id)
     {
         $rent = Rent::where('id', $id)->with(['returns', 'extends'])->first();
         $rentAmount = $rent->amount;
@@ -342,6 +343,7 @@ class StockController extends Controller
             'image' => $stock->image,
             'item' => $stock->item,
             'client' => $rent->client,
+            'method' => $request->method,
             'quantity' => $rentQuantity,
             'amount' => $rentAmount,
             'date' => $rent->extends ? $rent->extends->date : $rent->date,
