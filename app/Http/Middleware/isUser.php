@@ -21,7 +21,8 @@ class isUser
             if(!Auth::user()->is_admin) {
                 return $next($request);
             }
+        }else {
+            return route('login');
         }
-        return route('login');
     }
 }
