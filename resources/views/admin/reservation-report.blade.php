@@ -55,6 +55,10 @@
                 <td>Email</td>
                 <td align="right">{{ $client->email }}</td>
             </tr>
+            <tr>
+                <td>Prefered Contact</td>
+                <td align="right">{{ $client->method }}</td>
+            </tr>
         </table>
     </div>
 </div>
