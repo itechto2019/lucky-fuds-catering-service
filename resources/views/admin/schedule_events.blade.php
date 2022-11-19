@@ -75,7 +75,7 @@
                 <div class="event-list-coming">
                     @foreach ($previousEvents as $prev)
                         <div class="event-coming">
-                            <p><b>{{ $prev->client }}</b></p>
+                            <p>Client: <b>{{ $prev->client }}</b></p>
                             <div>
                                 <small>{{ $prev->event }}</small>
                             </div>
@@ -96,7 +96,7 @@
                 <div class="event-list-coming">
                     @foreach ($upcomingEvents as $upcoming)
                         <div class="event-coming">
-                            <p><b>{{ $upcoming->client }}</b></p>
+                            <p>Client: <b>{{ $upcoming->client }}</b></p>
                             <div>
                                 <small>{{ $upcoming->event }}</small>
                             </div>

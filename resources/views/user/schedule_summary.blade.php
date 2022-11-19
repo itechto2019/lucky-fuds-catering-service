@@ -19,7 +19,14 @@
                     <tr>
                         <td>{{ $reserve->id }}</td>
                         <td>{{ $reserve->created_at->format('Y-m-d') }}</td>
-                        <td><b>Client: </b>{{ $reserve->client }} <br> <b>Contact: </b>{{ $reserve->method == 'email' ? $reserve->email : $reserve->contact}} <br> <b>Date address: </b> {{ $reserve->address }} <br> <b>Event: </b> {{ $reserve->event }} </td>
+                        <td>
+                            <b>Client: </b>{{ $reserve->client }}
+                            <br> <b>Contact: </b>{{ $reserve->contact}}
+                            <br> <b>Email: </b>{{ $reserve->email}}
+                            <br> <b>Prefered Contact: </b>{{ $reserve->method == 'email' ? $reserve->email : $reserve->contact}}
+                            <br> <b>Date address: </b> {{ $reserve->address }}
+                            <br> <b>Event: </b> {{ $reserve->event }}
+                        </td>
                     </tr>
                     @endforeach
                 </table>

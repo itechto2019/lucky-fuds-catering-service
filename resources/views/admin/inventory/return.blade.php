@@ -18,8 +18,9 @@
             <table>
                 <tr>
                     <th>#</th>
-                    <th>Client</th>
                     <th>Item</th>
+                    <th>Client</th>
+                    <th>Method</th>
                     <th>Quantity</th>
                     <th>Amount</th>
                     <th>Date for use</th>
@@ -30,8 +31,9 @@
                 @foreach ($rents as $rent)
                 <tr>
                     <td>{{ $rent->id }}</td>
-                    <td>{{ $rent->client }}</td>
                     <td>{{ $rent->returns ? $rent->returns->item : '' }}</td>
+                    <td>{{ $rent->client }}</td>
+                    <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
                     <td>{{ $rent->returns ? $rent->returns->quantity : '' }}</td>
                     <td>₱{{ $rent->amount }}</td>
                     <td>{{ $rent->date }}</td>

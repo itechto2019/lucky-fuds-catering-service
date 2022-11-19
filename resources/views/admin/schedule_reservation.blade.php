@@ -16,50 +16,59 @@
                     <th></th>
                 </tr>
                 @foreach ($reservations as $reservation)
-                    <tr>
-                        <td>{{ $reservation->id }}</td>
-                        <td>{{ $reservation->client }}</td>
-                        <td>
-                            {{ $reservation->contact }}
-                            <br>
-                            {{ $reservation->email }}
-                            <br>
-                            {{ $reservation->address }}
-                            <br>
-                            <b>Date: </b>{{ date('M d, Y', strtotime($reservation->date)) }}
-                        </td>
-                        <td>{{ $reservation->status }}</td>
-                        <td>
-                            @if($reservation->status == "pending")
-                                <div class="action-form">
-                                    <div class="action-button">
-                                        <form action="{{ route('to_approve', $reservation->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <button>Approve</button>
-                                        </form>
-                                    </div>
-                                    <div class="action-button">
-                                        <form action="{{ route('to_reject_reserve', $reservation->id) }}" method="POST">
-                                            @csrf
-                                            @method('put')
-                                            <button>Decline</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            @elseif($reservation->status == "approved")
-                                <p>You've approved a reservation</p>
-                            @elseif($reservation->status == "declined")
-                                <p>You've declined a reservation</p>
-                            @endif
-                        </td>
-                    </tr>
+                <tr>
+                    <td>{{ $reservation->id }}</td>
+                    <td>{{ $reservation->client }}</td>
+                    <td>
+                        <b>Package: </b>{{ $reservation->package->name }}
+                        <br>
+                        <b>Client: </b>{{ $reservation->client }}
+                        <br>
+                        <b>Contact: </b>{{ $reservation->contact }}
+                        <br>
+                        <b>Email: </b>{{ $reservation->email }}
+                        <br>
+                        <b>Prefered contact: </b>{{ $reservation->method }}
+                        <br>
+                        <b>Address: </b>{{ $reservation->address }}
+                        <br>
+                        <b>Event: </b>{{ $reservation->event }}
+                        <br>
+                        <b>No. of guest/s: </b>{{ $reservation->guest }}
+                        <br>
+                    </td>
+                    <td>{{ $reservation->status }}</td>
+                    <td>
+                        @if($reservation->status == "pending")
+                        <div class="action-form">
+                            <div class="action-button">
+                                <form action="{{ route('to_approve', $reservation->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button>Approve</button>
+                                </form>
+                            </div>
+                            <div class="action-button">
+                                <form action="{{ route('to_reject_reserve', $reservation->id) }}" method="POST">
+                                    @csrf
+                                    @method('put')
+                                    <button>Decline</button>
+                                </form>
+                            </div>
+                        </div>
+                        @elseif($reservation->status == "approved")
+                        <p>You've approved a reservation</p>
+                        @elseif($reservation->status == "declined")
+                        <p>You've declined a reservation</p>
+                        @endif
+                    </td>
+                </tr>
                 @endforeach
             </table>
             @else
-                <div style="padding: 10px">
-                    <h3><i>No such reservations are available!</i></h3>
-                </div>
+            <div style="padding: 10px">
+                <h3><i>No such reservations are available!</i></h3>
+            </div>
             @endif
         </div>
     </div>
@@ -71,13 +80,23 @@
                 <br>
                 <hr>
                 <div class="event-list">
-                    @foreach ($approves as $approve)
-                        <div class="event-approved">
-                            <p>{{ $approve->event }}</p>
-                            <small>({{ $approve->date }})</small>
-                        </div>
-                        <hr>
-                    @endforeach
+                    @if ($approves->isEmpty())
+                        @foreach ($approves as $approve)
+                            <div class="event-approved">
+                                <p><b>Client: </b>{{$approve->client}}</p>
+                                <p><b>Contact: </b> {{ $approve->contact }}</p>
+                                <p><b>Email: </b> {{ $approve->email }}</p>
+                                <p><b>Prefered: </b> {{ $approve->method }}</p>
+                                <p><b>Event: </b> {{ $approve->event }}</p>
+                                <p><b>Date: </b><small>({{ $approve->date }})</small></p>
+                            </div>
+                            <hr>
+                        @endforeach
+                    @else
+                    <div class="event-approved">
+                        <b>No approved reservation</b>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -88,17 +107,22 @@
                 <hr>
                 <div class="event-list">
                     @if (!$declines->isEmpty())
-                        @foreach ($declines as $decline)
-                            <div class="event-approved">
-                                <p style="color: rgb(250, 83, 83)">{{ $decline->event }}</p>
-                                <small>({{ $decline->date }})</small>
-                            </div>
-                            <hr>
-                        @endforeach
+                    @foreach ($declines as $decline)
+                    <div class="event-approved">
+                        <small>({{ $decline->date }})</small>
+                        <p><b>Client: </b>{{$decline->client}}</p>
+                        <p><b>Contact: </b> {{ $decline->contact }}</p>
+                        <p><b>Email: </b> {{ $decline->email }}</p>
+                        <p><b>Prefered: </b> {{ $decline->method }}</p>
+                        <p style="color: rgb(250, 83, 83)"><b>Event: </b> {{ $decline->event }}</p>
+                        <p><b>Date: </b><small>({{ $decline->date }})</small></p>
+                    </div>
+                    <hr>
+                    @endforeach
                     @else
-                        <div class="event-approved">
-                            <b>No declined reservation</b>
-                        </div>
+                    <div class="event-approved">
+                        <b>No declined reservation</b>
+                    </div>
                     @endif
                 </div>
             </div>

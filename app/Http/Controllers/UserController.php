@@ -91,7 +91,6 @@ class UserController extends Controller
         $packages = Package::get();
         return view('user.schedule_reservation')->with(compact(['packages']));
     }
-
     public function ForRents()
     {
         $supplies = Stock::with(['for_rents' => function ($q) {
@@ -114,7 +113,7 @@ class UserController extends Controller
     {
         $id = $request->user()->id;
         $rents = Rent::where('user_id',$id)->get();
-        $returns = Rent::with('returns')->get();
+        $returns = Rent::where('user_id', $id)->with('returns')->get();
         return view('user.inventory.summary')->with(compact(['rents', 'returns']));
     }
     public function ReservationSummary() {

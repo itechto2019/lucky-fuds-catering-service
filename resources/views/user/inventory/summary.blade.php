@@ -31,6 +31,8 @@
                             <br>
                             <b>Client: </b>{{ $rent->client }}
                             <br>
+                            <b>Method: </b>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}
+                            <br>
                             <b>Amount: </b>
                             ₱{{ $rent->amount }}
                             <br>
@@ -66,6 +68,8 @@
                             {{ $return->items }}
                             <br>
                             <b>Client: </b>{{ $return->client }}
+                            <br>
+                            <b>Method: </b>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}
                             <br>
                             <b>Amount: </b>
                             ₱{{ $return->amount }}

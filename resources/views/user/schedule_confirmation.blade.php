@@ -18,7 +18,24 @@
                     <tr>
                         <td>{{ $reservation->id }}</td>
                         <td>{{ $reservation->date  . ' | ' . $reservation->time}}</td>
-                        <td>{{ $reservation->package->name }}</td>
+                        <td>
+                            <b>Package: </b>{{ $reservation->package->name }}
+                            <br>
+                            <b>Client: </b>{{ $reservation->client }}
+                            <br>
+                            <b>Contact: </b>{{ $reservation->contact }}
+                            <br>
+                            <b>Email: </b>{{ $reservation->email }}
+                            <br>
+                            <b>Prefered contact: </b>{{ $reservation->method }}
+                            <br>
+                            <b>Address: </b>{{ $reservation->address }}
+                            <br>
+                            <b>Event: </b>{{ $reservation->event }}
+                            <br>
+                            <b>No. of guest/s: </b>{{ $reservation->guest }}
+                            <br>
+                        </td>
                         <td>{{ $reservation->status }}</td>
                     </tr>
                 @endforeach

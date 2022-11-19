@@ -82,7 +82,7 @@
                                 <a href="{{ route('inventory_approves') }}">Approves</a>                        
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_extends' ? 'active' : '' }}">
-                                <a href="{{ route('inventory_extends') }}">Extends</a>
+                                <a href="{{ route('inventory_extends') }}">Extended</a>
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_return' ? 'active' : '' }}">
                                 <a href="{{ route('inventory_return') }}">Return</a>

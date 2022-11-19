@@ -26,7 +26,7 @@
                     <tr>
                         <td>{{ $report->id }}</td>
                         <td><img src="{{ asset("stocks") }}/{{ $report->image }}" width="50" alt=""></td>
-                        <td>{{ $report->item }}</td>
+                        <td>{{ $report->items }}</td>
                         <td>{{ $report->client }}</td>
                         <td>{{ $report->quantity }}</td>
                         <td>₱{{ $report->amount }}</td>

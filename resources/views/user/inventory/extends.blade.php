@@ -12,6 +12,7 @@
                         <th>#</th>
                         <th>Item</th>
                         <th>Client</th>
+                        <th>Method</th>
                         <th>Amount</th>
                         <th>Date for use</th>
                         <th>Extended use</th>
@@ -25,6 +26,7 @@
                             <td>{{ $rent->id }}</td>
                             <td>{{ $rent->items }}</td>
                             <td>{{ $rent->client }}</td>
+                            <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
                             <td>₱{{ $rent->amount }}</td>
                             <td><small>{{ $rent->return }}</small></td>
                             <td><small>{{ $rent->extends ? $rent->extends->date : $rent->date }}</small></td>

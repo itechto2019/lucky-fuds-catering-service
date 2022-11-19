@@ -168,7 +168,8 @@ class AdminController extends Controller
     
     public function Reports()
     {
-        $reports = Report::get();
+        $reports = Rent::with('report')->get();
+        dd($reports);
         return view('admin.inventory.reports')->with(compact(['reports']));
     }
 }
