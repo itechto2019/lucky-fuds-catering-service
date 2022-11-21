@@ -11,6 +11,8 @@ use App\Models\Returns;
 use App\Models\Reserve;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\UserRent;
+use App\Models\UserReserve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -35,13 +37,13 @@ class UserController extends Controller
         for ($i = 1; $i <= $noOfDays; $i++) {
             $days[] = Carbon::now()->days($i)->format('j');
         }
-        $id = Auth::id();
+        $id = Auth::user()->info->id;
 
-        $approved = count(Reserve::where('user_id', $id)->where('status', 'approved')->get());
-        $declined = count(Reserve::where('user_id', $id)->where('status', 'declined')->get());
-        $pending = count(Reserve::where('user_id', $id)->where('status', 'pending')->get());
-        $request = count(Reserve::where('user_id', $id)->get());
-        $reserves = Reserve::where('user_id', $id)->where('status', 'approved')->get();
+        $approved = count(UserReserve::where('user_info_id', $id)->where('status', 'approved')->get());
+        $declined = count(UserReserve::where('user_info_id', $id)->where('status', 'declined')->get());
+        $pending = count(UserReserve::where('user_info_id', $id)->where('status', 'pending')->get());
+        $request = count(UserReserve::where('user_info_id', $id)->get());
+        $reserves = UserReserve::where('user_info_id', $id)->where('status', 'approved')->get();
         $user = Auth::user();
         return view('user.dashboard')->with(compact([
             'noOfDays',
@@ -105,13 +107,13 @@ class UserController extends Controller
     }
     public function Rented()
     {
-        $id = Auth::user()->id;
-        $rents = Rent::where('user_id', $id)->with('extends')->get();
+        $id = Auth::user()->info->id;
+        $rents = UserRent::with('info')->with('stock')->where('user_info_id', $id)->get();
         return view('user.inventory.rents')->with(compact(['rents']));
     }
     public function Extends() {
         $id = Auth::id();
-        $rents = Rent::where('user_id', $id)->where('status', 'extend')->get();
+        $rents = UserRent::with('info')->with('stock')->where('user_id', $id)->where('status', 'extend')->get();
         return view('user.inventory.extends')->with(compact(['rents']));
     }
     public function Summary(Request $request)

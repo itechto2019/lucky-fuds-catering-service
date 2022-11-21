@@ -109,8 +109,9 @@
                                         </div>
                                         @else
                                         <div class="input-group">
-                                            <span style="color:#FF1E1E">Please update your profile first</span>
+                                            <span style="color:#FF1E1E">Please complete your profile first</span>
                                         </div>
+                                        <a href="{{route('user_account_profile')}}" style="text-decoration: underlined; color: #1A1A1A; padding: 10px">Check</a>
                                         <div class="input-group">
                                             <button class="cancel" type="button"
                                                 onclick="cancelRent({{ $supply->id }})">Close</button>

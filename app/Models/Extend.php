@@ -10,7 +10,7 @@ class Extend extends Model
     use HasFactory;
     protected $table = "extends";
     protected $fillable = [
-        'rent_id',
+        'user_rent_id',
         'date',
         'return'
     ];

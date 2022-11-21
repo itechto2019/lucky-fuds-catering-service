@@ -3,18 +3,12 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Package;
 use App\Models\Stock;
-use App\Models\Rent;
-use App\Models\Returns;
-use App\Models\Extend;
 use App\Models\ForRent;
-use App\Models\Report;
+use App\Models\Package;
 use App\Models\Reserve;
-use App\Models\Reservation;
-use App\Models\User;
-use App\Models\UserInfo;
 use App\Models\UserRent;
+use App\Models\UserReserve;
 
 class AdminController extends Controller
 {
@@ -40,23 +34,31 @@ class AdminController extends Controller
         // for($i = 1; $i <= $noOfWeeks; $i++) {
         //     $weeks[] = Carbon::now()->days($i)->format('D');
         // }
-        $approved = count(Reserve::where('status', 'approved')->get());
-        $declined = count(Reserve::where('status', 'declined')->get());
-        $pending = count(Reserve::where('status', 'pending')->get());
-        $request = count(Reserve::get());
+        $approved = count(UserReserve::with(['info' => function ($q) {
+            $q->where('status', 'approved');
+        }])->get());
+        $declined = count(UserReserve::with(['info' => function ($q) {
+            $q->where('status', 'declined');
+        }])->get());
+        $pending = count(UserReserve::with(['info' => function ($q) {
+            $q->where('status', 'pending');
+        }])->get());
+        $request = count(UserReserve::get());
 
 
-        $confirmedRent = count(Rent::where('status', 'approved')->get());
-        $pendingRent = count(Rent::where('status', 'pending')->get());
-        $declinedRent = count(Rent::where('status', 'declined')->get());
-        $totalRequest = count(Rent::where('status', 'approved')->orWhere('status', 'pending')->orWhere('status', 'declined')->get());
+        $confirmedRent = count(UserRent::where('status', 'approved')->get());
+        $pendingRent = count(UserRent::where('status', 'pending')->get());
+        $declinedRent = count(UserRent::where('status', 'declined')->get());
+        $totalRequest = count(UserRent::where('status', 'approved')->orWhere('status', 'pending')->orWhere('status', 'declined')->get());
 
-        $confirmedExtend = count(Rent::where('status', 'extended')->get());
-        $pendingExtend = count(Rent::where('status', 'extending')->get());
-        $declinedExtend = count(Rent::where('status', 'declined')->whereHas('extends')->get());
-        $totalRequestExtend = count(Rent::where('status', 'extended')->orWhere('status', 'extending')->orWhere('status', 'declined')->whereHas('extends')->get());
+        $confirmedExtend = count(UserRent::where('status', 'extended')->get());
+        $pendingExtend = count(UserRent::where('status', 'extending')->get());
+        $declinedExtend = count(UserRent::where('status', 'declined')->whereHas('extends')->get());
+        $totalRequestExtend = count(UserRent::where('status', 'extended')->orWhere('status', 'extending')->orWhere('status', 'declined')->whereHas('extends')->get());
 
-        $reserves = Reserve::where('status', 'approved')->get();
+        $reserves = UserReserve::with(['info' => function ($q) {
+            $q->where('status', 'approved');
+        }])->get();
 
         return view('admin.dashboard')->with(compact([
             'noOfDays',
@@ -125,10 +127,9 @@ class AdminController extends Controller
     // stocks
     public function InventoryStocks()
     {
-        // $packages = Package::get();
+        $packages = Package::get();
         $supplies = Stock::get();
-        // return view('admin.inventory.stocks')->with(compact(['packages', 'supplies']));
-        return view('admin.inventory.stocks')->with(compact([ 'supplies']));
+        return view('admin.inventory.stocks')->with(compact(['packages', 'supplies']));
     }
     // for rents
     public function ForRents()
@@ -141,38 +142,38 @@ class AdminController extends Controller
     {
         // $rents = UserRent::where('status', 'pending')->get();
         // $rents = UserRent::with('info')->where('status', 'pending')->get();
-        $rents = UserRent::with('info')->get();
+        $rents = UserRent::with('info')->with('stock')->where('status', 'pending')->get();
         return view('admin.inventory.rents')->with(compact(['rents']));
     }
     // for extend request
     public function ExtendRequest()
     {
-        $rents = Rent::where('status', 'extending')->with('extends')->get();
+        $rents = UserRent::with(['info', 'stock', 'extends'])->where('status', 'extending')->get();
         return view('admin.inventory.extend_request')->with(compact(['rents']));
     }
     // approval
     public function Approves()
     {
-        $rents = Rent::where('status', 'approved')->orWhere('status', 'extend')->get();
+        $rents = UserRent::with(['info', 'stock'])->where('status', 'approved')->orWhere('status', 'extend')->get();
         return view('admin.inventory.approves')->with(compact(['rents']));
     }
     // extended
     public function Extends()
     {
-        $rents = Rent::where('status', 'extended')->with(['extends'])->get();
-        // $rents = Rent::where('status', 'extend')->with('extends')->get();
+        $rents = UserRent::with('info')->with('stock')->where('status', 'extend')->get();
         return view('admin.inventory.extends')->with(compact(['rents']));
     }
     // retured
     public function Returned()
     {
-        $rents = Rent::where('status', 'returned')->orWhere('status', 'extended')->orWhere('is_returned', true)->with('returns')->get();
+        // $rents = Rent::where('status', 'returned')->orWhere('status', 'extended')->orWhere('is_returned', true)->with('returns')->get();
+        $rents = UserRent::with(['info', 'extends'])->where('status', 'returned')->get();
         return view('admin.inventory.return')->with(compact(['rents']));
     }
     
     public function Reports()
     {
-        $reports = Report::get();
-        return view('admin.inventory.reports')->with(compact(['reports']));
+        $rents = UserRent::get();
+        return view('admin.inventory.reports')->with(compact(['rents']));
     }
 }

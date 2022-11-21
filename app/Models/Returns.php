@@ -10,11 +10,7 @@ class Returns extends Model
     use HasFactory;
     protected $table = "returns";
     protected $fillable = [
-        'user_id',
-        'rent_id',
-        'item',
-        'quantity',
-        'amount',
+        'user_rent_id',
         'date',
         'return',
     ];

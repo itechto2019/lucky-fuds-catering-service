@@ -11,6 +11,7 @@
                 <table>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Item</th>
                         <th>Client</th>
                         <th>Method</th>
@@ -23,8 +24,9 @@
                     @foreach ($rents as $rent)
                     <tr>
                         <td>{{ $rent->id }}</td>
-                        <td>{{ $rent->items }}</td>
-                        <td>{{ $rent->client }}</td>
+                        <td><img src="{{ asset('stocks/' . $rent->stock->image) }}" alt=""></td>
+                        <td>{{ $rent->stock->item }}</td>
+                        <td>{{ $rent->info->name }}</td>
                         <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
                         <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                         <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
@@ -51,7 +53,9 @@
                                     <div class="form-data">
                                         <form action="{{ route('user_extends', $rent->id) }}" method="POST">
                                             <h3>Extend Rental</h3>
-                                            <div style="padding: 10px">Client: <b>{{ $rent->client }}</b></div>
+                                            <div style="padding: 10px">Contact: <b>{{ $rent->info && $rent->info->method == "email" ? $rent->info->email :  ($rent->info && $rent->info->method == "contact" ? $rent->info->contact : "Not set")}}</b></div>
+                                            <div style="padding: 10px">Address: <b>{{ $rent->info->address }}</b></div>
+                                            <div style="padding: 10px">Client: <b>{{ $rent->info->name }}</b></div>
                                             @csrf
                                             <div class="input-group">
                                                 <label for="">Date to use(?): </label>

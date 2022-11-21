@@ -242,7 +242,7 @@
         <div class="input-group" style="width:fit-content" onclick="openAddPackage()">
             <button type="button">Add Package</button>
         </div>
-        {{-- <div class="packages-content">
+        <div class="packages-content">
             @if (!$packages->isEmpty())
             <div class="package-h3">
                 <h3>Packages</h3>
@@ -331,7 +331,7 @@
                 <h3>No packages are available</h3>
             </div>
             @endif
-        </div> --}}
+        </div>
 
     </div>
 </div>

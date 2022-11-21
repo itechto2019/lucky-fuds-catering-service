@@ -1,13 +1,13 @@
 
 <head>
-    <title>{{ $report->client }} | Receipt {{ today()->format('Y-m-d') }}</title>
+    <title>{{ $rent->info->name }} | Receipt {{ today()->format('Y-m-d') }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <style>
     body {
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         font-size: 17px;
-        width: 400px;
+        width: 500px;
     }
     .receipt {
         padding: 10px;
@@ -25,42 +25,53 @@
     }
 </style>
 <div class="receipt">
-    <div class="receipt-container" style="text-align: center; border: 1px solid #D0D0D0;background-color: #F6F6F6;">
+    <div class="receipt-container" style="text-align: center; border: 1px solid #D0D0D0;background-color: #F6F6F6; padding: 10px">
         <img src="{{ public_path('assets') . '/logo.jpg' }}" width="60" alt="">
-        <h3>Lucky Fuds | Catering Services - Official Receipt</h3>
+        <h3>Lucky Fuds | Catering Services <br>Official Receipt</h3>
     </div>
     <div class="receipt-box">
         <table >
-
+            <tr>
+                <td>Receipt#</td>
+                <td align="right">{{ $rent->id }}</td>
+            </tr>
             <tr>
                 <td>Item</td>
-                <td align="right">{{ $report->item }}</td>
+                <td align="right">{{ $rent->stock->item }}</td>
             </tr>
             <tr>
                 <td>Client</td>
-                <td align="right">{{ $report->client }}</td>
+                <td align="right">{{ $rent->info->name }}</td>
             </tr>
             <tr>
                 <td>Method</td>
-                <td align="right">{{ $report->method }}</td>
+                <td align="right">{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td align="right">{{ $rent->info->method == "contact" ? $rent->info->contact : ($rent->info->method == "email" ? $rent->info->email : "None")  }}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td align="right">{{ $rent->info->address }}</td>
             </tr>
             <tr>
                 <td>Quantity</td>
-                <td align="right">{{ $report->quantity }}</td>
+                <td align="right">{{ $rent->amount / $rent->stock->price }}</td>
             </tr>
 
             <tr>
                 <td>Amount</td>
-                <td align="right">{{ $report->amount }}</td>
+                <td align="right">{{ $rent->amount }}</td>
             </tr>
 
             <tr>
                 <td>Date for use</td>
-                <td align="right">{{ $report->date }}</td>
+                <td align="right">{{ $rent->extends ? $rent->extends->date : $rent->date  }}</td>
             </tr>
             <tr>
                 <td>Date for return</td>
-                <td align="right">{{ $report->return }}</td>
+                <td align="right">{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
             </tr>
         </table>
     </div>

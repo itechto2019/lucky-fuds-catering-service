@@ -6,19 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::create('user_rents', function (Blueprint $table) {
+        Schema::create('for_reserves', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_info_id')->constrained('user_infos')->cascadeOnDelete();
-            $table->foreignId('stock_id')->constrained('stocks')->cascadeOnDelete();
-            $table->foreignId('for_rent_id')->constrained('for_rents')->cascadeOnDelete();
-            $table->decimal('amount', 8, 2);
-            $table->date('date');
-            $table->date('return');
+            $table->foreignId('user_reserve_id')->constrained('user_reserves')->cascadeOnDelete();
             $table->string('status')->nullable()->default('pending');
-            $table->boolean('is_returned')->nullable()->default(false);
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_rents');
+        Schema::dropIfExists('for_reserves');
     }
 };

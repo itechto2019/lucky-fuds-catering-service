@@ -10,28 +10,24 @@
                 <table>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Item</th>
                         <th>Client</th>
                         <th>Method</th>
-                        <th>Item</th>
                         <th>Amount</th>
-                        <th>Date for use</th>
                         <th>Extended use</th>
-                        <th>Date for return</th>
                         <th>Extended return</th>
                     </tr>
                     @foreach ($rents as $rent)
                         <tr>
                             <td>{{ $rent->id }}</td>
-                            <td>{{ $rent->items }}</td>
-                            <td>{{ $rent->client }}</td>
+                            <td><img src="{{ asset('stocks/'.$rent->stock->image) }}" alt=""></td>
+                            <td>{{ $rent->stock->item }}</td>
+                            <td>{{ $rent->info->name }}</td>
                             <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
-                            <td>{{ $rent->returns->item }}</td>
                             <td>₱{{ $rent->amount }}</td>
-                            <td><small>{{ $rent->return }}</small></td>
-                            <td><small>{{ $rent->extends ? $rent->extends->date : $rent->date }}</small></td>
-                            <td><small>{{ $rent->return }}</small></td>
-                            <td><small>{{ $rent->extends ? $rent->extends->return : $rent->return }}</small></td>
+                            <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
+                            <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
                         </tr>
                     @endforeach
                 </table>
