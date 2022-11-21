@@ -25,5 +25,8 @@ class UserInfo extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+    // public function rent() {
+    //     return $this->hasMany(UserRent::class, "user_id");
+    // }
 
 }

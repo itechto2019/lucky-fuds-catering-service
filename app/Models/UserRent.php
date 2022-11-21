@@ -19,8 +19,10 @@ class UserRent extends Model
         'status',
         'is_returned'
     ];
-    public function user_info() {
-        return $this->belongsTo(UserInfo::class);
+    public function info() {
+        return $this->belongsTo(UserInfo::class, "user_id");
     }
-
+    public function for_rent() {
+        return $this->belongsTo(ForRent::class);
+    }
 }

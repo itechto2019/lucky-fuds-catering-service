@@ -141,8 +141,7 @@ class AdminController extends Controller
     {
         // $rents = UserRent::where('status', 'pending')->get();
         // $rents = UserRent::with('info')->where('status', 'pending')->get();
-        $rents = UserRent::with('user_info')->where('status', 'pending')->get();
-        dd($rents);
+        $rents = UserRent::with('info')->get();
         return view('admin.inventory.rents')->with(compact(['rents']));
     }
     // for extend request
