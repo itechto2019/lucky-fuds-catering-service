@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('returns', function (Blueprint $table) {
+        Schema::create('for_rents', function (Blueprint $table) {
             $table->id();
-            $table->string('item');
+            $table->foreignId('stock_id')->constrained('stocks')->cascadeOnDelete();
             $table->integer('quantity');
-            $table->decimal('amount', 8, 2);
-            $table->date('date');
-            $table->date('return');
+            $table->boolean('is_rented')->nullable()->default(true);
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('returns');
+        Schema::dropIfExists('for_rents');
     }
 };

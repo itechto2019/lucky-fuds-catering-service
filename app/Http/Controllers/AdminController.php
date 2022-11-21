@@ -8,10 +8,13 @@ use App\Models\Stock;
 use App\Models\Rent;
 use App\Models\Returns;
 use App\Models\Extend;
+use App\Models\ForRent;
 use App\Models\Report;
 use App\Models\Reserve;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\UserInfo;
+use App\Models\UserRent;
 
 class AdminController extends Controller
 {
@@ -122,22 +125,24 @@ class AdminController extends Controller
     // stocks
     public function InventoryStocks()
     {
-        $packages = Package::get();
+        // $packages = Package::get();
         $supplies = Stock::get();
-        return view('admin.inventory.stocks')->with(compact(['packages', 'supplies']));
+        // return view('admin.inventory.stocks')->with(compact(['packages', 'supplies']));
+        return view('admin.inventory.stocks')->with(compact([ 'supplies']));
     }
     // for rents
     public function ForRents()
     {
-        $supplies = Stock::with(['for_rents' => function ($q) {
-            return $q->where('is_rented', true);
-        }])->get();
+        $supplies = ForRent::with('stock')->get();
         return view('admin.inventory.for_rents')->with(compact(['supplies']));
     }
     // for rented
     public function ForRented()
     {
-        $rents = Rent::where('status', 'pending')->get();
+        // $rents = UserRent::where('status', 'pending')->get();
+        // $rents = UserRent::with('info')->where('status', 'pending')->get();
+        $rents = UserRent::with('user_info')->where('status', 'pending')->get();
+        dd($rents);
         return view('admin.inventory.rents')->with(compact(['rents']));
     }
     // for extend request

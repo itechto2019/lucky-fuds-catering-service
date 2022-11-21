@@ -13,8 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('extends', function (Blueprint $table) {
-            $table->foreignId('rent_id')->constrained('rents');
+        Schema::create('delivers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_rent_id')->constrained('user_rents')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('extends', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('delivers');
     }
 };

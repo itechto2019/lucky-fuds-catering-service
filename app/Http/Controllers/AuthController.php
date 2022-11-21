@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use TypeError;
 
 class AuthController extends Controller
@@ -44,55 +45,26 @@ class AuthController extends Controller
             ]);
         }
 
-
-        // if(Auth::attempt($credential, $remember)) {
-        //     if(!$terms && !$policy) {
-        //         return redirect()->back()->withErrors([
-        //             'message' => [
-        //                 'terms' => 'You must agree to the Terms and Conditions',
-        //                 'policy' => 'You must agree to the Data Policy Policy',
-        //             ],
-        //         ]);
-        //     }
-        // }else {
-        //     return redirect()->back()->withErrors([
-        //         'message' => [
-        //             'credentials' => 'Incorrect Credentials',
-        //             'terms' => 'You must agree to the Terms and Conditions',
-        //             'policy' => 'You must agree to the Data Policy Policy',
-        //         ],
-        //     ]);
-        // }
-
-
     }
     public function signup(Request $request)
     {
         try {
-            $form = $request->validate([
-                'email' => 'required',
-                'name' => 'required|min:8',
-                'password' => 'required|confirmed|min:8'
+            $validator = Validator::make($request->only('username', 'password','password_confirmation'), [
+                'username' => 'required',
+                'password' => 'required|confirmed|min:8',
             ]);
-            $userExist = User::where('is_admin', '1')->get();
-            if ($userExist->isEmpty()) {
-                User::create([
-                    'email' => $form['email'],
-                    'name' => $form['name'],
-                    'password' => password_hash($form['password'], PASSWORD_BCRYPT),
-                    'is_admin' => '1'
-                ]);
-            } else {
-
-                User::create([
-                    'email' => $form['email'],
-                    'name' => $form['name'],
-                    'password' => password_hash($form['password'], PASSWORD_BCRYPT),
-                ]);
-            }
-            return redirect('/login');
+            $form = $validator->validated();
+            User::create([
+                'username' => $form['username'],
+                'password' => password_hash($form['password'], PASSWORD_BCRYPT),
+            ]);
+            return redirect('/login')->withErrors([
+                'message' => 'Registration complete'
+            ]);
         } catch (TypeError $e) {
-            dd($e);
+            return back()->withErrors([
+                'message' => 'Registration failed'
+            ]);;
         }
     }
     public function logout()

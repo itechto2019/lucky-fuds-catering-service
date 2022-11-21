@@ -27,7 +27,7 @@
                 @foreach ($rents as $rent)
                 <tr>
                     <td>{{ $rent->id }}</td>
-                    <td>{{$rent->items}}</td>
+                    <td>{{ $rent->items}}</td>
                     <td>{{ $rent->client }}</td>
                     <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
                     <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>

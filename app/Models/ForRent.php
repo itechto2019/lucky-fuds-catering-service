@@ -15,4 +15,7 @@ class ForRent extends Model
         'is_rented',
         'status'
     ];
+    public function stock() {
+        return $this->belongsTo(Stock::class);
+    }
 }

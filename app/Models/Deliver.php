@@ -10,6 +10,6 @@ class Deliver extends Model
     use HasFactory;
     protected $table = "delivers";
     protected $fillable = [
-        'rent_id'
+        'user_rent_id'
     ];
 }

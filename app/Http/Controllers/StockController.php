@@ -10,6 +10,7 @@ use App\Models\Rent;
 use App\Models\Returns;
 use App\Models\Stock;
 use App\Models\Report;
+use App\Models\UserRent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -46,7 +47,6 @@ class StockController extends Controller
                 'price' => $form['price'],
             ]);
         }
-
         return redirect()->back()->withErrors([
             'message' => "New item created"
         ]);
@@ -137,27 +137,24 @@ class StockController extends Controller
     }
     protected function userRent(Request $request, $rentId, $stockId)
     {
+        // user_id, stock_id, for_rent_id
+        $user_id = Auth::id();
+        
         $stock = Stock::where('id', $stockId)->get()->first();
-        $user = Auth::user();
         $validator = Validator::make($request->only(
-            'client',
-            'items',
             'quantity',
             'date',
             'return'
         ),[
-            'client' => 'required|min:3',
-            'items' => 'required',
             'quantity' => 'required|min:1',
             'date' => 'required',
             'return' => 'required'
         ]);
         $form = $validator->validated();
-        $result = Rent::create([
-            'user_id' => $user->id,
+        $result = UserRent::create([
+            'user_id' => $user_id,
+            'stock_id' => $stockId,
             'for_rent_id' => $rentId,
-            'client' => Auth::user()->name,
-            'items' => $form['items'],
             'amount' => $form['quantity'] * $stock->price,
             'date' => $form['date'],
             'return' => $form['return'],
@@ -166,12 +163,12 @@ class StockController extends Controller
             $method = $request->method;
             if($method == "deliver") {
                 Deliver::create([
-                    'rent_id' => $result->id
+                    'user_rent_id' => $result->id
                 ]);
             }
             if($method == "pickup") {
                 Pickup::create([
-                    'rent_id' => $result->id
+                    'user_rent_id' => $result->id
                 ]);
             }
             return redirect()->back()->withErrors([

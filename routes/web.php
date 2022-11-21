@@ -106,6 +106,9 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     Route::get('/inventory/extend', [UserController::class, 'Extends'])->name('user_inventory_extends');
     Route::get('/inventory/summary', [UserController::class, 'Summary'])->name('user_inventory_summary');
 
+    // Account
+    Route::get('/account/profile', [UserController::class, 'AccountProfile'])->name('user_account_profile');
+    Route::patch('/account/profile/update', [UserController::class, 'UpdateProfile'])->name('user_profile_update');
 
     
 
