@@ -138,7 +138,7 @@ class StockController extends Controller
     protected function userRent(Request $request, $rentId, $stockId)
     {
         // user_id, stock_id, for_rent_id
-        $user_id = Auth::id();
+        $user = Auth::user();
         
         $stock = Stock::where('id', $stockId)->get()->first();
         $validator = Validator::make($request->only(
@@ -152,7 +152,7 @@ class StockController extends Controller
         ]);
         $form = $validator->validated();
         $result = UserRent::create([
-            'user_id' => $user_id,
+            'user_id' => $user->info->id,
             'stock_id' => $stockId,
             'for_rent_id' => $rentId,
             'amount' => $form['quantity'] * $stock->price,
