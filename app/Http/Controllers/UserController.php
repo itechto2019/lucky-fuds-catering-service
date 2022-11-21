@@ -37,13 +37,29 @@ class UserController extends Controller
         for ($i = 1; $i <= $noOfDays; $i++) {
             $days[] = Carbon::now()->days($i)->format('j');
         }
-        $id = Auth::user()->info->id;
+        $id = Auth::user()->info ? Auth::user()->info->id : null;
 
-        $approved = count(UserReserve::where('user_info_id', $id)->where('status', 'approved')->get());
-        $declined = count(UserReserve::where('user_info_id', $id)->where('status', 'declined')->get());
-        $pending = count(UserReserve::where('user_info_id', $id)->where('status', 'pending')->get());
-        $request = count(UserReserve::where('user_info_id', $id)->get());
-        $reserves = UserReserve::where('user_info_id', $id)->where('status', 'approved')->get();
+        $approved = count(UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->where('user_info_id', $id)->get());
+
+        $declined = count(UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'declined');
+        }])->where('user_info_id', $id)->get());
+
+        $pending = count(UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'pending');
+        }])->where('user_info_id', $id)->get());
+
+        $request = count(UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->where('user_info_id', $id)->get());
+
+        $reserves = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->where('user_info_id', $id)->get();
+
+
         $user = Auth::user();
         return view('user.dashboard')->with(compact([
             'noOfDays',
@@ -59,8 +75,8 @@ class UserController extends Controller
         ]));
     }
     public function ConfirmationRequest() {
-        $id = Auth::id();
-        $reservations = Reserve::where('user_id', $id)->with('package')->get();
+        $id = Auth::user()->info ? Auth::user()->info->id : null;
+        $reservations = UserReserve::with('package')->where('user_id', $id)->get();
         return view('user.schedule_confirmation')->with(compact([
             'reservations',
         ]));
@@ -76,7 +92,7 @@ class UserController extends Controller
         $startOfCalendar = $date->copy()->firstOfMonth()->startOfWeek(Carbon::SUNDAY);
         $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY);
 
-        $id = Auth::id();
+        $id = Auth::user()->info ? Auth::user()->info->id : null;
         $previousEvents = Reserve::where('user_id', $id)->whereDate('date', '<', today()->format('Y-m-d'))->where('status', 'approved')->get();
         $upcomingEvents = Reserve::where('user_id', $id)->whereDate('date', '>=', today()->format('Y-m-d'))->where('status', 'approved')->get();
         $events = Reserve::where('user_id', $id)->where('status', 'approved')->get();
@@ -98,34 +114,37 @@ class UserController extends Controller
     }
     public function ForRents()
     {
-        // $supplies = Stock::with(['for_rent' => function ($q) {
-        //     return $q->where('is_rented', true);
-        // }])->get();
         $supplies = ForRent::with('stock')->get();
-        // dd($supplies);
         return view('user.inventory.for_rents')->with(compact(['supplies']));
     }
     public function Rented()
     {
-        $id = Auth::user()->info->id;
-        $rents = UserRent::with('info')->with('stock')->where('user_info_id', $id)->get();
+        $id = Auth::user()->info ? Auth::user()->info->id : null;
+
+        $rents = UserRent::with(['info', 'stock'])->where('user_info_id', $id)->get();
+
         return view('user.inventory.rents')->with(compact(['rents']));
     }
     public function Extends() {
-        $id = Auth::id();
-        $rents = UserRent::with('info')->with('stock')->where('user_id', $id)->where('status', 'extend')->get();
+        $id = Auth::user()->info ? Auth::user()->info->id : null;
+
+        $rents = UserRent::with(['info','stock', 'extends'])->where('user_info_id', $id)->where('status', 'extended')->get();
+
         return view('user.inventory.extends')->with(compact(['rents']));
     }
     public function Summary(Request $request)
     {
-        $id = $request->user()->id;
-        $rents = Rent::where('user_id',$id)->get();
-        $returns = Rent::where('user_id', $id)->with('returns')->get();
+        $id = Auth::user()->info ? Auth::user()->info->id : null;
+        $rents = UserRent::with(['info','stock', 'extends'])->where('user_info_id', $id)->get();
+        $returns = UserRent::with(['info'])->with('return')->where('user_info_id', $id)->get();
+
         return view('user.inventory.summary')->with(compact(['rents', 'returns']));
     }
     public function ReservationSummary() {
-        $id = Auth::id();
-        $reserves = Reserve::where('user_id', $id)->get();
+        $id = Auth::user()->info ? Auth::user()->info->id : null;
+        $reserves = UserReserve::with(['info' => function ($q) use($id){
+            $q->where('id',$id);            
+        }])->where('user_info_id', $id)->get();
         return view('user.schedule_summary')->with(compact(['reserves']));
     }
     public function AccountProfile() {

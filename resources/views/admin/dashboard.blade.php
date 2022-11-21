@@ -135,7 +135,7 @@
                 @endfor
             @endif
         </div>
-        <div class="event-items">
+        <div class="event-items"  style="height: 100px">
             <div class="event-card-body">
                 @if (!$reserves->isEmpty())
                     @foreach ($reserves as $event)

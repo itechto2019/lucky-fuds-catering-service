@@ -90,9 +90,23 @@ class AdminController extends Controller
         $formatWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         $startOfCalendar = $date->copy()->firstOfMonth()->startOfWeek(Carbon::SUNDAY);
         $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY);
-        $previousEvents = Reserve::whereDate('date', '<', today()->format('Y-m-d'))->where('status', 'approved')->get();
-        $upcomingEvents = Reserve::whereDate('date', '>=', today()->format('Y-m-d'))->where('status', 'approved')->get();
-        $events = Reserve::where('status', 'approved')->get();
+
+        
+        $previousEvents = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->whereDate('date', '<', today()->format('Y-m-d'))->get();
+
+
+        $upcomingEvents = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->whereDate('date', '>=', today()->format('Y-m-d'))->get();
+
+
+        $events = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->get();
+
+
         return view('admin.schedule_events')->with(compact([
             'date',
             'months',
@@ -107,9 +121,13 @@ class AdminController extends Controller
 
     public function ScheduleReservation()
     {
-        $reservations = Reserve::get();
-        $approves = Reserve::where('status', 'approved')->get();
-        $declines = Reserve::where('status', 'declined')->get();
+        $reservations = UserReserve::get();
+        $approves = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->get();
+        $declines = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'declined');
+        }])->get();
         return view('admin.schedule_reservation')->with(compact([
             'reservations',
             'approves',
@@ -118,7 +136,7 @@ class AdminController extends Controller
     }
     public function ScheduleReports()
     {
-        $reports = Reserve::with('package')->get();
+        $reports = UserReserve::with('package')->get();
         return view('admin.schedule_reports')->with(compact([
             'reports'
         ]));

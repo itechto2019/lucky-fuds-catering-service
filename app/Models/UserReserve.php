@@ -27,4 +27,10 @@ class UserReserve extends Model
     public function info() {
         return $this->hasOne(UserInfo::class, "user_info_id");
     }
+    public function reserve() {
+        return $this->hasOne(ForReserve::class);
+    }
+    public function package() {
+        return $this->hasOne(Package::class);
+    }
 }
