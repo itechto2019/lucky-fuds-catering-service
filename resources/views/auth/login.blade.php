@@ -26,7 +26,7 @@
                 <h2>LOGIN TO SYSTEM</h2>
 
                 <div class="for-group-input" @error('message') style="border: 2px solid #EB1D36" @enderror>
-                    <input type="email" name="email" class="for-input" placeholder="Email" value="{{old('email')}}"
+                    <input type="text" name="username" class="for-input" placeholder="Username" value="{{old('email')}}"
                         id="email">
                 </div>
                 <div class="for-group-input" @error('message') style="border: 2px solid #EB1D36; display: flex; align-items:center" @enderror>

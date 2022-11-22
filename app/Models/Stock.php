@@ -15,7 +15,7 @@ class Stock extends Model
         'quantity',
         'price'
     ];
-    public function for_rents()
+    public function for_rent()
     {
         return $this->hasMany(ForRent::class);
     }

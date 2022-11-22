@@ -3,6 +3,16 @@
 <div class="for-inventory-summary">
     <div class="for-page-title">
         <h1>Summary page</h1>
+        @if (!Auth::user()->info)
+            <div style="color:#FF1E1E;display: flex; align-items:center">
+                <div>
+                    <svg style="width: 40px; height: 40px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                </div>
+                <div><p>Please complete your profile to access other features</p></div>
+            </div>
+        @endif
     </div>
     <div class="table-summary">
         <div style="padding: 10px">
@@ -18,23 +28,31 @@
                 <table>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Date Rented</th>
                         <th>Details</th>
                     </tr>
                     @foreach ($rents as $rent)
                     <tr>
                         <td>{{ $rent->id }}</td>
+                        <td><img src="{{asset('stocks/' . $rent->stock->image)}}" alt=""></td>
                         <td>{{ $rent->created_at->format('Y-m-d') }}</td>
                         <td>
                             <b>Item: </b>
-                            {{ $rent->items }}
+                            {{ $rent->stock->item }}
                             <br>
-                            <b>Client: </b>{{ $rent->client }}
+                            <b>Client: </b>{{ $rent->info->name }}
                             <br>
                             <b>Method: </b>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}
                             <br>
                             <b>Amount: </b>
                             ₱{{ $rent->amount }}
+                            <br>
+                            <b>Date Used: </b>
+                            {{ $rent->extends ? $rent->extends->date :  $rent->date  }}
+                            <br>
+                            <b>Date Returned: </b>
+                            {{ $rent->extends ? $rent->extends->return :  $rent->return }}
                             <br>
                             <b>Date rented: </b>
                             {{ $rent->created_at->format('Y-m-d') }}
@@ -56,23 +74,31 @@
                 <table>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Date Rented</th>
                         <th>Details</th>
                     </tr>
                     @foreach ($returns as $return)
                     <tr>
                         <td>{{ $return->id }}</td>
+                        <td><img src="{{asset('stocks/' . $return->stock->image)}}" alt=""></td>
                         <td>{{ $return->created_at->format('Y-m-d') }}</td>
                         <td>
                             <b>Item: </b>
-                            {{ $return->items }}
+                            {{ $return->stock->item }}
                             <br>
-                            <b>Client: </b>{{ $return->client }}
+                            <b>Client: </b>{{ $return->info->name }}
                             <br>
-                            <b>Method: </b>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}
+                            <b>Method: </b>{{ $return->delivers ? "Deliver" : ($return->pickups ? "Pickup" : "") }}
                             <br>
                             <b>Amount: </b>
                             ₱{{ $return->amount }}
+                            <br>
+                            <b>Date Used: </b>
+                            {{ $return->extends ? $return->extends->date :  $return->date  }}
+                            <br>
+                            <b>Date Return: </b>
+                            {{ $return->extends ? $return->extends->return :  $return->return }}
                             <br>
                             <b>Date Returned: </b>
                             {{ $return->updated_at->format('Y-m-d') }}

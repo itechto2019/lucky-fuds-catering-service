@@ -21,6 +21,13 @@ class PackageController extends Controller
             'details' => $form['details'],
             'price' => $form['price']
         ]);
-        return redirect()->back();
+        if($result) {
+            return redirect()->back()->withErrors([
+                'message' => "Package added"
+            ]); 
+        }
+        return redirect()->back()->withErrors([
+            'message' => "Please check your fields"
+        ]);
     }
 }

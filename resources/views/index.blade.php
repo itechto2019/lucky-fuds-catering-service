@@ -139,7 +139,6 @@
                             </a>
                         </div>
                         <div class="for-link-panel active" id="inventory-active">
-
                             <div class="for-sub-link {{ Route::currentRouteName() === 'user_inventory_for_rents' ? 'active' : '' }}">
                                 <a href="{{ route('user_inventory_for_rents') }}">For Rents</a>                        
                             </div>
@@ -152,7 +151,20 @@
                             <div class="for-sub-link {{ Route::currentRouteName() === 'user_inventory_summary' ? 'active' : '' }}">
                                 <a href="{{ route('user_inventory_summary') }}">Summary</a>                        
                             </div>
-                        </div>   
+                        </div>
+                        <div class="for-link {{ Route::currentRouteName() === 'account' ? 'active' : '' }}" id="account">
+                            <a href="" onclick="openAccount(event)">
+                                Account Manager
+                                <svg id="account_icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="for-link-panel active" id="account-active">
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'user_account_profile' ? 'active' : '' }}">
+                                <a href="{{ route('user_account_profile') }}">Profile</a>                        
+                            </div>
+                        </div>
                         <div class="for-link">
                             <a href="{{ route('signout') }}">Logout</a>
                         </div>
@@ -209,6 +221,8 @@
                     @yield('user_inventory_extends')
                 @elseif(Route::currentRouteName() === "user_inventory_summary")
                     @yield('user_inventory_summary')
+                @elseif(Route::currentRouteName() === "user_account_profile")
+                    @yield('user_account_profile')
                 @endif
             </section>
         @endif
@@ -243,11 +257,25 @@
         $('#inventory_icon').show()
         $('#rental_icon').toggle()
     })
+    $('#account').click(()=> {
+        $('#reservation-active').hide()
+        $('#inventory-active').hide()
+        $('#rentals-active').hide()
+        $('#account-active').toggle()
+
+        $('#reservation_icon').show()
+        $('#inventory_icon').show()
+        $('#rental_icon').show()
+        $('#account_icon').toggle()
+    })
 
     function openInventory(e) {
         e.preventDefault();
     }
     function openReservation(e) {
+        e.preventDefault();
+    }
+    function openAccount(e) {
         e.preventDefault();
     }
     setTimeout(() => {

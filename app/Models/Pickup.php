@@ -11,6 +11,6 @@ class Pickup extends Model
     protected $table = "pickups";
 
     protected $fillable = [
-        'rent_id'
+        'user_rent_id'
     ];
 }

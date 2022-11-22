@@ -2,7 +2,7 @@
 @section('dashboard')
 <div class="for-page-title">
     <h1>Dashboard</h1>
-    <div style="padding: 5px"><small>Welcome {{ Auth::user()->name }}</small></div>
+    <div style="padding: 5px"><small>Welcome {{ Auth::user()->info  ? Auth::user()->info->name : "User" }}</small></div>
 </div>
 <div class="for-dashboard-data" style="position: relative">
     <h1>Reservation Requests</h1>
@@ -135,7 +135,7 @@
                 @endfor
             @endif
         </div>
-        <div class="event-items">
+        <div class="event-items"  style="height: 100px">
             <div class="event-card-body">
                 @if (!$reserves->isEmpty())
                     @foreach ($reserves as $event)

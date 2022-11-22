@@ -22,16 +22,10 @@
                 @csrf                    
                 <h2>REGISTER TO SYSTEM</h2>
                 <div class="for-group-input" 
-                    @error('email') 
+                    @error('username') 
                         style="border: 2px solid #EB1D36"
                     @enderror>
-                    <input type="email" name="email" class="for-input" placeholder="Email" value="{{ old('email') }}">
-                </div>
-                <div class="for-group-input"
-                    @error('name') 
-                        style="border: 2px solid #EB1D36"
-                    @enderror>
-                    <input type="text" name="name" class="for-input" placeholder="Username" value="{{ old('name') }}">
+                    <input type="username" name="username" class="for-input" placeholder="Username" value="{{ old('email') }}">
                 </div>
                 <div class="for-group-input"
                     @error('password') 

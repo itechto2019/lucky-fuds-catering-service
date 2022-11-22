@@ -17,16 +17,14 @@
                         <th>Price</th>
                     </tr>
                     @foreach ($supplies as $supply)
-                        @foreach ($supply->for_rents as $item)
-                            <tr>
-                                <td>{{ $item->id }}</td>
-                                <td><img src="{{ asset("stocks") }}/{{ $supply->image }}" width="50" alt=""></td>
-                                <td>{{ $supply->item }}</td>
-                                <td>{{ $item->quantity }}</td>
-                                <td>{{ $item->quantity > 0 ? 'Active' : 'Out of Stock' }}</td>
-                                <td>₱{{ $supply->price }}</td>
-                            </tr>
-                        @endforeach
+                        <tr>
+                            <td>{{ $supply->id }}</td>
+                            <td><img src="{{ asset("stocks") }}/{{ $supply->stock->image }}" width="50" alt=""></td>
+                            <td>{{ $supply->stock->item }}</td>
+                            <td>{{ $supply->quantity }}</td>
+                            <td>{{ $supply->quantity > 0 ? 'Active' : 'Out of Stock' }}</td>
+                            <td>₱{{ $supply->stock->price }}</td>
+                        </tr>
                     @endforeach
                 </table>
             @else

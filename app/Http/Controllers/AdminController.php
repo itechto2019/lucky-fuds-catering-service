@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Package;
 use App\Models\Stock;
-use App\Models\Rent;
-use App\Models\Returns;
-use App\Models\Extend;
-use App\Models\Report;
+use App\Models\ForRent;
+use App\Models\ForReserve;
+use App\Models\Package;
 use App\Models\Reserve;
-use App\Models\Reservation;
-use App\Models\User;
+use App\Models\UserRent;
+use App\Models\UserReserve;
 
 class AdminController extends Controller
 {
@@ -34,26 +32,28 @@ class AdminController extends Controller
         for ($i = 1; $i <= $noOfDays; $i++) {
             $days[] = Carbon::now()->days($i)->format('j');
         }
-        // for($i = 1; $i <= $noOfWeeks; $i++) {
-        //     $weeks[] = Carbon::now()->days($i)->format('D');
-        // }
-        $approved = count(Reserve::where('status', 'approved')->get());
-        $declined = count(Reserve::where('status', 'declined')->get());
-        $pending = count(Reserve::where('status', 'pending')->get());
-        $request = count(Reserve::get());
 
+        // reservation requests
+        $approved = count(ForReserve::where('status', 'approved')->get());
+        $declined = count(ForReserve::where('status', 'declined')->get());
+        $pending = count(ForReserve::where('status', 'pending')->get());
+        $request = count(ForReserve::get());
 
-        $confirmedRent = count(Rent::where('status', 'approved')->get());
-        $pendingRent = count(Rent::where('status', 'pending')->get());
-        $declinedRent = count(Rent::where('status', 'declined')->get());
-        $totalRequest = count(Rent::where('status', 'approved')->orWhere('status', 'pending')->orWhere('status', 'declined')->get());
+        // rent requests
+        $confirmedRent = count(UserRent::where('status', 'approved')->get());
+        $pendingRent = count(UserRent::where('status', 'pending')->get());
+        $declinedRent = count(UserRent::where('status', 'declined')->get());
+        $totalRequest = count(UserRent::get());
 
-        $confirmedExtend = count(Rent::where('status', 'extended')->get());
-        $pendingExtend = count(Rent::where('status', 'extending')->get());
-        $declinedExtend = count(Rent::where('status', 'declined')->whereHas('extends')->get());
-        $totalRequestExtend = count(Rent::where('status', 'extended')->orWhere('status', 'extending')->orWhere('status', 'declined')->whereHas('extends')->get());
+        // extend requests
+        $confirmedExtend = count(UserRent::whereHas('extends')->where('status', 'extended')->get());
+        $pendingExtend = count(UserRent::whereHas('extends')->where('status', 'extending')->get());
+        $declinedExtend = count(UserRent::whereHas('extends')->where('status', 'declined')->whereHas('extends')->get());
+        $totalRequestExtend = count(UserRent::whereHas('extends')->get());
 
-        $reserves = Reserve::where('status', 'approved')->get();
+        $reserves = UserReserve::with(['reserve' => function ($q) {
+            $q->where('status', 'approved');
+        }])->get();
 
         return view('admin.dashboard')->with(compact([
             'noOfDays',
@@ -85,9 +85,23 @@ class AdminController extends Controller
         $formatWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         $startOfCalendar = $date->copy()->firstOfMonth()->startOfWeek(Carbon::SUNDAY);
         $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY);
-        $previousEvents = Reserve::whereDate('date', '<', today()->format('Y-m-d'))->where('status', 'approved')->get();
-        $upcomingEvents = Reserve::whereDate('date', '>=', today()->format('Y-m-d'))->where('status', 'approved')->get();
-        $events = Reserve::where('status', 'approved')->get();
+
+        
+        $previousEvents = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->whereDate('date', '<', today()->format('Y-m-d'))->get();
+
+
+        $upcomingEvents = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->whereDate('date', '>=', today()->format('Y-m-d'))->get();
+
+
+        $events = UserReserve::with(['reserve' => function($q) {
+            $q->where('status', 'approved');
+        }])->get();
+
+
         return view('admin.schedule_events')->with(compact([
             'date',
             'months',
@@ -102,9 +116,20 @@ class AdminController extends Controller
 
     public function ScheduleReservation()
     {
-        $reservations = Reserve::get();
-        $approves = Reserve::where('status', 'approved')->get();
-        $declines = Reserve::where('status', 'declined')->get();
+        $reservations = UserReserve::get();
+        // $approves = UserReserve::with(['reserve' => function ($q) {
+        //     $q->where('status', 'approved');
+        // }])->get();
+
+        $approves = ForReserve::with(['user_reserve'])->where('status', 'approved')->get();
+
+        // $declines = UserReserve::with(['reserve' => function ($q) {
+        //     $q->where('status', 'declined');
+        // }])->get();
+        $declines = ForReserve::with(['user_reserve'])->where('status', 'declined')->get();
+        
+
+
         return view('admin.schedule_reservation')->with(compact([
             'reservations',
             'approves',
@@ -113,7 +138,7 @@ class AdminController extends Controller
     }
     public function ScheduleReports()
     {
-        $reports = Reserve::with('package')->get();
+        $reports = UserReserve::with('package')->get();
         return view('admin.schedule_reports')->with(compact([
             'reports'
         ]));
@@ -129,46 +154,46 @@ class AdminController extends Controller
     // for rents
     public function ForRents()
     {
-        $supplies = Stock::with(['for_rents' => function ($q) {
-            return $q->where('is_rented', true);
-        }])->get();
+        $supplies = ForRent::with('stock')->get();
         return view('admin.inventory.for_rents')->with(compact(['supplies']));
     }
     // for rented
     public function ForRented()
     {
-        $rents = Rent::where('status', 'pending')->get();
+        // $rents = UserRent::where('status', 'pending')->get();
+        // $rents = UserRent::with('info')->where('status', 'pending')->get();
+        $rents = UserRent::with('info')->with('stock')->where('status', 'pending')->get();
         return view('admin.inventory.rents')->with(compact(['rents']));
     }
     // for extend request
     public function ExtendRequest()
     {
-        $rents = Rent::where('status', 'extending')->with('extends')->get();
+        $rents = UserRent::with(['info', 'stock', 'extends'])->where('status', 'extending')->get();
         return view('admin.inventory.extend_request')->with(compact(['rents']));
     }
     // approval
     public function Approves()
     {
-        $rents = Rent::where('status', 'approved')->orWhere('status', 'extend')->get();
+        $rents = UserRent::with(['info', 'stock'])->where('status', 'approved')->orWhere('status', 'extend')->get();
         return view('admin.inventory.approves')->with(compact(['rents']));
     }
     // extended
     public function Extends()
     {
-        $rents = Rent::where('status', 'extended')->with(['extends'])->get();
-        // $rents = Rent::where('status', 'extend')->with('extends')->get();
+        $rents = UserRent::with('info')->with('stock')->where('status', 'extend')->get();
         return view('admin.inventory.extends')->with(compact(['rents']));
     }
     // retured
     public function Returned()
     {
-        $rents = Rent::where('status', 'returned')->orWhere('status', 'extended')->orWhere('is_returned', true)->with('returns')->get();
+        // $rents = Rent::where('status', 'returned')->orWhere('status', 'extended')->orWhere('is_returned', true)->with('returns')->get();
+        $rents = UserRent::with(['info', 'extends'])->where('status', 'returned')->get();
         return view('admin.inventory.return')->with(compact(['rents']));
     }
     
     public function Reports()
     {
-        $reports = Report::get();
-        return view('admin.inventory.reports')->with(compact(['reports']));
+        $rents = UserRent::get();
+        return view('admin.inventory.reports')->with(compact(['rents']));
     }
 }

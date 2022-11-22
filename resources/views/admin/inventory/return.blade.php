@@ -18,6 +18,7 @@
             <table>
                 <tr>
                     <th>#</th>
+                    <th>Image</th>
                     <th>Item</th>
                     <th>Client</th>
                     <th>Method</th>
@@ -31,10 +32,11 @@
                 @foreach ($rents as $rent)
                 <tr>
                     <td>{{ $rent->id }}</td>
-                    <td>{{ $rent->returns ? $rent->returns->item : '' }}</td>
-                    <td>{{ $rent->client }}</td>
+                    <td><img src="{{ asset('stocks/'.$rent->stock->image) }}" alt=""></td>
+                    <td>{{ $rent->stock->item }}</td>
+                    <td>{{ $rent->info->name }}</td>
                     <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
-                    <td>{{ $rent->returns ? $rent->returns->quantity : '' }}</td>
+                    <td>{{ (int) $rent->amount / $rent->stock->price }}</td>
                     <td>₱{{ $rent->amount }}</td>
                     <td>{{ $rent->date }}</td>
                     <td>{{ $rent->return }}</td>
@@ -62,7 +64,7 @@
                             </div>
                         </div>
                         @else
-                        Item is returned
+                            Item is returned to inventory
                         @endif
                     </td>
                 </tr>

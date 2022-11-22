@@ -10,6 +10,7 @@ use App\Models\Rent;
 use App\Models\Returns;
 use App\Models\Stock;
 use App\Models\Report;
+use App\Models\UserRent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -46,7 +47,6 @@ class StockController extends Controller
                 'price' => $form['price'],
             ]);
         }
-
         return redirect()->back()->withErrors([
             'message' => "New item created"
         ]);
@@ -137,27 +137,24 @@ class StockController extends Controller
     }
     protected function userRent(Request $request, $rentId, $stockId)
     {
-        $stock = Stock::where('id', $stockId)->get()->first();
+        // user_id, stock_id, for_rent_id
         $user = Auth::user();
+        
+        $stock = Stock::where('id', $stockId)->get()->first();
         $validator = Validator::make($request->only(
-            'client',
-            'items',
             'quantity',
             'date',
             'return'
         ),[
-            'client' => 'required|min:3',
-            'items' => 'required',
             'quantity' => 'required|min:1',
             'date' => 'required',
             'return' => 'required'
         ]);
         $form = $validator->validated();
-        $result = Rent::create([
-            'user_id' => $user->id,
+        $result = UserRent::create([
+            'user_info_id' => $user->info->id,
+            'stock_id' => $stockId,
             'for_rent_id' => $rentId,
-            'client' => Auth::user()->name,
-            'items' => $form['items'],
             'amount' => $form['quantity'] * $stock->price,
             'date' => $form['date'],
             'return' => $form['return'],
@@ -166,12 +163,12 @@ class StockController extends Controller
             $method = $request->method;
             if($method == "deliver") {
                 Deliver::create([
-                    'rent_id' => $result->id
+                    'user_rent_id' => $result->id
                 ]);
             }
             if($method == "pickup") {
                 Pickup::create([
-                    'rent_id' => $result->id
+                    'user_rent_id' => $result->id
                 ]);
             }
             return redirect()->back()->withErrors([
@@ -184,44 +181,44 @@ class StockController extends Controller
     }
     protected function toCheckOut($id)
     {
-        $rent = Rent::where('id', $id)->get()->first();
-        $forRent = ForRent::where('id', $rent->for_rent_id)->first();
-        $stock = Stock::where('id', $forRent->stock_id)->get()->first();
+        $rent = UserRent::where('id', $id)->get()->first();
+        // $forRent = ForRent::where('id', $rent->for_rent_id)->first();
+        // $stock = Stock::where('id', $forRent->stock_id)->get()->first();
+
 
         if ($rent->status == "pending") {
-            Rent::where('id', $id)->update([
+            UserRent::where('id', $id)->update([
                 'status' => 'approved'
             ]);
             ForRent::where('id', $rent->for_rent_id)->update([
-                'quantity' => $forRent->quantity - $rent->amount / $stock->price
+                'quantity' => $rent->for_rent->quantity - $rent->amount / $rent->stock->price
             ]);
             return redirect()->back()->withErrors([
                 'message' => "Rent Approved"
             ]);
         }
         if($rent->status == "extending"){
-            Rent::where('id', $id)->update([
+            UserRent::where('id', $id)->update([
                 'status' => 'extend'
             ]);
             return redirect()->back()->withErrors([
-                'message' => "Rent extended"
+                'message' => "Rent extends"
             ]);
         }
         
     }
     protected function toReject($id)
     {
-        $rent = Rent::where('id', $id)->get()->first();
-        $forRent = ForRent::where('id', $rent->for_rent_id)->first();
-        $stock = Stock::where('id', $forRent->stock_id)->get()->first();
-
+        $rent = UserRent::where('id', $id)->get()->first();
+        // $forRent = ForRent::where('id', $rent->for_rent_id)->first();
+        // $stock = Stock::where('id', $forRent->stock_id)->get()->first();
 
         if ($rent->status == "pending" || $rent->status == "extending") {
-            Rent::where('id', $id)->update([
+            UserRent::where('id', $id)->update([
                 'status' => 'declined',
             ]);
             ForRent::where('id', $rent->for_rent_id)->update([
-                'quantity' => $forRent->quantity + $rent->amount / $stock->price
+                'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
             ]);
         }
 
@@ -235,11 +232,11 @@ class StockController extends Controller
             'date' => 'required',
             'return' => 'required'
         ]);
-        Rent::where('id', $id)->update([
+        UserRent::where('id', $id)->update([
             'status' => 'extending',
         ]);
         Extend::create([
-            'rent_id' => $id,
+            'user_rent_id' => $id,
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
@@ -250,41 +247,32 @@ class StockController extends Controller
     }
     protected function toReturn($id)
     {
-        $rent = Rent::where('id', $id)->get()->first();
-        $item = ForRent::where('id', $rent->for_rent_id)->get()->first();
-        $stock = Stock::where('id', $item->stock_id)->get()->first();
+        $rent = UserRent::where('id', $id)->get()->first();
+        // $item = ForRent::where('id', $rent->for_rent_id)->get()->first();
+        // $stock = Stock::where('id', $item->stock_id)->get()->first();
 
         if($rent->status == "approved") {
-            $result = Rent::where('id', $id)->update([
+            $result = UserRent::where('id', $id)->update([
                 'status' => 'returned'
             ]);
-            $userId = $rent->user_id;
             if($result) {
                 Returns::create([
-                    'user_id' => $userId,
-                    'rent_id' => $id,
-                    'item' => $stock->item,
-                    'quantity' => $rent->amount / $stock->price,
-                    'amount' => $rent->amount,
+                    'user_rent_id' => $rent->id,
                     'date' => $rent->date,
                     'return' => $rent->return,
                 ]);
             }
         }
         if($rent->status == "extend") {
-            $result = Rent::where('id', $id)->update([
+            $result = UserRent::where('id', $id)->update([
                 'status' => 'extended'
             ]);
-            $userId = $rent->user_id;
             if($result) {
                 Returns::create([
-                    'user_id' => $userId,
-                    'rent_id' => $id,
-                    'item' => $stock->item,
-                    'quantity' => $rent->amount / $stock->price,
-                    'amount' => $rent->amount,
-                    'date' => $rent->date,
-                    'return' => $rent->return,
+                    'user_rent_id' => $rent->id,
+                    'date' => $rent->extend && $rent->extend->date ? $rent->extend->date : $rent->date,
+                    'return' => $rent->extend && $rent->extend->return ? $rent->extend->return : $rent->return,
+                    'quantity' => $rent->amount / $rent->stock->price,
                 ]);
             }
         }
@@ -295,28 +283,13 @@ class StockController extends Controller
 
     protected function addToItems(Request $request, $id)
     {
-        $rent = Rent::where('id', $id)->with(['returns', 'extends'])->first();
-        $rentAmount = $rent->amount;
-        $rentQuantity = $rent->returns->quantity;
+        $rent = UserRent::where('id', $id)->get()->first();
 
-        $forRent = ForRent::where('id', $rent->for_rent_id)->first();
-        $stock = Stock::where('id', $forRent->stock_id)->first();
-
-        Stock::where('id', $stock->id)->update([
-            'quantity' => $stock->quantity + $rentQuantity
+        Stock::where('id', $rent->stock->id)->update([
+            'quantity' => $rent->stock->quantity + $rent->amount / $rent->stock->price
         ]);
-        Rent::where('id', $id)->update([
+        UserRent::where('id', $id)->update([
             'is_returned' => 1
-        ]);
-        Report::create([
-            'image' => $stock->image,
-            'item' => $stock->item,
-            'client' => $rent->client,
-            'method' => $request->method,
-            'quantity' => $rentQuantity,
-            'amount' => $rentAmount,
-            'date' => $rent->extends ? $rent->extends->date : $rent->date,
-            'return' => $rent->extends ? $rent->extends->return : $rent->return,
         ]);
         return redirect()->back()->withErrors([
             'message' => "Item successfully added in the inventory"
@@ -324,30 +297,12 @@ class StockController extends Controller
     }
     protected function addToRents(Request $request, $id)
     {
-        $rent = Rent::where('id', $id)->with(['returns', 'extends'])->first();
-        $rentAmount = $rent->amount;
-        $rentQuantity = $rent->returns->quantity;
-
-        $forRent = ForRent::where('id', $rent->for_rent_id)->first();
-        $forRentQuantity = $forRent->quantity;
-
-        $stock = Stock::where('id', $forRent->stock_id)->first();
-
+        $rent = UserRent::where('id', $id)->get()->first();
         ForRent::where('id', $rent->for_rent_id)->update([
-            'quantity' => $forRentQuantity + $rentQuantity
+            'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
         ]);
-        Rent::where('id', $id)->update([
+        UserRent::where('id', $id)->update([
             'is_returned' => 1
-        ]);
-        Report::create([
-            'image' => $stock->image,
-            'item' => $stock->item,
-            'client' => $rent->client,
-            'method' => $request->method,
-            'quantity' => $rentQuantity,
-            'amount' => $rentAmount,
-            'date' => $rent->extends ? $rent->extends->date : $rent->date,
-            'return' => $rent->extends ? $rent->extends->return : $rent->return,
         ]);
         return redirect()->back()->withErrors([
             'message' => "Item is applied to rentable items."
