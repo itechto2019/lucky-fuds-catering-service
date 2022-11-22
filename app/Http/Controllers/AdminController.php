@@ -40,15 +40,15 @@ class AdminController extends Controller
         $request = count(ForReserve::get());
 
         // rent requests
-        $confirmedRent = count(UserRent::where('status', 'approved')->orWhere('status', 'returned')->get());
-        $pendingRent = count(UserRent::where('status', 'pending')->orWhere('status', 'returned')->get());
-        $declinedRent = count(UserRent::where('status', 'declined')->orWhere('status', 'returned')->get());
+        $confirmedRent = count(UserRent::where('status', 'approved')->orWhere('status','returned')->get());
+        $pendingRent = count(UserRent::where('status', 'pending')->get());
+        $declinedRent = count(UserRent::where('status', 'declined')->get());
         $totalRequest = count(UserRent::get());
 
         // extend requests
-        $confirmedExtend = count(UserRent::whereHas('extends')->where('status', 'extended')->whereHas('return')->orWhereHas('extends')->get());
-        $pendingExtend = count(UserRent::whereHas('extends')->where('status', 'extending')->whereHas('return')->orWhereHas('extends')->get());
-        $declinedExtend = count(UserRent::whereHas('extends')->where('status', 'declined')->whereHas('return')->orWhereHas('extends')->whereHas('extends')->get());
+        $confirmedExtend = count(UserRent::whereHas('extends')->where('status', 'extended')->get());
+        $pendingExtend = count(UserRent::whereHas('extends')->where('status', 'extending')->get());
+        $declinedExtend = count(UserRent::whereHas('extends')->where('status', 'declined')->get());
         $totalRequestExtend = count(UserRent::whereHas('return')->whereHas('extends')->get());
 
         $reserves = UserReserve::with(['reserve' => function ($q) {
