@@ -42,7 +42,9 @@
                     <td>{{ $rent->amount / $rent->stock->price }}</td>
                     <td>{{ $rent->status }}</td>
                     <td>
-                        @if (!$rent->return->id)
+                        @if ($rent->status == "returned")
+                            item is returned
+                        @else
                             <div class="action-form">
                                 <div class="action-button">
                                     <form action="{{ route('to_return', $rent->id) }}" method="POST">
@@ -54,8 +56,6 @@
                                     </form>
                                 </div>
                             </div>
-                        @else
-                            item is returned
                         @endif
                     </td>
                     @endforeach
