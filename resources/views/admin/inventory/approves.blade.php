@@ -24,6 +24,7 @@
                     <th>Date for use</th>
                     <th>Date for return</th>
                     <th>Amount</th>
+                    <th>Quantity</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -38,6 +39,7 @@
                     <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                     <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
                     <td>₱{{ $rent->amount }}</td>
+                    <td>{{ $rent->amount / $rent->stock->price }}</td>
                     <td>{{ $rent->status }}</td>
                     <td>
                         <div class="action-form">
