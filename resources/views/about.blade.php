@@ -12,5 +12,4 @@
         Follow Us on <a href="https://www.facebook.com/LuckyFuds">https://www.facebook.com/LuckyFuds</a>
         <br>
     </p>
-
 </div>
