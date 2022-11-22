@@ -178,7 +178,7 @@ class AdminController extends Controller
     // extended
     public function Extends()
     {
-        $rents = UserRent::with(['info', 'stock'])->where('status', 'extend')->orWhere('status', 'returned')->get();
+        $rents = UserRent::with(['info', 'stock'])->whereHas('extends')->get();
         return view('admin.inventory.extends')->with(compact(['rents']));
     }
     // retured
