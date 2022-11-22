@@ -20,9 +20,11 @@ class isUser
         if(Auth::check()) {
             if(!Auth::user()->is_admin) {
                 return $next($request);
+            }else {
+                return route('dashboard');
             }
         }else {
-            return route('login');
+            return redirect('/login');
         }
     }
 }

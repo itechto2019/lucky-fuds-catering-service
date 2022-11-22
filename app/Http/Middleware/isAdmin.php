@@ -24,7 +24,7 @@ class isAdmin
                 return route('user_dashboard');
             }
         }else {
-            return route('login');
+            return redirect('/login');
         }
     }
 }
