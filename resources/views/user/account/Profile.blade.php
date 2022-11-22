@@ -1,7 +1,7 @@
 @extends('index')
 @section('user_account_profile')
     <div class="for-page-title" style="user-select: none">
-        <h1>Profile</h1>
+        <h1>Profile account</h1>
     </div>
     <div class="reserve form">
         <div class="title-container" style="padding: 10px">
