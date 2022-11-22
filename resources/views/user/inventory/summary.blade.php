@@ -28,16 +28,16 @@
                 <table>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Date Rented</th>
                         <th>Details</th>
                     </tr>
                     @foreach ($rents as $rent)
                     <tr>
                         <td>{{ $rent->id }}</td>
+                        <td><img src="{{asset('stocks/' . $rent->stock->image)}}" alt=""></td>
                         <td>{{ $rent->created_at->format('Y-m-d') }}</td>
                         <td>
-                            <img src="{{asset('stocks/' . $rent->stock->image)}}" alt="">
-                            <br>
                             <b>Item: </b>
                             {{ $rent->stock->item }}
                             <br>
@@ -74,23 +74,31 @@
                 <table>
                     <tr>
                         <th>#</th>
+                        <th>Image</th>
                         <th>Date Rented</th>
                         <th>Details</th>
                     </tr>
                     @foreach ($returns as $return)
                     <tr>
                         <td>{{ $return->id }}</td>
+                        <td><img src="{{asset('stocks/' . $return->stock->image)}}" alt=""></td>
                         <td>{{ $return->created_at->format('Y-m-d') }}</td>
                         <td>
                             <b>Item: </b>
-                            {{ $return->items }}
+                            {{ $return->stock->item }}
                             <br>
-                            <b>Client: </b>{{ $return->client }}
+                            <b>Client: </b>{{ $return->info->name }}
                             <br>
-                            <b>Method: </b>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}
+                            <b>Method: </b>{{ $return->delivers ? "Deliver" : ($return->pickups ? "Pickup" : "") }}
                             <br>
                             <b>Amount: </b>
                             ₱{{ $return->amount }}
+                            <br>
+                            <b>Date Used: </b>
+                            {{ $return->extends ? $return->extends->date :  $return->date  }}
+                            <br>
+                            <b>Date Return: </b>
+                            {{ $return->extends ? $return->extends->return :  $return->return }}
                             <br>
                             <b>Date Returned: </b>
                             {{ $return->updated_at->format('Y-m-d') }}

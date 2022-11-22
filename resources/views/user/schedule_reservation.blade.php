@@ -27,34 +27,25 @@
                 <div class="form-separate">
                     <div class="form-page">
                         <div class="input-group">
-                            <input type="text" name="client" id="" placeholder="Name" value="{{ Auth::user()->name }}" required disabled>
+                            <label for=""><b>Name: </b>{{ Auth::user()->info->name }}</label>
                         </div>
                         <div class="input-group">
-                            <input type="text" name="contact" id="" placeholder="Contact Number" value="{{ old('contact') }}" required>
+                            <label for=""><b>Contact: </b>{{ Auth::user()->info->contact }}</label>
                         </div>
                         <div class="input-group">
-                            <input type="email" name="email" id="" placeholder="Email Address" value="{{ old('email') }}" required>
+                            <label for=""><b>Email: </b>{{ Auth::user()->info->email }}</label>
                         </div>
-                        <div class="input-group">
-                            <label for="">Preferred Contact Method:&nbsp;</label>
-                            <div style="display: flex;align-items:center; margin: 0px 5px">
-                                <input type="radio" name="method" id="email" value="email" required>
-                                <label for="email">Email Address</label>
+                        @if (!$packages->isEmpty())
+                            <div class="package-description">
+                                <h3 style="padding: 0px 10px;">Package List</h3>
+                                @foreach ($packages as $package)
+                                    <div class="package-info">
+                                        <p><b>{{ $package->name }}</b></p>
+                                        <p>{{ $package->details }}</p>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div style="display: flex;align-items:center;  margin: 0px 5px">
-                                <input type="radio" name="method" id="contact" value="contact" required>
-                                <label for="contact">Contact Number</label>
-                            </div>
-                        </div>
-                        <div class="package-description">
-                            <h3 style="padding: 0px 10px;">Package List</h3>
-                            @foreach ($packages as $package)
-                                <div class="package-info">
-                                    <p><b>{{ $package->name }}</b></p>
-                                    <p>{{ $package->details }}</p>
-                                </div>
-                            @endforeach
-                        </div>
+                        @endif
                     </div>
                     <div class="form-page">
                         <div class="input-group">
@@ -66,17 +57,15 @@
                             <input type="time" name="time" id="" value="{{ old('time') }}" required>
                         </div>
                         <div class="input-group">
-                            {{-- <label for="">Address of Event</label> --}}
                             <input type="text" name="address" placeholder="Address of event" value="{{ old('address') }}" required>
                         </div>
                         <div class="input-group">
-                            {{-- <label for="">Number of Guest: </label> --}}
                             <input type="number" name="guest" placeholder="Number of guest" value="{{ old('guest') }}" required>
                         </div>
                         <div class="input-group">
-                            {{-- <label for="">Event Type: </label> --}}
                             <input type="text" name="event" id="" placeholder="Event type" value="{{ old('event') }}" required>
                         </div>
+                        @if (!$packages->isEmpty())
                         <div class="input-group">
                             <label for="">Package:&nbsp;</label>
                             <select name="package_id" id="package">
@@ -87,6 +76,12 @@
                                 @endforeach
                             </select>
                         </div>
+                        @else
+                            <div class="input-group">
+                                <label for="">No Package are available</label>
+                            </div>
+                        @endif
+                        
                         <div class="input-group submit">
                             <div>
                                 <button type="submit">Submit</button>

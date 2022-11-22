@@ -76,7 +76,7 @@ class UserController extends Controller
     }
     public function ConfirmationRequest() {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
-        $reservations = UserReserve::with('package')->where('user_id', $id)->get();
+        $reservations = UserReserve::with('package')->where('user_info_id', $id)->get();
         return view('user.schedule_confirmation')->with(compact([
             'reservations',
         ]));
@@ -93,9 +93,20 @@ class UserController extends Controller
         $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY);
 
         $id = Auth::user()->info ? Auth::user()->info->id : null;
-        $previousEvents = Reserve::where('user_id', $id)->whereDate('date', '<', today()->format('Y-m-d'))->where('status', 'approved')->get();
-        $upcomingEvents = Reserve::where('user_id', $id)->whereDate('date', '>=', today()->format('Y-m-d'))->where('status', 'approved')->get();
-        $events = Reserve::where('user_id', $id)->where('status', 'approved')->get();
+
+        $previousEvents = UserReserve::with(['reserve' => function ($q) {
+            $q->where('status', 'approved');
+        }])->where('user_info_id', $id)->whereDate('date', '<', today()->format('Y-m-d'))->get();
+
+        $upcomingEvents = UserReserve::with(['reserve' => function ($q) {
+            $q->where('status', 'approved');
+        }])->where('user_info_id', $id)->whereDate('date', '>=', today()->format('Y-m-d'))->get();
+
+        $events = UserReserve::with(['reserve' => function ($q) {
+            $q->where('status', 'approved');
+        }])->where('user_info_id', $id)->get();
+        
+
         return view('user.schedule_events')->with(compact([
             'date',
             'months',
@@ -136,7 +147,7 @@ class UserController extends Controller
     {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
         $rents = UserRent::with(['info','stock', 'extends'])->where('user_info_id', $id)->get();
-        $returns = UserRent::with(['info'])->with('return')->where('user_info_id', $id)->get();
+        $returns = UserRent::with(['info'])->whereHas('return')->where('user_info_id', $id)->get();
 
         return view('user.inventory.summary')->with(compact(['rents', 'returns']));
     }

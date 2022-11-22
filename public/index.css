@@ -827,7 +827,7 @@ input[type=file] {
 
 .package-description {
     overflow-y: auto;
-    max-height: 200px;
+    max-height: 400px;
 }
 
 .package-description::-webkit-scrollbar {

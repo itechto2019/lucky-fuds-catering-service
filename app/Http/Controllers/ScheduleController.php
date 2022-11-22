@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reserve;
 use App\Models\Reservation;
+use App\Models\UserReserve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,18 +21,16 @@ class ScheduleController extends Controller
                 "message" => "Please choose a package"
             ]);
         }else {
-            Reserve::create([
-                'user_id' => $id,
-                'client' => Auth::user()->name,
-                'contact' => request('contact'),
-                'email' => request('email'),
-                'method' => request('method'),
-                'date' => request('date'),
-                'time' => request('time'),
-                'address' => request('address'),
-                'guest' => request('guest'),
-                'event' => request('event'),
-                'package_id' => request('package_id'),
+            UserReserve::create([
+                'user_info_id' => Auth::user()->info->id,
+                'package_id' => $request->package,
+                'contact',
+                'email',
+                'date',
+                'time',
+                'address',
+                'guest',
+                'event'
             ]);
             return back();
         }
