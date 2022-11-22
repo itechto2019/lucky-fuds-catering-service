@@ -161,6 +161,9 @@ class StockController extends Controller
         ]);
         if($result) {
             $method = $request->method;
+            ForRent::where('stock_id', $stock->id)->update([
+                'quantity' => $stock->quantity - $form['quantity']
+            ]);
             if($method == "deliver") {
                 Deliver::create([
                     'user_rent_id' => $result->id
@@ -182,9 +185,6 @@ class StockController extends Controller
     protected function toCheckOut($id)
     {
         $rent = UserRent::where('id', $id)->get()->first();
-        // $forRent = ForRent::where('id', $rent->for_rent_id)->first();
-        // $stock = Stock::where('id', $forRent->stock_id)->get()->first();
-
 
         if ($rent->status == "pending") {
             UserRent::where('id', $id)->update([
