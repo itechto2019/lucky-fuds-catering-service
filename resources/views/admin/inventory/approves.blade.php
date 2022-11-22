@@ -42,17 +42,21 @@
                     <td>{{ $rent->amount / $rent->stock->price }}</td>
                     <td>{{ $rent->status }}</td>
                     <td>
-                        <div class="action-form">
-                            <div class="action-button">
-                                <form action="{{ route('to_return', $rent->id) }}" method="POST">
-                                    @csrf
-                                    @method('put')
-                                    <button class="action-print">
-                                        Returned
-                                    </button>
-                                </form>
+                        @if (!$rent->status == "returned")
+                            <div class="action-form">
+                                <div class="action-button">
+                                    <form action="{{ route('to_return', $rent->id) }}" method="POST">
+                                        @csrf
+                                        @method('put')
+                                        <button class="action-print">
+                                            Returned
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            item is returned
+                        @endif
                     </td>
                     @endforeach
             </table>
