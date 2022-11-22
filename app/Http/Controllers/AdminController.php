@@ -160,8 +160,6 @@ class AdminController extends Controller
     // for rented
     public function ForRented()
     {
-        // $rents = UserRent::where('status', 'pending')->get();
-        // $rents = UserRent::with('info')->where('status', 'pending')->get();
         $rents = UserRent::with('info')->with('stock')->where('status', 'pending')->get();
         return view('admin.inventory.rents')->with(compact(['rents']));
     }
@@ -174,13 +172,13 @@ class AdminController extends Controller
     // approval
     public function Approves()
     {
-        $rents = UserRent::with(['info', 'stock'])->where('status', 'approved')->orWhere('status', 'extend')->get();
+        $rents = UserRent::with(['info', 'stock'])->where('status', 'approved')->where('status', 'extend')->where('is_returned', 1)->get();
         return view('admin.inventory.approves')->with(compact(['rents']));
     }
     // extended
     public function Extends()
     {
-        $rents = UserRent::with('info')->with('stock')->where('status', 'extend')->get();
+        $rents = UserRent::with('info')->with('stock')->where('status', 'extend')->where('is_returned', 1)->get();
         return view('admin.inventory.extends')->with(compact(['rents']));
     }
     // retured
