@@ -191,9 +191,6 @@ class StockController extends Controller
             UserRent::where('id', $id)->update([
                 'status' => 'approved'
             ]);
-            ForRent::where('id', $rent->for_rent_id)->update([
-                'quantity' => $rent->for_rent->quantity - $rent->amount / $rent->stock->price
-            ]);
             return redirect()->back()->withErrors([
                 'message' => "Rent Approved"
             ]);
@@ -211,8 +208,6 @@ class StockController extends Controller
     protected function toReject($id)
     {
         $rent = UserRent::where('id', $id)->get()->first();
-        // $forRent = ForRent::where('id', $rent->for_rent_id)->first();
-        // $stock = Stock::where('id', $forRent->stock_id)->get()->first();
 
         if ($rent->status == "pending" || $rent->status == "extending") {
             UserRent::where('id', $id)->update([
