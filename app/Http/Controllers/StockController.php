@@ -141,6 +141,7 @@ class StockController extends Controller
         $user = Auth::user();
         
         $stock = Stock::where('id', $stockId)->get()->first();
+        $forrent = ForRent::where('stock_id', $stock->id)->get()->first();
         $validator = Validator::make($request->only(
             'quantity',
             'date',
@@ -162,7 +163,7 @@ class StockController extends Controller
         if($result) {
             $method = $request->method;
             ForRent::where('stock_id', $stock->id)->update([
-                'quantity' => $stock->quantity - $form['quantity']
+                'quantity' => $forrent->quantity - $form['quantity']
             ]);
             if($method == "deliver") {
                 Deliver::create([
