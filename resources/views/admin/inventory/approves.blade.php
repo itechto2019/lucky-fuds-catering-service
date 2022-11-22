@@ -42,7 +42,7 @@
                     <td>{{ $rent->amount / $rent->stock->price }}</td>
                     <td>{{ $rent->status }}</td>
                     <td>
-                        @if (!$rent->status == "returned")
+                        @if (!$rent->return->id)
                             <div class="action-form">
                                 <div class="action-button">
                                     <form action="{{ route('to_return', $rent->id) }}" method="POST">
