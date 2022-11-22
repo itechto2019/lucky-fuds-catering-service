@@ -31,9 +31,7 @@
                             <td>{{ $rent->amount / $rent->stock->price }}</td>
                             <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                             <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
-                            <td>
-                               Item is returned
-                            </td>
+                            <td>Item is returned</td>
                         </tr>
                     @endforeach
                 </table>
