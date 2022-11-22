@@ -76,7 +76,7 @@ class UserController extends Controller
     }
     public function ConfirmationRequest() {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
-        $reservations = UserReserve::with('package')->where('user_info_id', $id)->get();
+        $reservations = UserReserve::with(['info','package', 'reserve'])->where('user_info_id', $id)->get();
         return view('user.schedule_confirmation')->with(compact([
             'reservations',
         ]));
@@ -139,7 +139,7 @@ class UserController extends Controller
     public function Extends() {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
 
-        $rents = UserRent::with(['info','stock', 'extends'])->where('user_info_id', $id)->where('status', 'extended')->get();
+        $rents = UserRent::with(['info','stock', 'extends'])->where('user_info_id', $id)->whereHas('extends')->get();
 
         return view('user.inventory.extends')->with(compact(['rents']));
     }
@@ -153,9 +153,8 @@ class UserController extends Controller
     }
     public function ReservationSummary() {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
-        $reserves = UserReserve::with(['info' => function ($q) use($id){
-            $q->where('id',$id);            
-        }])->where('user_info_id', $id)->get();
+        $reserves = UserReserve::with(['info'])->where('user_info_id', $id)->get();
+
         return view('user.schedule_summary')->with(compact(['reserves']));
     }
     public function AccountProfile() {

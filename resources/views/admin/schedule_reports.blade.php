@@ -22,11 +22,11 @@
                     <tr>
                         <td>{{ $report->id }}</td>
                         <td>{{ date('h:i A', strtotime($report->time)) }}</td>
-                        <td>{{ $report->client }}</td>
+                        <td>{{ $report->info->name }}</td>
                         <td>{{ $report->event }}</td>
                         <td>{{ $report->date }}</td>
                         <td>₱{{ $report->package->price }}</td>
-                        <td>{{ $report->status }}</td>
+                        <td>{{ $report->reserve->status }}</td>
                         <td>
                             <div class="action-form">
                                 <div class="action-button">

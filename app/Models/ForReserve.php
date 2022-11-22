@@ -13,4 +13,12 @@ class ForReserve extends Model
         'user_reserve_id',
         'status'
     ];
+
+    public function info(){
+        return $this->belongsTo(UserInfo::class, "user_info_id");
+    }
+
+    public function user_reserve() {
+        return $this->belongsTo(UserReserve::class, "user_reserve_id");
+    }
 }

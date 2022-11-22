@@ -1,11 +1,12 @@
+<!DOCTYPE html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>{{ $client->client }} | Receipt {{ today()->format('Y-m-d') }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{{ $client->info->name }} | Record {{ today()->format('Y-m-d') }}</title>
     <style>
         body {
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            font-size: 17px;
-            width: 400px;
+            font-family: DejaVu Sans;
+            font-size: 14px;
+            width: 500px;
         }
         .receipt {
             padding: 10px;
@@ -24,9 +25,9 @@
     </style>
 </head>
 <div class="receipt">
-    <div class="receipt-container" style="text-align: center; border: 1px solid #D0D0D0;background-color: #F6F6F6;">
+    <div class="receipt-container" style="text-align: center; border: 1px solid #D0D0D0;background-color: #F6F6F6;padding: 10px">
         <img src="{{ public_path('assets') . '/logo.jpg' }}" width="60" alt="">
-        <h3>Lucky Fuds | Catering Services - Official Receipt</h3>
+        <h3>Lucky Fuds | Catering Services - Official Record</h3>
     </div>
     <div class="receipt-box">
         <table >
@@ -35,8 +36,16 @@
                 <td align="right">{{ $client->event }}</td>
             </tr>
             <tr>
+                <td>Address</td>
+                <td align="right">{{ $client->info->address }}</td>
+            </tr>
+            <tr>
+                <td>Package</td>
+                <td align="right">{{ $client->package->name }}</td>
+            </tr>
+            <tr>
                 <td>Amount</td>
-                <td align="right">{{ $client->package->price }}</td>
+                <td align="right">₱{{ $client->package->price }}</td>
             </tr>
             <tr>
                 <td>Date</td>
@@ -57,7 +66,7 @@
             </tr>
             <tr>
                 <td>Prefered Contact</td>
-                <td align="right">{{ $client->method }}</td>
+                <td align="right">{{ $client->info->method == "email" ? $client->info->email : ($client->info->method == "contact" ? $client->info->contact : "N/A" )}}</td>
             </tr>
         </table>
     </div>

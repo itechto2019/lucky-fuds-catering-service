@@ -18,7 +18,7 @@
     </div>
     <div class="table-reservation">
         <div class="table-form">
-            @if($reservations->isNotEmpty())
+            @if(!$reservations->isEmpty())
             <table>
                 <tr>
                     <th>#</th>
@@ -33,13 +33,13 @@
                         <td>
                             <b>Package: </b>{{ $reservation->package->name }}
                             <br>
-                            <b>Client: </b>{{ $reservation->client }}
+                            <b>Client: </b>{{$reservation->info->name}}
                             <br>
-                            <b>Contact: </b>{{ $reservation->contact }}
+                            <b>Contact: </b>{{ $reservation->info->contact }}
                             <br>
-                            <b>Email: </b>{{ $reservation->email }}
+                            <b>Email: </b>{{ $reservation->info->email }}
                             <br>
-                            <b>Prefered contact: </b>{{ $reservation->method }}
+                            <b>Prefered contact: </b>{{ $reservation->info->method == "email" ? $reservation->info->email : ($reservation->info->method == "contact" ? $reservation->info->contact : "Not Set") }}
                             <br>
                             <b>Address: </b>{{ $reservation->address }}
                             <br>
@@ -48,7 +48,7 @@
                             <b>No. of guest/s: </b>{{ $reservation->guest }}
                             <br>
                         </td>
-                        <td>{{ $reservation->status }}</td>
+                        <td>{{ $reservation->reserve->status }}</td>
                     </tr>
                 @endforeach
             </table>

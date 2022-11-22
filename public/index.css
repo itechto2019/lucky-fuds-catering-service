@@ -413,11 +413,16 @@ main {
 .input-group.a {
     background-color: #019267;
     margin: 5px;
+    width: 100px;
+    height: 60px;
     border-radius: 20px;
 }
 .input-group.a a {
     text-decoration: none;
-    color: #1A1A1A;
+    text-align: center;
+    display: grid;
+    place-content: center;
+    color: #FFFFFF;
 }
 
 .input-group.textarea textarea {

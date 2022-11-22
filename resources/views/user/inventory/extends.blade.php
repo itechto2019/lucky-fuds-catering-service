@@ -30,8 +30,6 @@
                         <th>Extended use</th>
                         <th>Date for return</th>
                         <th>Extended return</th>
-                        <th>Status</th>
-
                     </tr>
                     @foreach ($rents as $rent)
                         <tr>
@@ -46,7 +44,6 @@
                             <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                             <td>{{ $rent->return }}</td>
                             <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
-                            <td>{{ $rent->status === "extend" ? 'approved' : 'pending' }}</td>
                         </tr>
                     @endforeach
                 </table>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Stock;
 use App\Models\ForRent;
+use App\Models\ForReserve;
 use App\Models\Package;
 use App\Models\Reserve;
 use App\Models\UserRent;
@@ -31,32 +32,26 @@ class AdminController extends Controller
         for ($i = 1; $i <= $noOfDays; $i++) {
             $days[] = Carbon::now()->days($i)->format('j');
         }
-        // for($i = 1; $i <= $noOfWeeks; $i++) {
-        //     $weeks[] = Carbon::now()->days($i)->format('D');
-        // }
-        $approved = count(UserReserve::with(['info' => function ($q) {
-            $q->where('status', 'approved');
-        }])->get());
-        $declined = count(UserReserve::with(['info' => function ($q) {
-            $q->where('status', 'declined');
-        }])->get());
-        $pending = count(UserReserve::with(['info' => function ($q) {
-            $q->where('status', 'pending');
-        }])->get());
-        $request = count(UserReserve::get());
 
+        // reservation requests
+        $approved = count(ForReserve::where('status', 'approved')->get());
+        $declined = count(ForReserve::where('status', 'declined')->get());
+        $pending = count(ForReserve::where('status', 'pending')->get());
+        $request = count(ForReserve::get());
 
+        // rent requests
         $confirmedRent = count(UserRent::where('status', 'approved')->get());
         $pendingRent = count(UserRent::where('status', 'pending')->get());
         $declinedRent = count(UserRent::where('status', 'declined')->get());
-        $totalRequest = count(UserRent::where('status', 'approved')->orWhere('status', 'pending')->orWhere('status', 'declined')->get());
+        $totalRequest = count(UserRent::get());
 
-        $confirmedExtend = count(UserRent::where('status', 'extended')->get());
-        $pendingExtend = count(UserRent::where('status', 'extending')->get());
-        $declinedExtend = count(UserRent::where('status', 'declined')->whereHas('extends')->get());
-        $totalRequestExtend = count(UserRent::where('status', 'extended')->orWhere('status', 'extending')->orWhere('status', 'declined')->whereHas('extends')->get());
+        // extend requests
+        $confirmedExtend = count(UserRent::whereHas('extends')->where('status', 'extended')->get());
+        $pendingExtend = count(UserRent::whereHas('extends')->where('status', 'extending')->get());
+        $declinedExtend = count(UserRent::whereHas('extends')->where('status', 'declined')->whereHas('extends')->get());
+        $totalRequestExtend = count(UserRent::whereHas('extends')->get());
 
-        $reserves = UserReserve::with(['info' => function ($q) {
+        $reserves = UserReserve::with(['reserve' => function ($q) {
             $q->where('status', 'approved');
         }])->get();
 
@@ -122,12 +117,19 @@ class AdminController extends Controller
     public function ScheduleReservation()
     {
         $reservations = UserReserve::get();
-        $approves = UserReserve::with(['reserve' => function($q) {
-            $q->where('status', 'approved');
-        }])->get();
-        $declines = UserReserve::with(['reserve' => function($q) {
-            $q->where('status', 'declined');
-        }])->get();
+        // $approves = UserReserve::with(['reserve' => function ($q) {
+        //     $q->where('status', 'approved');
+        // }])->get();
+
+        $approves = ForReserve::with(['user_reserve'])->where('status', 'approved')->get();
+
+        // $declines = UserReserve::with(['reserve' => function ($q) {
+        //     $q->where('status', 'declined');
+        // }])->get();
+        $declines = ForReserve::with(['user_reserve'])->where('status', 'declined')->get();
+        
+
+
         return view('admin.schedule_reservation')->with(compact([
             'reservations',
             'approves',

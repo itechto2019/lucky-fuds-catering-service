@@ -30,12 +30,16 @@
                         <td>{{ $reserve->id }}</td>
                         <td>{{ $reserve->created_at->format('Y-m-d') }}</td>
                         <td>
-                            <b>Client: </b>{{ $reserve->client }}
+                            <b>Client: </b>{{ $reserve->info->name }}
                             <br> <b>Contact: </b>{{ $reserve->contact}}
                             <br> <b>Email: </b>{{ $reserve->email}}
                             <br> <b>Prefered Contact: </b>{{ $reserve->method == 'email' ? $reserve->email : $reserve->contact}}
-                            <br> <b>Date address: </b> {{ $reserve->address }}
-                            <br> <b>Event: </b> {{ $reserve->event }}
+                            <br> <b>Reservation address: </b> {{ $reserve->address }}
+                            <br> <b>Event: </b>{{ $reserve->event }}
+                            <br> <b>No. of guest/s: </b>{{ $reserve->guest }}
+                            <br>
+                            <br> <b>Package: </b> {{$reserve->package->name}}
+                            <br> <b>Amount: </b> {{$reserve->package->price}}
                         </td>
                     </tr>
                     @endforeach

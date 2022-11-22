@@ -5,8 +5,8 @@
 </head>
 <style>
     body {
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        font-size: 17px;
+        font-family: DejaVu Sans;
+        font-size: 14px;
         width: 500px;
     }
     .receipt {
@@ -27,14 +27,10 @@
 <div class="receipt">
     <div class="receipt-container" style="text-align: center; border: 1px solid #D0D0D0;background-color: #F6F6F6; padding: 10px">
         <img src="{{ public_path('assets') . '/logo.jpg' }}" width="60" alt="">
-        <h3>Lucky Fuds | Catering Services <br>Official Receipt</h3>
+        <h3>Lucky Fuds | Catering Services <br>Official Record</h3>
     </div>
     <div class="receipt-box">
         <table >
-            <tr>
-                <td>Receipt#</td>
-                <td align="right">{{ $rent->id }}</td>
-            </tr>
             <tr>
                 <td>Item</td>
                 <td align="right">{{ $rent->stock->item }}</td>
@@ -62,7 +58,7 @@
 
             <tr>
                 <td>Amount</td>
-                <td align="right">{{ $rent->amount }}</td>
+                <td align="right">₱{{ $rent->amount }}</td>
             </tr>
 
             <tr>
