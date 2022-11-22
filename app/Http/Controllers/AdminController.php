@@ -172,7 +172,7 @@ class AdminController extends Controller
     // approval
     public function Approves()
     {
-        $rents = UserRent::with(['info', 'stock'])->where('status', 'approved')->get();
+        $rents = UserRent::with(['info', 'stock'])->where('status', 'approved')->orWhereHas('return')->get();
         return view('admin.inventory.approves')->with(compact(['rents']));
     }
     // extended
