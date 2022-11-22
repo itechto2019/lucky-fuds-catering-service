@@ -265,7 +265,7 @@ class StockController extends Controller
         }
         if($rent->status == "extended") {
             $result = UserRent::where('id', $id)->update([
-                'status' => 'extended'
+                'status' => 'returned'
             ]);
             if($result) {
                 Returns::create([
