@@ -158,7 +158,7 @@ class UserController extends Controller
         return view('user.schedule_summary')->with(compact(['reserves']));
     }
     public function AccountProfile() {
-        return view('user.account.profile');
+        return view('user.account.Profile');
     }
 
     public function UpdateProfile(Request $request) {

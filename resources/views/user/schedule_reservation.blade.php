@@ -26,15 +26,19 @@
                 @csrf
                 <div class="form-separate">
                     <div class="form-page">
-                        <div class="input-group">
-                            <label for=""><b>Name: </b>{{ Auth::user()->info->name }}</label>
-                        </div>
-                        <div class="input-group">
-                            <label for=""><b>Contact: </b>{{ Auth::user()->info->contact }}</label>
-                        </div>
-                        <div class="input-group">
-                            <label for=""><b>Email: </b>{{ Auth::user()->info->email }}</label>
-                        </div>
+                        @if (Auth::user()->info)
+                            <div class="input-group">
+                                <label for=""><b>Name: </b>{{ Auth::user()->info->name }}</label>
+                            </div>
+                            <div class="input-group">
+                                <label for=""><b>Contact: </b>{{ Auth::user()->info->contact }}</label>
+                            </div>
+                            <div class="input-group">
+                                <label for=""><b>Email: </b>{{ Auth::user()->info->email }}</label>
+                            </div>
+                        @else
+                            <h3>In order to reserve you must update your profile first.</h3>
+                        @endif
                         @if (!$packages->isEmpty())
                             <div class="package-description">
                                 <h3 style="padding: 0px 10px;">Package List</h3>
