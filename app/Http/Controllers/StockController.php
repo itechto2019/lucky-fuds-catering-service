@@ -263,7 +263,7 @@ class StockController extends Controller
                 ]);
             }
         }
-        if($rent->status == "extend") {
+        if($rent->status == "extended") {
             $result = UserRent::where('id', $id)->update([
                 'status' => 'extended'
             ]);
