@@ -36,6 +36,7 @@ class ScheduleController extends Controller
             ForReserve::create([
                 'user_info_id' => Auth::user()->info->id,
                 'user_reserve_id' => $reserve->id,
+                'status' => 'pending'
             ]);
             return back();
         }
@@ -43,6 +44,7 @@ class ScheduleController extends Controller
 
     }
     protected function ApproveReserve($id) {
+        
         ForReserve::where('id', $id)->update([
             'status' => 'approved'
         ]);

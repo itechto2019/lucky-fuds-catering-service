@@ -88,7 +88,6 @@ class AdminController extends Controller
         $startOfCalendar = $date->copy()->firstOfMonth()->startOfWeek(Carbon::SUNDAY);
         $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY);
 
-        
         $previousEvents = UserReserve::with(['reserve' => function($q) {
             $q->where('status', 'approved');
         }])->whereDate('date', '<', today()->format('Y-m-d'))->get();
@@ -97,7 +96,6 @@ class AdminController extends Controller
         $upcomingEvents = UserReserve::with(['reserve' => function($q) {
             $q->where('status', 'approved');
         }])->whereDate('date', '>=', today()->format('Y-m-d'))->get();
-
 
         $events = UserReserve::with(['reserve' => function($q) {
             $q->where('status', 'approved');
@@ -120,15 +118,7 @@ class AdminController extends Controller
     public function ScheduleReservation()
     {
         $reservations = UserReserve::get();
-        // $approves = UserReserve::with(['reserve' => function ($q) {
-        //     $q->where('status', 'approved');
-        // }])->get();
-
         $approves = ForReserve::with(['user_reserve'])->where('status', 'approved')->get();
-
-        // $declines = UserReserve::with(['reserve' => function ($q) {
-        //     $q->where('status', 'declined');
-        // }])->get();
         $declines = ForReserve::with(['user_reserve'])->where('status', 'declined')->get();
         
         return view('admin.schedule_reservation')->with(compact([
