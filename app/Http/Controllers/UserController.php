@@ -186,10 +186,10 @@ class UserController extends Controller
             $form = $validator->validated();
             if($request->hasFile('profile')) {
                 $tempName = time() . '_profile.' . $form['profile']->extension();
-                $filename = $form['profile']->move(public_path('profile'), $tempName);
+                $image = $form['profile']->move(public_path('profile'), $tempName);
                 UserInfo::updateOrCreate([
                     'user_id' => Auth::id(),
-                    'profile' => $filename,
+                    'profile' => $image->filename,
                     'name' => $form['name'],
                     'contact' => $form['contact'],
                     'email' => $form['email'],

@@ -36,12 +36,12 @@ class StockController extends Controller
             'quantity' => "required|min:0",
         ]);
         if ($request->image) {
-            $tempName = $form['item'] . '_' . time() . '.' . $request->image->extension();
-            $filename = $request->image->move(public_path('stocks'), $tempName);
+            $filename = $form['item'] . '_' . time() . '.' . $request->image->extension();
+            $image = $request->image->move(public_path('stocks'), $filename);
 
             $result = Stock::create([
                 'item' => $form['item'],
-                'image' => $filename,
+                'image' => $image->filename,
                 'quantity' => $form['quantity'],
                 'price' => $form['price'],
             ]);
@@ -67,12 +67,12 @@ class StockController extends Controller
         ]);
         if ($request->image) {
             $filename = $form['item'] . '_' . time() . '.' . $request->image->extension();
-            $request->image->move(public_path('stocks'), $filename);
+            $image = $request->image->move(public_path('stocks'), $filename);
             $quantity = $request->quantity;
             if(!$quantity > 0) {
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
-                    'image' => $filename,
+                    'image' => $image->filename,
                     'quantity' => 0,
                     'price' => $form['price'],
                 ]);
