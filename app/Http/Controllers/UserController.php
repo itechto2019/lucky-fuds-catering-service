@@ -185,11 +185,11 @@ class UserController extends Controller
         }else {
             $form = $validator->validated();
             if($request->hasFile('profile')) {
-                $tempName = time() . '_profile.' . $form['profile']->extension();
-                $image = $form['profile']->move(public_path('profile'), $tempName);
+                $filename = time() . '_profile.' . $form['profile']->extension();
+                $form['profile']->move(public_path('profile'), $filename);
                 UserInfo::updateOrCreate([
                     'user_id' => Auth::id(),
-                    'profile' => $image->filename,
+                    'profile' => $filename,
                     'name' => $form['name'],
                     'contact' => $form['contact'],
                     'email' => $form['email'],
