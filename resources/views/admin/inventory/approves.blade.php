@@ -44,6 +44,8 @@
                     <td>
                         @if ($rent->status == "returned")
                             item is returned
+                        @elseif (!$rent->extends && !$rent->rent_approve)
+                            item is declined
                         @else
                             <div class="action-form">
                                 <div class="action-button">

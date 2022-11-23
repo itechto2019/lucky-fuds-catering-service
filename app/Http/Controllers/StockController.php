@@ -240,15 +240,12 @@ class StockController extends Controller
         }
         if($rent->status == "extending") {
             UserRent::where('id', $id)->update([
-                'status' => 'declined',
+                'status' => 'extend declined',
             ]);
             ExtendDecline::create([
                 'user_rent_id' => $rent->id
             ]);
             Extend::where('id', $rent->extends->id)->delete();
-            ForRent::where('id', $rent->for_rent_id)->update([
-                'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
-            ]);
         }
 
         return redirect()->back()->withErrors([
@@ -278,7 +275,7 @@ class StockController extends Controller
     {
         $rent = UserRent::where('id', $id)->get()->first();
 
-        if($rent->status == "approved") {
+        if($rent->rent_approve) {
             $result = UserRent::where('id', $id)->update([
                 'status' => 'returned'
             ]);
@@ -290,7 +287,20 @@ class StockController extends Controller
                 ]);
             }
         }
-        if($rent->status == "extended") {
+        if($rent->extend_approve) {
+            $result = UserRent::where('id', $id)->update([
+                'status' => 'returned'
+            ]);
+            if($result) {
+                Returns::create([
+                    'user_rent_id' => $rent->id,
+                    'date' => $rent->extend && $rent->extend->date ? $rent->extend->date : $rent->date,
+                    'return' => $rent->extend && $rent->extend->return ? $rent->extend->return : $rent->return,
+                    'quantity' => $rent->amount / $rent->stock->price,
+                ]);
+            }
+        }
+        if($rent->extend_decline) {
             $result = UserRent::where('id', $id)->update([
                 'status' => 'returned'
             ]);

@@ -49,17 +49,19 @@
                         <td>
                             <div class="action-form">
                                 <div class="action-button">
-                                    @if ($rent->rent_approve && !$rent->status == "extended")
-                                    <button class="action-print" onclick="extend({{ $rent->id }})">
-                                        Extend
-                                    </button>
-                                    @elseif($rent?->rent_approve)
+                                    @if ($rent->status == "approved")
+                                        <button class="action-print" onclick="extend({{ $rent->id }})">
+                                            Extend
+                                        </button>
+                                    @elseif($rent?->rent_approve && $rent->status == "approved" || $rent->status == "extended")
                                         <p>Admin approved your request</p>
-                                    @elseif($rent?->rent_decline)
+                                    @elseif($rent?->rent_decline || $rent->status == "declined")
                                         <p>Admin declined your request</p>
-                                    @elseif($rent?->extend_approve)
+
+
+                                    @elseif($rent?->extend_approve || $rent->status == "extended")
                                         <p>Admin approved your request</p>
-                                    @elseif($rent?->extend_decline)
+                                    @elseif($rent?->extend_decline && $rent->status == "extend declined")
                                         <p>Admin declined your request</p>
                                     @else
                                         <p>Waiting for approval</p>
@@ -75,7 +77,7 @@
                                             @csrf
                                             <div class="input-group">
                                                 <label for="">Date to use(?): </label>
-                                                <input type="date" name="date" value="{{ $rent->date }}">
+                                                <input type="date" name="date" value="{{ $rent->date }}" min="{{now()}}">
                                             </div>
                                             <div class="input-group">
                                                 <label for="">Date to return(?): </label>
