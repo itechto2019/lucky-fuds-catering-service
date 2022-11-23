@@ -218,6 +218,9 @@ class StockController extends Controller
             ]);
         }
         if($rent->status == "extending") {
+            UserRent::where('id', $id)->update([
+                'status' => 'approved',
+            ]);
             Extend::where('id', $rent->extends->id)->delete();
         }
 
