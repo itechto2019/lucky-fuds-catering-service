@@ -222,6 +222,9 @@ class StockController extends Controller
                 'status' => 'approved',
             ]);
             Extend::where('id', $rent->extends->id)->delete();
+            ForRent::where('id', $rent->for_rent_id)->update([
+                'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
+            ]);
         }
 
         return redirect()->back()->withErrors([
