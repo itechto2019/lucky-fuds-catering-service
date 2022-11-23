@@ -15,6 +15,7 @@ use App\Models\UserRent;
 use App\Models\UserReserve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -184,8 +185,8 @@ class UserController extends Controller
         }else {
             $form = $validator->validated();
             if($request->hasFile('profile')) {
-                $filename = time() . '_profile.' . $form['profile']->extension();
-                $form['profile']->move(public_path("asset/profile"), $filename);
+                $tempName = time() . '_profile.' . $form['profile']->extension();
+                $filename = $form['profile']->move(public_path('profile'), $tempName);
                 UserInfo::updateOrCreate([
                     'user_id' => Auth::id(),
                     'profile' => $filename,

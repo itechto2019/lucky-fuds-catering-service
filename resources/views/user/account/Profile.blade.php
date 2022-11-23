@@ -17,7 +17,7 @@
             @method('PATCH')
             <div class="form-separate" style="display: block">
                 <div class="image-container" style="padding: 10px">
-                    <img src="{{Auth::user()->info ? asset('/asset/profile/'. Auth::user()->info->profile ) : asset('profile/user.png')}}" alt="failed to load image" style="width: 200px; height: 200px;object-fit: cover;background-repeat:no-repeat; border-radius: 50%" >
+                    <img src="{{Auth::user()->info ? asset('profile/'. Auth::user()->info->profile) : asset('profile/user.png')}}" alt="failed to load image" style="width: 200px; height: 200px;object-fit: cover;background-repeat:no-repeat; border-radius: 50%" >
                 </div>
                 <div class="form-page">
                     <div class="input-group" style="border:2px solid #5FD068;">

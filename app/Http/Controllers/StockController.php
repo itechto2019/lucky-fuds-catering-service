@@ -36,8 +36,8 @@ class StockController extends Controller
             'quantity' => "required|min:0",
         ]);
         if ($request->image) {
-            $filename = $form['item'] . '_' . time() . '.' . $request->image->extension();
-            $request->image->move(public_path('stocks'), $filename);
+            $tempName = $form['item'] . '_' . time() . '.' . $request->image->extension();
+            $filename = $request->image->move(public_path('stocks'), $tempName);
 
             $result = Stock::create([
                 'item' => $form['item'],
