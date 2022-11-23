@@ -209,13 +209,16 @@ class StockController extends Controller
     {
         $rent = UserRent::where('id', $id)->get()->first();
 
-        if ($rent->status == "pending" || $rent->status == "extending") {
+        if ($rent->status == "pending") {
             UserRent::where('id', $id)->update([
                 'status' => 'declined',
             ]);
             ForRent::where('id', $rent->for_rent_id)->update([
                 'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
             ]);
+        }
+        if($rent->status == "extending") {
+            Extend::where('id', $rent->extends->id)->delete();
         }
 
         return redirect()->back()->withErrors([
