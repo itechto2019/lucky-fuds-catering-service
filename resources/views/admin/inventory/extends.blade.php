@@ -13,12 +13,12 @@
                         <th>Image</th>
                         <th>Item</th>
                         <th>Client</th>
+                        <th>Address</th>
                         <th>Method</th>
                         <th>Amount</th>
                         <th>Quantity</th>
                         <th>Extended use</th>
                         <th>Extended return</th>
-                        <th>Status</th>
                     </tr>
                     @foreach ($rents as $rent)
                         <tr>
@@ -26,12 +26,12 @@
                             <td><img src="{{ asset('stocks/'.$rent->stock->image) }}" alt=""></td>
                             <td>{{ $rent->stock->item }}</td>
                             <td>{{ $rent->info->name }}</td>
+                            <td>{{ $rent->address }}</td>
                             <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
                             <td>₱{{ $rent->amount }}</td>
                             <td>{{ $rent->amount / $rent->stock->price }}</td>
                             <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                             <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
-                            <td>Item is returned</td>
                         </tr>
                     @endforeach
                 </table>

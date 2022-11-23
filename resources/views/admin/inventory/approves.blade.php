@@ -35,7 +35,7 @@
                     <td>{{ $rent->stock->item}}</td>
                     <td>{{ $rent->info->name }}</td>
                     <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
-                    <td>{{ $rent->info->address }}</td>
+                    <td>{{ $rent->address }}</td>
                     <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                     <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
                     <td>₱{{ $rent->amount }}</td>

@@ -17,8 +17,9 @@
                         <th>Item</th>
                         <th>Client</th>
                         <th>Method</th>
-                        <th>Quantity</th>
+                        <th>Address</th>
                         <th>Amount</th>
+                        <th>Quantity</th>
                         <th>Date</th>
                         <th>Return</th>
                         <th></th>
@@ -30,8 +31,9 @@
                         <td>{{ $rent->stock->item }}</td>
                         <td>{{ $rent->info->name }}</td>
                         <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
-                        <td>{{ (int) $rent->amount / $rent->stock->price }}</td>
+                        <td>{{ $rent->address }}</td>
                         <td>₱{{ $rent->amount }}</td>
+                        <td>{{ (int) $rent->amount / $rent->stock->price }}</td>
                         <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                         <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
                         <td>

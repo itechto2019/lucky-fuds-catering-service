@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Approve;
+use App\Models\Decline;
 use App\Models\Deliver;
 use App\Models\Extend;
+use App\Models\ExtendApprove;
+use App\Models\ExtendDecline;
 use App\Models\ForRent;
 use App\Models\Pickup;
 use App\Models\Rent;
+use App\Models\RentApprove;
+use App\Models\RentDecline;
 use App\Models\Returns;
 use App\Models\Stock;
 use App\Models\Report;
@@ -145,18 +151,22 @@ class StockController extends Controller
         $validator = Validator::make($request->only(
             'quantity',
             'date',
+            'address',
             'return'
         ),[
             'quantity' => 'required|min:1',
             'date' => 'required',
+            'address' => 'required',
             'return' => 'required'
         ]);
         $form = $validator->validated();
+        $address = $request->input('venue') == "current" ? $user->info->address : ($request->input('venue') == "manual" ?  $form['address'] : $user->info->address);
         $result = UserRent::create([
             'user_info_id' => $user->info->id,
             'stock_id' => $stockId,
             'for_rent_id' => $rentId,
             'amount' => $form['quantity'] * $stock->price,
+            'address' => $address,
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
@@ -191,14 +201,22 @@ class StockController extends Controller
             UserRent::where('id', $id)->update([
                 'status' => 'approved'
             ]);
+            RentApprove::create([
+                'user_rent_id' => $rent->id
+            ]);
+            
             return redirect()->back()->withErrors([
                 'message' => "Rent Approved"
             ]);
         }
         if($rent->status == "extending"){
             UserRent::where('id', $id)->update([
-                'status' => 'extend'
+                'status' => 'extended'
             ]);
+            ExtendApprove::create([
+                'user_rent_id' => $rent->id
+            ]);
+            
             return redirect()->back()->withErrors([
                 'message' => "Rent extends"
             ]);
@@ -213,13 +231,19 @@ class StockController extends Controller
             UserRent::where('id', $id)->update([
                 'status' => 'declined',
             ]);
+            RentDecline::create([
+                'user_rent_id' => $rent->id
+            ]);
             ForRent::where('id', $rent->for_rent_id)->update([
                 'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
             ]);
         }
         if($rent->status == "extending") {
             UserRent::where('id', $id)->update([
-                'status' => 'approved',
+                'status' => 'declined',
+            ]);
+            ExtendDecline::create([
+                'user_rent_id' => $rent->id
             ]);
             Extend::where('id', $rent->extends->id)->delete();
             ForRent::where('id', $rent->for_rent_id)->update([
@@ -253,8 +277,6 @@ class StockController extends Controller
     protected function toReturn($id)
     {
         $rent = UserRent::where('id', $id)->get()->first();
-        // $item = ForRent::where('id', $rent->for_rent_id)->get()->first();
-        // $stock = Stock::where('id', $item->stock_id)->get()->first();
 
         if($rent->status == "approved") {
             $result = UserRent::where('id', $id)->update([

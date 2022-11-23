@@ -49,7 +49,7 @@
             </tr>
             <tr>
                 <td>Address</td>
-                <td align="right">{{ $rent->info->address }}</td>
+                <td align="right">{{ $rent->address }}</td>
             </tr>
             <tr>
                 <td>Quantity</td>

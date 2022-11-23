@@ -25,6 +25,7 @@
                         <th>Item</th>
                         <th>Client</th>
                         <th>Method</th>
+                        <th>Address</th>
                         <th>Date for use</th>
                         <th>Date for return</th>
                         <th>Amount</th>
@@ -39,6 +40,7 @@
                         <td>{{ $rent->stock->item }}</td>
                         <td>{{ $rent->info->name }}</td>
                         <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
+                        <td>{{ $rent->address }}</td>
                         <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                         <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
                         <td>₱{{ $rent->amount }}</td>
@@ -47,18 +49,20 @@
                         <td>
                             <div class="action-form">
                                 <div class="action-button">
-                                    @if ($rent->status == "approved")
+                                    @if ($rent->rent_approve && !$rent->status == "extended")
                                     <button class="action-print" onclick="extend({{ $rent->id }})">
                                         Extend
                                     </button>
-                                    @elseif($rent->status == "extend")
-                                        <p>Extending</p>
-                                    @elseif($rent->status == "extending" || $rent->status == "pending")
+                                    @elseif($rent?->rent_approve)
+                                        <p>Admin approved your request</p>
+                                    @elseif($rent?->rent_decline)
+                                        <p>Admin declined your request</p>
+                                    @elseif($rent?->extend_approve)
+                                        <p>Admin approved your request</p>
+                                    @elseif($rent?->extend_decline)
+                                        <p>Admin declined your request</p>
+                                    @else
                                         <p>Waiting for approval</p>
-                                    @elseif($rent->status == "declined")
-                                        <p>Admin declined your approval</p>
-                                    @elseif($rent->status == "returned" || $rent->status == "extended")
-                                        <p>Successfully returned</p>
                                     @endif
                                 </div>
                                 <div class="form" id="form-extends-{{ $rent->id }}" class="form-rents" style="display:none">

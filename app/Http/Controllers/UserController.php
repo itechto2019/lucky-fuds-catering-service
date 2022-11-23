@@ -132,22 +132,21 @@ class UserController extends Controller
     {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
 
-        $rents = UserRent::with(['info', 'stock'])->where('user_info_id', $id)->get();
-
+        $rents = UserRent::where('user_info_id', $id)->get();
         return view('user.inventory.rents')->with(compact(['rents']));
     }
     public function Extends() {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
 
-        $rents = UserRent::with(['info','stock', 'extends'])->where('user_info_id', $id)->whereHas('extends')->get();
+        $rents = UserRent::whereHas('extend_approve')->orWhereHas('extend_decline')->where('user_info_id', $id)->get();
 
         return view('user.inventory.extends')->with(compact(['rents']));
     }
     public function Summary(Request $request)
     {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
-        $rents = UserRent::with(['info','stock', 'extends'])->where('user_info_id', $id)->get();
-        $returns = UserRent::with(['info'])->whereHas('return')->where('user_info_id', $id)->get();
+        $rents = UserRent::where('user_info_id', $id)->get();
+        $returns = UserRent::whereHas('return')->where('user_info_id', $id)->get();
 
         return view('user.inventory.summary')->with(compact(['rents', 'returns']));
     }

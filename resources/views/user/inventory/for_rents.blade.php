@@ -95,12 +95,23 @@
                                                 required>
                                         </div>
                                         <div class="input-group">
+                                            <label for="">Current</label>
+                                            <input type="radio" name="venue" value="current" checked />
+                                            <label for="">Manual</label>
+                                            <input type="radio" name="venue" value="manual"/>
+                                        </div>
+                                        <div class="input-group" id="show-address">
+                                            <input type="text" name="address"
+                                                placeholder="Address" value="{{ Auth::user()->info->address }}"
+                                                required>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="method" style="user-select:none">Pickup</label>
                                             <input type="radio" name="method" value="pickup" style="cursor: pointer"
                                                 required>
-                                            <label for="method" style="user-select:none">Pickup</label>
+                                            <label for="method" style="user-select:none">Deliver</label>
                                             <input type="radio" style="cursor: pointer" value="deliver" name="method"
                                                 required>
-                                            <label for="method" style="user-select:none">Deliver</label>
                                         </div>
                                         <div class="input-group">
                                             <label for="">Date to use(?): </label>
@@ -178,6 +189,7 @@
         $(`#amount-${id}`).attr("disabled", "")
         $(`#amount-${id}`).val(q * p)
     }
+
     setTimeout(() => {
        $('.error-message').css({
             display: 'none'

@@ -14,6 +14,7 @@ class UserRent extends Model
         'stock_id',
         'for_rent_id',
         'amount',
+        'address',
         'date',
         'return',
         'status',
@@ -39,5 +40,18 @@ class UserRent extends Model
     }
     public function return() {
         return $this->hasOne(Returns::class);
+    }
+    
+    public function rent_approve() {
+        return $this->hasOne(RentApprove::class);
+    }
+    public function rent_decline() {
+        return $this->hasOne(RentDecline::class);
+    }
+    public function extend_approve() {
+        return $this->hasOne(ExtendApprove::class);
+    }
+    public function extend_decline() {
+        return $this->hasOne(ExtendDecline::class);
     }
 }
