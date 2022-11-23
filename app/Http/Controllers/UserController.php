@@ -125,7 +125,7 @@ class UserController extends Controller
     }
     public function ForRents()
     {
-        $supplies = ForRent::with('stock')->get();
+        $supplies = ForRent::whereNot('quantity' , '<' , 0)->get();
         return view('user.inventory.for_rents')->with(compact(['supplies']));
     }
     public function Rented()

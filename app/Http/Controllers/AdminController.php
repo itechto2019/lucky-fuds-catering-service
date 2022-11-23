@@ -152,7 +152,7 @@ class AdminController extends Controller
     // for rents
     public function ForRents()
     {
-        $supplies = ForRent::with('stock')->get();
+        $supplies = ForRent::whereNot('quantity' , '<' , 0)->get();
         return view('admin.inventory.for_rents')->with(compact(['supplies']));
     }
     // for rented
