@@ -23,7 +23,7 @@
                         </div>
                         <div class="month-list">
                             @foreach ($months as $month)
-                                <div class="{{ date('M') == $month ? 'months cur' : 'months' }}" >{{ $month }}</div>
+                                <div class="{{ $selectMonth && date('M', strtotime($selectMonth)) == $month ? 'months cur' : (!$selectMonth && date('M') == $month ? 'months cur' : 'months') }}" style="cursor: pointer; padding: 10px" onclick="getDateEvent('{{$month}}')">{{ $month }}</div>
                             @endforeach
                         </div>
                         @foreach ($formatWeek as $day)
@@ -123,6 +123,15 @@
             success: function (response) {
                 $('.note-event span').html(response.event.event + "<br>" + response.today)
                 $('#ordinal-date span').html(response.event.date)
+            }
+        });
+    }
+    function getDateEvent(month) {
+        $.ajax({
+            type: "get",
+            url: "{{route('schedule_events')}}",
+            success: function (response) {
+                location.href = "?month_of=" + month
             }
         });
     }

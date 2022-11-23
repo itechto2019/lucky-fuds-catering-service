@@ -115,11 +115,11 @@
                                         </div>
                                         <div class="input-group">
                                             <label for="">Date to use(?): </label>
-                                            <input type="date" name="date" required>
+                                            <input type="date" name="date" min={{now()}} required>
                                         </div>
                                         <div class="input-group">
                                             <label for="">Date to return(?): </label>
-                                            <input type="date" name="return" required>
+                                            <input type="date" name="return" min={{now()}} required>
                                         </div>
                                         <div class="input-group">
                                             <button type="submit">Submit</button>

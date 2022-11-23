@@ -82,9 +82,10 @@ class UserController extends Controller
             'reservations',
         ]));
     }
-    public function ScheduleEvents()
+    public function ScheduleEvents(Request $request)
     {
-        $date = empty($date) ? Carbon::today() : Carbon::createFromDate();
+        $selectMonth = $request->has('month_of') ? $request->input('month_of') : today()->month;
+        $date = empty($selectMonth) ? Carbon::today() : Carbon::createFromDate($selectMonth);
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::createFromDate(today()->month, $i)->format('M');
@@ -111,6 +112,7 @@ class UserController extends Controller
         return view('user.schedule_events')->with(compact([
             'date',
             'months',
+            'selectMonth',
             'formatWeek',
             'startOfCalendar',
             'endOfCalendar',

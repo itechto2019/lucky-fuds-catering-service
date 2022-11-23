@@ -10,6 +10,7 @@ use App\Models\Package;
 use App\Models\Reserve;
 use App\Models\UserRent;
 use App\Models\UserReserve;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -75,11 +76,12 @@ class AdminController extends Controller
             'totalRequestExtend'
         ]));
     }
-    public function ScheduleEvents()
+    public function ScheduleEvents(Request $request)
     {
-        $date = empty($date) ? Carbon::now() : Carbon::createFromDate();
+        $selectMonth = $request->has('month_of') ? $request->input('month_of') : today()->month;
+        $date = empty($selectMonth) ? Carbon::now() : Carbon::createFromDate($selectMonth);
         $months = [];
-        for ($i = 1; $i < 12; $i++) {
+        for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::createFromDate(today()->month, $i)->format('M');
         }
         $formatWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -105,6 +107,7 @@ class AdminController extends Controller
         return view('admin.schedule_events')->with(compact([
             'date',
             'months',
+            'selectMonth',
             'formatWeek',
             'startOfCalendar',
             'endOfCalendar',
@@ -182,7 +185,6 @@ class AdminController extends Controller
     // retured
     public function Returned()
     {
-        // $rents = Rent::where('status', 'returned')->orWhere('status', 'extended')->orWhere('is_returned', true)->with('returns')->get();
         $rents = UserRent::whereHas('return')->get();
         return view('admin.inventory.return')->with(compact(['rents']));
     }

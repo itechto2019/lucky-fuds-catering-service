@@ -51,7 +51,7 @@
                         <div class="form-page">
                             <div class="input-group">
                                 <label for="">Date of Event:&nbsp;</label>
-                                <input type="date" name="date" id="" placeholder="Date of event" value="{{ old('date') }}" required>
+                                <input type="date" name="date" id="" placeholder="Date of event" value="{{ old('date') }}" min={{now()}} required>
                             </div>
                             <div class="input-group">
                                 <label for="">Start time:&nbsp;</label>
