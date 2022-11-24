@@ -79,18 +79,30 @@ class StockController extends Controller
         if ($request->image) {
             $filename = $form['item'] . '_' . time() . '.' . $request->image->extension();
             $request->image->move(public_path('stocks'), $filename);
+
+            $file = fopen(public_path('stocks/') . $filename, 'r');
+
+            $storage = Firebase::storage();
+            $storage->getBucket()->upload($file, ['name' => 'stocks/'  . $filename]);
+
+            $imageReference = app('firebase.storage')->getBucket()->object("stocks/" . $filename);
+            $image = $imageReference->signedUrl(Carbon::now()->addCenturies(1));
+
+            unlink(public_path('stocks/') . $filename);
+
+
             $quantity = $request->quantity;
             if (!$quantity > 0) {
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
-                    'image' => $filename,
+                    'image' => $image,
                     'quantity' => 0,
                     'price' => $form['price'],
                 ]);
             } else {
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
-                    'image' => $filename,
+                    'image' => $image,
                     'quantity' => $form['quantity'],
                     'price' => $form['price'],
                 ]);
@@ -106,7 +118,6 @@ class StockController extends Controller
             } else {
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
-                    'image' => "no_image.png",
                     'quantity' => $form['quantity'],
                     'price' => $form['price'],
                 ]);

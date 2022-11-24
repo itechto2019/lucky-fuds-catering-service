@@ -119,8 +119,12 @@
     <div class="event-dates">
         <h1>Event Dates</h1>
     </div>
-    <div style="padding: 10px">
-        <h3>{{ date('F') }}</h3>
+    <div style="padding: 15px; display: flex; gap: 10px;">
+        @foreach ($months as $month)
+            <div class="month-selection"  onclick="getDateEvent('{{$month}}')" style="{{ !$selectedMonth && date('M') == date('M', strtotime($month)) ? "background-color:#FA8281;" : (date('M', strtotime($selectedMonth)) == $month ? "background-color:#FA8281;" : "") }}">
+                <h3>{{ $month }}</h3>
+            </div>
+        @endforeach
     </div>
     <div class="events">
         <div class="dates">
@@ -170,10 +174,16 @@
             <div class="product-box">
                 <img src="{{$product->image}}" alt="">
                 <div class="product-info">
+                    <span>₱{{$product->price}}</span>
                     <p>{{strlen($product->item) > 50 ? substr($product->item, 0, 50) . '...': $product->item}}</p>
                 </div>
             </div>
         @endforeach
     </div>
 </div>
+<script>
+    function getDateEvent(eventMonth) {
+        window.location.href = `?month=${eventMonth}`
+    }
+</script>
 @endsection

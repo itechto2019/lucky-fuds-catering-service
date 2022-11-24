@@ -19,9 +19,11 @@ class AdminController extends Controller
     {
         $this->middleware('admin');
     }
-    public function index()
+    public function index(Request $request)
     {
-        // $noOfDays = today()->daysInMonth;
+        $selectedMonth = $request->has('month') ? $request->input('month') : Carbon::today();
+        $date = empty($selectedMonth) ? Carbon::today() : Carbon::createFromDate($selectedMonth);
+        
         $noOfMonths = Carbon::now()->months()->format('m');
         $noOfDays = Carbon::now()->days()->format('j');
         $noOfWeeks = 7;
@@ -55,7 +57,7 @@ class AdminController extends Controller
 
         $reserves = UserReserve::with(['reserve' => function ($q) {
             $q->where('status', 'approved');
-        }])->get();
+        }])->whereMonth('date', $date->format('m'))->get();
 
         $products = Stock::get();
 
@@ -77,7 +79,8 @@ class AdminController extends Controller
             'pendingExtend',
             'declinedExtend',
             'totalRequestExtend',
-            'products'
+            'products',
+            'selectedMonth'
         ]));
     }
     public function ScheduleEvents(Request $request)
