@@ -31,17 +31,20 @@
                         <th>Image</th>
                         <th>Date Rented</th>
                         <th>Details</th>
+                        <th>Remarks</th>
                     </tr>
                     @foreach ($rents as $rent)
                     <tr>
                         <td>{{ $rent->id }}</td>
-                        <td><img src="{{asset('stocks/' . $rent->stock->image)}}" alt=""></td>
+                        <td><img src="{{ $rent->stock->image }}" alt=""></td>
                         <td>{{ $rent->created_at->format('Y-m-d') }}</td>
                         <td>
                             <b>Item: </b>
                             {{ $rent->stock->item }}
                             <br>
                             <b>Client: </b>{{ $rent->info->name }}
+                            <br>
+                            <b>Address: </b>{{ $rent->address }}
                             <br>
                             <b>Method: </b>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}
                             <br>
@@ -56,6 +59,9 @@
                             <br>
                             <b>Date rented: </b>
                             {{ $rent->created_at->format('Y-m-d') }}
+                        </td>
+                        <td>
+                            {{$rent->status}}
                         </td>
                     </tr>
                     @endforeach
@@ -77,17 +83,20 @@
                         <th>Image</th>
                         <th>Date Rented</th>
                         <th>Details</th>
+                        <th>Remarks</th>
                     </tr>
                     @foreach ($returns as $return)
                     <tr>
                         <td>{{ $return->id }}</td>
-                        <td><img src="{{asset('stocks/' . $return->stock->image)}}" alt=""></td>
+                        <td><img src="{{ $return->stock->image }}" alt=""></td>
                         <td>{{ $return->created_at->format('Y-m-d') }}</td>
                         <td>
                             <b>Item: </b>
                             {{ $return->stock->item }}
                             <br>
                             <b>Client: </b>{{ $return->info->name }}
+                            <br>
+                            <b>Address: </b>{{ $rent->address }}
                             <br>
                             <b>Method: </b>{{ $return->delivers ? "Deliver" : ($return->pickups ? "Pickup" : "") }}
                             <br>
@@ -102,6 +111,9 @@
                             <br>
                             <b>Date Returned: </b>
                             {{ $return->updated_at->format('Y-m-d') }}
+                        </td>
+                        <td>
+                            {{$rent->status}}
                         </td>
                     </tr>
                     @endforeach

@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Report;
-use App\Models\Reserve;
 use App\Models\UserRent;
 use App\Models\UserReserve;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use PDF;
 
 class PrintController extends Controller

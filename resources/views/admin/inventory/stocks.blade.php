@@ -115,7 +115,7 @@
                 @foreach ($supplies as $supply)
                 <tr>
                     <td>{{ $supply->id }}</td>
-                    <td><img src="{{ asset('stocks/'.$supply->image) }}" width="50" height="50"></td>
+                    <td><img src="{{ $supply->image }}" width="50" height="50"></td>
                     <td>{{ $supply->item }}</td>
                     <td>{{ $supply->quantity }}</td>
                     <td>₱{{ $supply->price }}</td>

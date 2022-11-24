@@ -35,7 +35,7 @@
                 
                 <tr>
                     <td>{{ $supply->id }}</td>
-                    <td><img src="{{ asset("stocks") }}/{{ $supply->stock->image }}" width="50" alt=""></td>
+                    <td><img src="{{ $supply->stock->image }}" width="50" alt=""></td>
                     <td>{{ $supply->stock->item }}</td>
                     <td>{{ $supply->quantity }}</td>
                     <td>₱{{ $supply->stock->price }}</td>

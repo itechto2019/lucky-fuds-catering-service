@@ -160,4 +160,20 @@
         </div>
     </div>
 </div>
+
+<div class="products-container">
+    <div class="product-title" style="padding: 10px">
+        <h1>Products</h1>
+    </div>
+    <div class="products-list">
+        @foreach ($products as $product)
+            <div class="product-box">
+                <img src="{{$product->image}}" alt="">
+                <div class="product-info">
+                    <p>{{strlen($product->item) > 50 ? substr($product->item, 0, 50) . '...': $product->item}}</p>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
 @endsection

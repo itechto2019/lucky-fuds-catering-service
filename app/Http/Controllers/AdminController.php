@@ -12,6 +12,7 @@ use App\Models\UserRent;
 use App\Models\UserReserve;
 use Illuminate\Http\Request;
 
+
 class AdminController extends Controller
 {
     public function __construct()
@@ -56,6 +57,8 @@ class AdminController extends Controller
             $q->where('status', 'approved');
         }])->get();
 
+        $products = Stock::get();
+
         return view('admin.dashboard')->with(compact([
             'noOfDays',
             'months',
@@ -73,7 +76,8 @@ class AdminController extends Controller
             'confirmedExtend',
             'pendingExtend',
             'declinedExtend',
-            'totalRequestExtend'
+            'totalRequestExtend',
+            'products'
         ]));
     }
     public function ScheduleEvents(Request $request)
@@ -97,10 +101,10 @@ class AdminController extends Controller
             $q->where('status', 'approved');
         }])->whereDate('date', '>=', today()->format('Y-m-d'))->get();
 
-        $events = UserReserve::with(['reserve' => function($q) {
+        $events = UserReserve::with('reserve')->whereHas('reserve', function ($q){
             $q->where('status', 'approved');
-        }])->get();
-
+        })->get();
+        
 
         return view('admin.schedule_events')->with(compact([
             'date',
@@ -129,7 +133,9 @@ class AdminController extends Controller
     }
     public function ScheduleReports()
     {
-        $reports = UserReserve::with('package')->get();
+        $reports = UserReserve::with(['package', 'reserve'])->whereHas('reserve', function ($q) {
+            $q->where('status', 'approved');
+        })->get();
         return view('admin.schedule_reports')->with(compact([
             'reports'
         ]));

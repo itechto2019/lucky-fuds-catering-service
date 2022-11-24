@@ -31,7 +31,7 @@
                 @foreach ($rents as $rent)
                 <tr>
                     <td>{{ $rent->id }}</td>
-                    <td><img src="{{ asset('stocks/' . $rent->stock->image) }}"></td>
+                    <td><img src="{{ $rent->stock->image }}"></td>
                     <td>{{ $rent->stock->item}}</td>
                     <td>{{ $rent->info->name }}</td>
                     <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>

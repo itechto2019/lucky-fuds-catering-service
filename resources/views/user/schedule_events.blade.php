@@ -21,7 +21,7 @@
                 <h2 style="padding: 10px;font-size: 30px;color: #F7F7F7;text-align: center;" id="ordinal-date"><span>Date Event</span></h2>
                 <div class="note-avail">
                     <div class="note-event">
-                        <span>Event</span>
+                        <span></span>
                     </div>
                 </div>
             </div>
@@ -131,7 +131,7 @@
             url: "/user/get-event/" + event,
             data: `_token = {{ csrf_token() }}`,
             success: function (response) {
-                $('.note-event span').html(response.event.event + "<br>" + response.today)
+                $('.note-event span').html(`<h3>${response.event.event}</h3>` + "<br>" + response.event.date)
                 $('#ordinal-date span').html(response.event.date)
             }
         });

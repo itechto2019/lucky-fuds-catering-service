@@ -5,18 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\ForRent;
 use Carbon\Carbon;
 use App\Models\Package;
-use App\Models\Stock;
-use App\Models\Rent;
-use App\Models\Returns;
-use App\Models\Reserve;
-use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\UserRent;
 use App\Models\UserReserve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Firebase;
 
 class UserController extends Controller
 {
@@ -25,8 +20,12 @@ class UserController extends Controller
         $this->middleware('user');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $selectedMonth = $request->has('month') ? $request->input('month') : Carbon::today();
+
+        $date = empty($selectedMonth) ? Carbon::today() : Carbon::createFromDate($selectedMonth);
+
         $noOfMonths = Carbon::now()->months()->format('m');
         $noOfDays = Carbon::now()->days()->format('j');
         $noOfWeeks = 7;
@@ -56,12 +55,23 @@ class UserController extends Controller
             $q->where('status', 'approved');
         }])->where('user_info_id', $id)->get());
 
+
+
         $reserves = UserReserve::with(['reserve' => function($q) {
             $q->where('status', 'approved');
-        }])->where('user_info_id', $id)->get();
+        }])->where('user_info_id', $id)->whereMonth('date', $date->format('m'))->get();
 
-
+        
         $user = Auth::user();
+
+        $reservationCount = count(UserReserve::where('user_info_id', $id)->get());
+        $rentCount = count(UserRent::whereHas('rent_approve')->where('user_info_id', $id)->get());
+        $rentConfirmCount = count(UserReserve::whereHas('reserve', function ($q) {
+            $q->where('status', 'pending');
+        })->where('user_info_id', $id)->get());
+        $rentRequestCount = count(UserRent::where('user_info_id', $id)->get());
+        $extendRequestCount = count(UserRent::whereHas('extends')->where('user_info_id', $id)->where('status', 'pending')->get());
+
         return view('user.dashboard')->with(compact([
             'noOfDays',
             'months',
@@ -72,7 +82,14 @@ class UserController extends Controller
             'pending',
             'request',
             'reserves',
-            'user'
+            'user',
+            'reservationCount',
+            'rentCount',
+            'rentConfirmCount',
+            'rentRequestCount',
+            'extendRequestCount',
+            'selectedMonth',
+            'date'
         ]));
     }
     public function ConfirmationRequest() {
@@ -104,9 +121,10 @@ class UserController extends Controller
             $q->where('status', 'approved');
         }])->where('user_info_id', $id)->whereDate('date', '>=', today()->format('Y-m-d'))->get();
 
-        $events = UserReserve::with(['reserve' => function ($q) {
+
+        $events = UserReserve::with('reserve')->whereHas('reserve', function ($q){
             $q->where('status', 'approved');
-        }])->where('user_info_id', $id)->get();
+        })->where('user_info_id', $id)->get();
         
 
         return view('user.schedule_events')->with(compact([
@@ -150,7 +168,7 @@ class UserController extends Controller
         $id = Auth::user()->info ? Auth::user()->info->id : null;
         $rents = UserRent::where('user_info_id', $id)->get();
         $returns = UserRent::whereHas('return')->where('user_info_id', $id)->get();
-
+        
         return view('user.inventory.summary')->with(compact(['rents', 'returns']));
     }
     public function ReservationSummary() {
@@ -160,6 +178,7 @@ class UserController extends Controller
         return view('user.schedule_summary')->with(compact(['reserves']));
     }
     public function AccountProfile() {
+
         return view('user.account.Profile');
     }
 
@@ -189,27 +208,62 @@ class UserController extends Controller
             if($request->hasFile('profile')) {
                 $filename = time() . '_profile.' . $form['profile']->extension();
                 $form['profile']->move(public_path('profile'), $filename);
-                UserInfo::updateOrCreate([
-                    'user_id' => Auth::id(),
-                    'profile' => $filename,
-                    'name' => $form['name'],
-                    'contact' => $form['contact'],
-                    'email' => $form['email'],
-                    'address' => $form['address'],
-                    'method' => $form['method'],
-                ]);
+                
+                $file = fopen(public_path('profile/'). $filename, 'r');
+                
+
+                $storage = Firebase::storage();
+                $storage->getBucket()->upload($file, ['name' => 'profile/'  . $filename ]);
+                
+                $imageReference = app('firebase.storage')->getBucket()->object("profile/" . $filename);
+                $image = $imageReference->signedUrl(Carbon::now()->addCenturies(1));
+
+                unlink(public_path('profile/'). $filename);
+
+                if(Auth::user()->info) {
+                    UserInfo::where('user_id', Auth::id())->update([
+                        'user_id' => Auth::id(),
+                        'profile' => $image,
+                        'name' => $form['name'],
+                        'contact' => $form['contact'],
+                        'email' => $form['email'],
+                        'address' => $form['address'],
+                        'method' => $form['method'],
+                    ]);
+                }else {
+                    UserInfo::create([
+                        'user_id' => Auth::id(),
+                        'profile' => $image,
+                        'name' => $form['name'],
+                        'contact' => $form['contact'],
+                        'email' => $form['email'],
+                        'address' => $form['address'],
+                        'method' => $form['method'],
+                    ]);
+                }
                 return back()->withErrors([
                     'message' => 'Profile updated'
                 ]);
             }else {
-                UserInfo::updateOrCreate([
-                    'user_id' => Auth::id(),
-                    'name' => $form['name'],
-                    'contact' => $form['contact'],
-                    'email' => $form['email'],
-                    'address' => $form['address'],
-                    'method' => $form['method'],
-                ]);
+                if(Auth::user()->info) {
+                    UserInfo::where('user_id', Auth::id())->update([
+                        'user_id' => Auth::id(),
+                        'name' => $form['name'],
+                        'contact' => $form['contact'],
+                        'email' => $form['email'],
+                        'address' => $form['address'],
+                        'method' => $form['method'],
+                    ]);
+                }else {
+                    UserInfo::create([
+                        'user_id' => Auth::id(),
+                        'name' => $form['name'],
+                        'contact' => $form['contact'],
+                        'email' => $form['email'],
+                        'address' => $form['address'],
+                        'method' => $form['method'],
+                    ]);
+                }
             }
             
         }

@@ -17,9 +17,11 @@ use App\Models\Returns;
 use App\Models\Stock;
 use App\Models\Report;
 use App\Models\UserRent;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Firebase;
 
 class StockController extends Controller
 {
@@ -39,16 +41,25 @@ class StockController extends Controller
             $filename = $form['item'] . '_' . time() . '.' . $request->image->extension();
             $request->image->move(public_path('stocks'), $filename);
 
-            $result = Stock::create([
+            $file = fopen(public_path('stocks/') . $filename, 'r');
+
+            $storage = Firebase::storage();
+            $storage->getBucket()->upload($file, ['name' => 'stocks/'  . $filename]);
+
+            $imageReference = app('firebase.storage')->getBucket()->object("stocks/" . $filename);
+            $image = $imageReference->signedUrl(Carbon::now()->addCenturies(1));
+
+            unlink(public_path('stocks/') . $filename);
+
+            Stock::create([
                 'item' => $form['item'],
-                'image' => $filename,
+                'image' => $image,
                 'quantity' => $form['quantity'],
                 'price' => $form['price'],
             ]);
         } else {
-            $result = Stock::create([
+            Stock::create([
                 'item' => $form['item'],
-                'image' => "no_image.png",
                 'quantity' => $form['quantity'],
                 'price' => $form['price'],
             ]);
@@ -69,14 +80,14 @@ class StockController extends Controller
             $filename = $form['item'] . '_' . time() . '.' . $request->image->extension();
             $request->image->move(public_path('stocks'), $filename);
             $quantity = $request->quantity;
-            if(!$quantity > 0) {
+            if (!$quantity > 0) {
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
                     'image' => $filename,
                     'quantity' => 0,
                     'price' => $form['price'],
                 ]);
-            }else {
+            } else {
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
                     'image' => $filename,
@@ -117,7 +128,7 @@ class StockController extends Controller
     {
         $stock = Stock::where('id', $id)->get()->first();
         $form = $request->only('quantity');
-        if($form['quantity'] < $stock->quantity) {
+        if ($form['quantity'] < $stock->quantity) {
             ForRent::create([
                 'stock_id' => $id,
                 'quantity' => $form['quantity'],
@@ -126,7 +137,7 @@ class StockController extends Controller
             Stock::where('id', $id)->update([
                 'quantity' => $stock->quantity - $form['quantity']
             ]);
-        }else {
+        } else {
             ForRent::create([
                 'stock_id' => $id,
                 'quantity' => $stock->quantity,
@@ -136,7 +147,7 @@ class StockController extends Controller
                 'quantity' => 0
             ]);
         }
-        
+
         return redirect()->back()->withErrors([
             'message' => "Item is now rentable"
         ]);
@@ -145,7 +156,7 @@ class StockController extends Controller
     {
         // user_id, stock_id, for_rent_id
         $user = Auth::user();
-        
+
         $stock = Stock::where('id', $stockId)->get()->first();
         $forrent = ForRent::where('id', $rentId)->get()->first();
         $validator = Validator::make($request->only(
@@ -153,7 +164,7 @@ class StockController extends Controller
             'date',
             'address',
             'return'
-        ),[
+        ), [
             'quantity' => 'required|min:1',
             'date' => 'required',
             'address' => 'required',
@@ -170,17 +181,17 @@ class StockController extends Controller
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
-        if($result) {
+        if ($result) {
             $method = $request->method;
             ForRent::where('id', $rentId)->update([
                 'quantity' => $forrent->quantity - $form['quantity']
             ]);
-            if($method == "deliver") {
+            if ($method == "deliver") {
                 Deliver::create([
                     'user_rent_id' => $result->id
                 ]);
             }
-            if($method == "pickup") {
+            if ($method == "pickup") {
                 Pickup::create([
                     'user_rent_id' => $result->id
                 ]);
@@ -204,24 +215,23 @@ class StockController extends Controller
             RentApprove::create([
                 'user_rent_id' => $rent->id
             ]);
-            
+
             return redirect()->back()->withErrors([
                 'message' => "Rent Approved"
             ]);
         }
-        if($rent->status == "extending"){
+        if ($rent->status == "extending") {
             UserRent::where('id', $id)->update([
                 'status' => 'extended'
             ]);
             ExtendApprove::create([
                 'user_rent_id' => $rent->id
             ]);
-            
+
             return redirect()->back()->withErrors([
                 'message' => "Rent extends"
             ]);
         }
-        
     }
     protected function toReject($id)
     {
@@ -238,7 +248,7 @@ class StockController extends Controller
                 'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
             ]);
         }
-        if($rent->status == "extending") {
+        if ($rent->status == "extending") {
             UserRent::where('id', $id)->update([
                 'status' => 'extend declined',
             ]);
@@ -266,7 +276,7 @@ class StockController extends Controller
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
-        
+
         return redirect()->back()->withErrors([
             'message' => "Rent extends, wait for approval"
         ]);
@@ -275,11 +285,11 @@ class StockController extends Controller
     {
         $rent = UserRent::where('id', $id)->get()->first();
 
-        if($rent->rent_approve) {
+        if ($rent->rent_approve) {
             $result = UserRent::where('id', $id)->update([
                 'status' => 'returned'
             ]);
-            if($result) {
+            if ($result) {
                 Returns::create([
                     'user_rent_id' => $rent->id,
                     'date' => $rent->date,
@@ -287,11 +297,11 @@ class StockController extends Controller
                 ]);
             }
         }
-        if($rent->extend_approve) {
+        if ($rent->extend_approve) {
             $result = UserRent::where('id', $id)->update([
                 'status' => 'returned'
             ]);
-            if($result) {
+            if ($result) {
                 Returns::create([
                     'user_rent_id' => $rent->id,
                     'date' => $rent->extend && $rent->extend->date ? $rent->extend->date : $rent->date,
@@ -300,11 +310,11 @@ class StockController extends Controller
                 ]);
             }
         }
-        if($rent->extend_decline) {
+        if ($rent->extend_decline) {
             $result = UserRent::where('id', $id)->update([
                 'status' => 'returned'
             ]);
-            if($result) {
+            if ($result) {
                 Returns::create([
                     'user_rent_id' => $rent->id,
                     'date' => $rent->extend && $rent->extend->date ? $rent->extend->date : $rent->date,

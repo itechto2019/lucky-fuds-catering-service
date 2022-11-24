@@ -1,0 +1,12 @@
+{
+    "type": "service_account",
+    "project_id": "lucky-fuds-catering-service",
+    "private_key_id": "e25e0f51ab8cd236ecda9ef66d24add808a170d1",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1ZyWMB+3Sh0Ty\noj/jREpn5zJ6UxDBxXRyP6qFjWpC6e3sP7HtJtHJJ2J5LWTpmnyTi5cNqlquxIb9\n3MvBXds4ySXF92aK7LhtCWPAme5/Rf/VLQvwSMjpmJzD9sOgWK4hr/ndjegSGVQ5\n5UzIYQgi2pA3ZjkgPiUBtKnHo1xTKX2QeGDFgQHoblyrF38GE04gDzKX21+8pZZg\n+FlX8rzP9cg5gVym0JYxT6Gfi0hq51/JTSZ5vPftbjWyMo75FZ0bcHp5tRCyZs2w\nAyBmVVLRFQ2KWIzEEJ/+GPkfGg3iSLaj1aIwwyCAqGgDg6RKrR7frqmXkwjTJ+i+\nRnSLw2w9AgMBAAECggEAC3zI2b7GITReueIWG01qTCfNwFr9RIASuTTDQX+B5f3h\nYA9tNDWRSGSS7as3E5IBvJLfkcZ4GqQoYPAirmVD/4BsFhwY0B211Mso7Xvx/fj6\nqU8XzUjBVwWf5nWnJW19jXWS5E8FuLZbk+pWO+7lGyvtwQxbUWmODLcaSfb+3uc2\nQhHy2ZPA8SQSdO0b2Xmw3ZQrxjYRZweZW+cBdBUWy5kxTTEHz5TMXiQyMxI3HnGU\nP6IekpFUHnaEEdY38256sOpxcCpl8CqJGU+V6IkQAuAwJL0ROiiBhvRXRr3ong5J\nbMo7pOGB5nNB5bI6kHsncMc4+/YV863s/8VwmO65AQKBgQDbzs9krw8i6xJPoHDE\nyu4GJilcvqO131pm0umdjA6mInSSi8X0m9HJXbseT9VsHb5rlGwPr4zaDj7H84lb\njSGEakUmtnXvQklNlCDZP+Drb1ZY4ATJffIMrl/Iwj+fO7Nby6qn+Igs2e6NP0gT\nduX2bJKrO9XLJ+hNrqDWpBjggQKBgQDTRYSd0n5CFOls3kPxk8NLlA4IHkB6NRIA\nQ3gUIheU+Zpx2Tg0Lh4mLgvkYCovc8hddSmTbo/j+9RMZzns3b6mVf3atfv7G4RS\ncPIGVUj+7F44Vb68V1ChjXo8dT+NPO84QV719NdVu1wlHpek7wTGcAE6G9m+j/s1\nGFvErm8tvQKBgQDKYy7UfteKCDXQ+WI74LmvEb4t9h6Y3HHJkVOnS4lFcR4yvN3l\nLv/H0DT1YP6a0Pw+4+dnvfUL5efqhZOop1cALDVFwuTuCvOhqc1hG48GWHqB1Kqz\nt/KBuKDbIfggroCj+fBFPvJrkbIzfdvoiCaPckLNxYdBypn7xNm1KFz7gQKBgEQ5\nH7EDJwhZzmL8hz48dAU04y8V7cZI2u5A20bNF4Zg79GxzmdzOQMlPWva7eRy5BHh\n4rIcMtTxHkYp01e853K5NAdrWtpksV8Z393Rroe7dlWEwtn47C2vDPj297W5Jpqo\n6WxNSzgBD6lg7qExGf6mbo8ALVlPD1S+7+tcVMSVAoGAUC9weLzz4dYNqizIDqDA\nvYYfc5lkQtWlIG8sp59fSeunmX4z+e/ADWAdDQjj3NVRn0QsGOLBVJi0j/br4UiS\nutCDLzR5Ua23n3CPCQ50e6Xw7aboozVMYPw5EdU0DBQ9TSCYAxNQbaSjJqIgzQtt\nPVrCm7kPbi5kCXlm9mQL66w=\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-vjtb9@lucky-fuds-catering-service.iam.gserviceaccount.com",
+    "client_id": "111783433465724440235",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-vjtb9%40lucky-fuds-catering-service.iam.gserviceaccount.com"
+  }

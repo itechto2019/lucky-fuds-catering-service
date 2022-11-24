@@ -7,7 +7,12 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-dompdf": "^2.0",
+        "google/cloud": "^0.193.0",
+        "google/cloud-storage": "^1.29",
+        "grpc/grpc": "1.38",
         "guzzlehttp/guzzle": "^7.2",
+        "kreait/firebase-php": "^6.9",
+        "kreait/laravel-firebase": "^4.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7"

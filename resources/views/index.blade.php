@@ -73,10 +73,10 @@
                                 <a href="{{ route('inventory_for_rents') }}">For Rents</a>                        
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_rents' ? 'active' : '' }}">
-                                <a href="{{ route('inventory_rents') }}">Rented Request</a>                        
+                                <a href="{{ route('inventory_rents') }}">Rent Request</a>                        
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'extend_request' ? 'active' : '' }}">
-                                <a href="{{ route('extend_request') }}">Extend Request</a>                        
+                                <a href="{{ route('extend_request') }}">Extension Request</a>                        
                             </div>
                             <div class="for-sub-link {{ Route::currentRouteName() === 'inventory_approves' ? 'active' : '' }}">
                                 <a href="{{ route('inventory_approves') }}">Approves</a>                        
