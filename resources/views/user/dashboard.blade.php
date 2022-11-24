@@ -3,7 +3,7 @@
 <div class="for-page-title">
     <h1>Dashboard</h1>
     <div style="padding: 5px"><small>Welcome {{ Auth::user()->info ? Auth::user()->info->name : 'User' }}</small></div>
-    @if (!Auth::user()->info)
+    @if (!Auth::user()->info || !Auth::user()->validate)
     <div style="color:#FF1E1E;display: flex; align-items:center">
         <div>
             <svg style="width: 40px; height: 40px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

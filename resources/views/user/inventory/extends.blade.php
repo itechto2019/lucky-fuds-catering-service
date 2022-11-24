@@ -3,7 +3,7 @@
 <div class="for-inventory-return">
     <div class="for-page-title">
         <h1>Extend Requests</h1>
-        @if (!Auth::user()->info)
+        @if (!Auth::user()->info  || !Auth::user()->validate)
         <div style="color:#FF1E1E;display: flex; align-items:center">
             <div>
                 <svg style="width: 40px; height: 40px" xmlns="http://www.w3.org/2000/svg" fill="none"

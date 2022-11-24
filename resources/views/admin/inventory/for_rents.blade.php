@@ -6,7 +6,15 @@
     </div>
     <div class="table-reservation">
         <div class="table-form">
+            <div class="search-form" style="padding: 10px">
+                <form action="?search=">
+                    <div class="input-group">
+                        <input type="search" name="search" placeholder="Search item" />
+                    </div>
+                </form>
+            </div>
             @if (!$supplies->isEmpty())
+                
                 <table>
                     <tr>
                         <th>#</th>

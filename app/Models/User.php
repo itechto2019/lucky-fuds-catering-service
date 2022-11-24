@@ -30,5 +30,7 @@ class User extends Authenticatable
     public function info() {
         return $this->hasOne(UserInfo::class);
     }
-
+    public function validate() {
+        return $this->hasOne(Validate::class);
+    }
 }

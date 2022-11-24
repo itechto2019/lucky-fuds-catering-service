@@ -54,6 +54,7 @@ class StockController extends Controller
             Stock::create([
                 'item' => $form['item'],
                 'image' => $image,
+                'temp_name' => $filename,
                 'quantity' => $form['quantity'],
                 'price' => $form['price'],
             ]);
@@ -70,6 +71,7 @@ class StockController extends Controller
     }
     protected function updateSupply(Request $request, $id)
     {
+        $stock = Stock::where('id', $id)->first();
         $form = $request->validate([
             'item' => "required|min:8",
             'image' => "nullable|min:1|max:4096|mimes:jpg,png,jpeg",
@@ -88,6 +90,7 @@ class StockController extends Controller
             $imageReference = app('firebase.storage')->getBucket()->object("stocks/" . $filename);
             $image = $imageReference->signedUrl(Carbon::now()->addCenturies(1));
 
+            app('firebase.storage')->getBucket()->object("stocks/" . $stock->temp_name)->delete();
             unlink(public_path('stocks/') . $filename);
 
 
@@ -96,6 +99,7 @@ class StockController extends Controller
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
                     'image' => $image,
+                    'temp_name' => $filename,
                     'quantity' => 0,
                     'price' => $form['price'],
                 ]);
@@ -103,6 +107,7 @@ class StockController extends Controller
                 Stock::where('id', $id)->update([
                     'item' => $form['item'],
                     'image' => $image,
+                    'temp_name' => $filename,
                     'quantity' => $form['quantity'],
                     'price' => $form['price'],
                 ]);

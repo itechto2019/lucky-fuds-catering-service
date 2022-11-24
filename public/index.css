@@ -960,3 +960,17 @@ background-color: #36AE7C;
     background-size: cover;
     object-fit: cover;
 }
+.show-id {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+}
+.show-id img {
+    width: 60%;
+    height: 60%;
+}

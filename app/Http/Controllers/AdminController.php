@@ -8,10 +8,12 @@ use App\Models\ForRent;
 use App\Models\ForReserve;
 use App\Models\Package;
 use App\Models\Reserve;
+use App\Models\User;
 use App\Models\UserRent;
 use App\Models\UserReserve;
+use App\Models\Validate;
 use Illuminate\Http\Request;
-
+use Illuminate\Validation\ValidationException;
 
 class AdminController extends Controller
 {
@@ -145,16 +147,20 @@ class AdminController extends Controller
     }
 
     // stocks
-    public function InventoryStocks()
+    protected function InventoryStocks(Request $request)
     {
+        $search = $request->has('search') ? $request->input('search') : null;
         $packages = Package::get();
-        $supplies = Stock::get();
+        $supplies = Stock::where('item', 'LIKE', '%' . $search . '%')->get();
         return view('admin.inventory.stocks')->with(compact(['packages', 'supplies']));
     }
     // for rents
-    public function ForRents()
+    public function ForRents(Request $request)
     {
-        $supplies = ForRent::whereNot('quantity' , 0)->get();
+        $search = $request->has('search') ? $request->input('search') : null;
+        $supplies = ForRent::whereNot('quantity' , 0)->whereHas('stock', function ($q) use($search) {
+            $q->where('item', 'LIKE', '%' . $search . '%');
+        })->get();
         return view('admin.inventory.for_rents')->with(compact(['supplies']));
     }
     // for rented
@@ -192,5 +198,35 @@ class AdminController extends Controller
     {
         $rents = UserRent::get();
         return view('admin.inventory.reports')->with(compact(['rents']));
+    }
+    public function User() {
+        $accounts = User::with(['info'])->whereHas('validate', function($q) {
+            $q->where('status', false);
+        })->get();
+        return view('admin.account.request')->with(compact([
+            'accounts'
+        ]));
+    }
+    public function verified() {
+        $accounts = User::with(['info', 'validate'])->whereHas('validate', function ($q) {
+            $q->where('status', true);
+        })->get();
+        return view('admin.account.verified')->with(compact([
+            'accounts'
+        ]));
+    }
+    public function confirmVerification($id){
+        Validate::where('id', $id)->update([
+            'status' => true
+        ]);
+        return throw ValidationException::withMessages([
+            'message' => 'Verification confirmed'
+        ]);
+    }
+    public function rejectVerification($id){
+        Validate::where('id', $id)->delete();
+        return throw ValidationException::withMessages([
+            'message' => 'Verification failed'
+        ]);
     }
 }

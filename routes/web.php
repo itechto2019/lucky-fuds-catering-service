@@ -69,6 +69,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/rentals-reports/{id}', [PrintController::class, 'InventoryReport'])->name('export_inventory');
     Route::get('/rentals-reports-download/{id}', [PrintController::class, 'InventoryReportDownload'])->name('download_report');
 
+    Route::get('/account/request', [AdminController::class, 'User'])->name('account_request');
+    Route::get('/account/verified', [AdminController::class, 'verified'])->name('account_verified');
+
+    Route::patch('/account/request/confirm/{id}', [AdminController::class, 'confirmVerification'])->name('confirm_verification');
+    Route::patch('/account/request/reject/{id}', [AdminController::class, 'rejectVerification'])->name('reject_verification');
+
     Route::put('/edit-package/{id}', function (Request $request, $id) {
         $form = $request->validate([
             'name' => "min:8",
@@ -111,6 +117,7 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     // Account
     Route::get('/account/profile', [UserController::class, 'AccountProfile'])->name('user_account_profile');
     Route::patch('/account/profile/update', [UserController::class, 'UpdateProfile'])->name('user_profile_update');
+    Route::patch('/account/profile/validate', [UserController::class, 'validateId'])->name('user_validate_update');
 
     
 

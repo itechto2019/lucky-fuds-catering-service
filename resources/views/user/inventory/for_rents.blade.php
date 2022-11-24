@@ -3,7 +3,7 @@
 <div class="for-inventory-for-rents">
     <div class="for-page-title">
         <h1>For Rents</h1>
-        @if (!Auth::user()->info)
+        @if (!Auth::user()->info || !Auth::user()->validate)
             <div style="color:#FF1E1E;display: flex; align-items:center">
                 <div>
                     <svg style="width: 40px; height: 40px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -20,6 +20,13 @@
                 @foreach ($errors->all() as $error)
                 <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
                 @endforeach
+            </div>
+            <div class="search-form" style="padding: 10px">
+                <form action="?search=">
+                    <div class="input-group">
+                        <input type="search" name="search" placeholder="Search item" />
+                    </div>
+                </form>
             </div>
             @if (!$supplies->isEmpty())
             <table>
@@ -64,7 +71,7 @@
                                         <h3>Renting Information</h3>
                                         @csrf
                                         <input type="hidden" name="items" value="{{$supply->stock->item}}">
-                                        @if (Auth::user()->info && Auth::user()->info->email)
+                                        @if (Auth::user()->info && Auth::user()->info->email && Auth::user()->validate)
                                         <div class="input-group" style="display: block">
                                             <p>
                                                 @if (Auth::user()->info->method == "email")

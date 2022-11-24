@@ -91,6 +91,22 @@
                                 <a href="{{ route('inventory_reports') }}">Reports</a>
                             </div>
                         </div>   
+                        <div class="for-link {{ Route::currentRouteName() === 'account' ? 'active' : '' }}" id="account">
+                            <a href="" onclick="openAccount(event)">
+                                Account Manager
+                                <svg id="account_icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="for-link-panel active" id="account-active">
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'account_request' ? 'active' : '' }}">
+                                <a href="{{ route('account_request') }}">Request Verification</a>                        
+                            </div>
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'account_verified' ? 'active' : '' }}">
+                                <a href="{{ route('account_verified') }}">Verified</a>                        
+                            </div>
+                        </div>
                         <div class="for-link">
                             <a href="{{ route('signout') }}">Logout</a>
                         </div>
@@ -199,6 +215,10 @@
                     @yield('inventory_return')
                 @elseif(Route::currentRouteName() === "inventory_reports")
                     @yield('inventory_reports')
+                @elseif(Route::currentRouteName() === "account_request")
+                    @yield('account_request')
+                @elseif(Route::currentRouteName() === "account_verified")
+                    @yield('account_verified')
                 @endif
             </section>
         @else

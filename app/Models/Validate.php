@@ -5,19 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Stock extends Model
+class Validate extends Model
 {
     use HasFactory;
-    protected $table = "stocks";
+    protected $table = "validates";
     protected $fillable = [
+        'user_id',
         'image',
-        'item',
-        'quantity',
         'temp_name',
-        'price'
+        'status'
     ];
-    public function for_rent()
-    {
-        return $this->hasMany(ForRent::class);
-    }
 }

@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('for_rents', function (Blueprint $table) {
+        Schema::create('validates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('stock_id')->constrained('stocks')->cascadeOnDelete();
-            $table->integer('quantity');
-            $table->decimal('extend_charge')->nullable()->default(200);
-            $table->boolean('is_rented')->nullable()->default(true);
-            $table->string('status')->nullable();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->longText('image')->nullable(true);
+            $table->text('temp_name')->nullable(true);
+            $table->boolean('status')->nullable(false);
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('for_rents');
+        Schema::dropIfExists('validates');
     }
 };
