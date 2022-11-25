@@ -61,7 +61,7 @@ class AdminController extends Controller
             $q->where('status', 'approved');
         }])->whereMonth('date', $date->format('m'))->get();
 
-        $products = Stock::get();
+        $products = Stock::paginate(20);
 
         return view('admin.dashboard')->with(compact([
             'noOfDays',
@@ -159,7 +159,7 @@ class AdminController extends Controller
     {
         $search = $request->has('search') ? $request->input('search') : null;
         $packages = Package::get();
-        $supplies = Stock::where(strtolower('item'), 'LIKE', '%' . $search . '%')->get();
+        $supplies = Stock::where('item', 'LIKE', '%' . $search . '%')->get();
         return view('admin.inventory.stocks')->with(compact(['packages', 'supplies']));
     }
     // for rents
@@ -167,7 +167,7 @@ class AdminController extends Controller
     {
         $search = $request->has('search') ? $request->input('search') : null;
         $supplies = ForRent::whereNot('quantity' , 0)->whereHas('stock', function ($q) use($search) {
-            $q->where(strtolower('item'), 'LIKE', '%' . $search . '%');
+            $q->where('item', 'LIKE', '%' . $search . '%');
         })->get();
         return view('admin.inventory.for_rents')->with(compact(['supplies']));
     }

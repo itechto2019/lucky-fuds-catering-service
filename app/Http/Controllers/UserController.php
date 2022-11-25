@@ -154,7 +154,7 @@ class UserController extends Controller
     {
         $search = $request->has('search') ? $request->input('search') : null;
         $supplies = ForRent::whereNot('quantity', 0)->whereHas('stock', function ($q) use($search) {
-            $q->where(strtolower('item'), 'LIKE', '%' . $search . '%');
+            $q->where('item', 'LIKE', '%' . $search . '%');
         })->get();
         return view('user.inventory.for_rents')->with(compact(['supplies']));
     }

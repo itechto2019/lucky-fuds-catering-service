@@ -223,7 +223,7 @@ class StockController extends Controller
     protected function toCheckOut($id)
     {
         $rent = UserRent::where('id', $id)->get()->first();
-
+        $extendRate = 100;
         if ($rent->status == "pending") {
             UserRent::where('id', $id)->update([
                 'status' => 'approved'
@@ -237,8 +237,10 @@ class StockController extends Controller
             ]);
         }
         if ($rent->status == "extending") {
+            $rentPerDay = Carbon::now()->diffInDays($rent->extends->return, false);
             UserRent::where('id', $id)->update([
-                'status' => 'extended'
+                'status' => 'extended',
+                'amount' => $extendRate * $rentPerDay
             ]);
             ExtendApprove::create([
                 'user_rent_id' => $rent->id

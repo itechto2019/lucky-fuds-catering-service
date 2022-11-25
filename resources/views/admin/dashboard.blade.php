@@ -182,6 +182,7 @@
             </div>
         </div>
         @endforeach
+        {{$products->links()}}
     </div>
 </div>
 @endif
