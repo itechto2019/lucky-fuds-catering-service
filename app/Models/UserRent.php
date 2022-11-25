@@ -14,6 +14,7 @@ class UserRent extends Model
         'stock_id',
         'for_rent_id',
         'amount',
+        'quantity',
         'address',
         'date',
         'return',

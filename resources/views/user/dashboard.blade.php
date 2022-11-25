@@ -23,21 +23,15 @@
     <div class="home-control-body">
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_schedule_reservation') }}">Reservation</a>
-            <span>
-                <div class="notif-count">{{$reservationCount}}</div>
-            </span>
+            
         </div>
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_inventory_for_rents') }}">Rent</a>
-            <span>
-                <div class="notif-count">{{$rentCount}}</div>
-            </span>
+            
         </div>
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_schedule_confirmation') }}">Confirmation Request</a>
-            <span>
-                <div class="notif-count">{{$rentConfirmCount}}</div>
-            </span>
+            
         </div>
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_inventory_rents') }}">Rent Request</a>

@@ -18,6 +18,9 @@
         @foreach ($errors->all() as $error)
         <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #FFFFFF">{{$error}}</div>
         @endforeach
+        @if(session()->has('message'))
+            <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
+        @endif
     </div>
     <div class="for-login">
         <div class="for-form">

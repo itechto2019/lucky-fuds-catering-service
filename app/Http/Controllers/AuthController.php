@@ -28,7 +28,9 @@ class AuthController extends Controller
 
         if (Auth::attempt($credential, $remember)) {
             if ($terms && $policy) {
-                return redirect('/');
+                return redirect('')->with([
+                    'message' => 'Login successfully'
+                ]);
             } else {
                 return redirect()->back()->withErrors([
                     'message' => [

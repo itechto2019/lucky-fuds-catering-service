@@ -15,6 +15,7 @@ return new class extends Migration
             $table->foreignId('stock_id')->constrained('stocks')->cascadeOnDelete();
             $table->foreignId('for_rent_id')->constrained('for_rents')->cascadeOnDelete();
             $table->decimal('amount', 8, 2);
+            $table->integer('quantity');
             $table->date('date');
             $table->date('return');
             $table->text('address');
