@@ -974,3 +974,40 @@ background-color: #36AE7C;
     width: 60%;
     height: 60%;
 }
+.calendar-container {
+    width: 450px;
+    height: 100%;
+    padding: 10px;
+
+}
+.calendar-view {
+    width: 100%;
+    border-collapse: collapse;
+}
+.calendar-view th,td {
+    border: 2px solid #028037;
+    padding: 10px;
+    text-align: center;
+    user-select: none;
+}
+.calendar-view td {
+    padding: 15px;
+}
+.calendar-view td.active {
+    background-color: #019267;
+    color: #FFFFFF;
+}
+.calendar-month {
+    width: 100%;
+    overflow-x: scroll;
+    padding: 10px;
+}
+.calendar-month::-webkit-scrollbar-track {
+    background-color: #028037;    
+}
+
+.calendar-month tr {
+    display: flex;
+    align-items: center;
+    gap: 5%;
+}

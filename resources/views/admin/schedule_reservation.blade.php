@@ -6,6 +6,12 @@
     </div>
     <div class="table-reservation">
         <div class="table-form">
+            @if(session()->has('message'))
+                <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
+            @endif
+            @if(session()->has('reject'))
+                <div style="padding: 15px; margin:5px; background-color: #F7A76C; color: #1a1a1a1">{{ session()->get('reject') }}</div>
+            @endif
             @if($reservations->isNotEmpty())
             <table>
                 <tr>

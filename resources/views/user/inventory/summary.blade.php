@@ -51,6 +51,9 @@
                             <b>Amount: </b>
                             ₱{{ $rent->amount }}
                             <br>
+                            <b>Quantity: </b>
+                            {{ $rent->quantity }}
+                            <br>
                             <b>Date Used: </b>
                             {{ $rent->extends ? $rent->extends->date :  $rent->date  }}
                             <br>
@@ -96,24 +99,30 @@
                             <br>
                             <b>Client: </b>{{ $return->info->name }}
                             <br>
-                            <b>Address: </b>{{ $rent->address }}
+                            <b>Address: </b>{{ $return->address }}
                             <br>
                             <b>Method: </b>{{ $return->delivers ? "Deliver" : ($return->pickups ? "Pickup" : "") }}
                             <br>
                             <b>Amount: </b>
                             ₱{{ $return->amount }}
                             <br>
+                            <b>Quantity: </b>
+                            {{ $return->quantity }}
+                            <br>
                             <b>Date Used: </b>
                             {{ $return->extends ? $return->extends->date :  $return->date  }}
                             <br>
-                            <b>Date Return: </b>
-                            {{ $return->extends ? $return->extends->return :  $return->return }}
+                            <b>Date Used: </b>
+                            {{ $return->extends ? $return->extends->date :  $return->date  }}
                             <br>
                             <b>Date Returned: </b>
-                            {{ $return->updated_at->format('Y-m-d') }}
+                            {{ $return->extends ? $return->extends->return :  $return->return }}
+                            <br>
+                            <b>Date rented: </b>
+                            {{ $return->created_at->format('Y-m-d') }}
                         </td>
                         <td>
-                            {{$rent->status}}
+                            {{$return->status}}
                         </td>
                     </tr>
                     @endforeach
@@ -122,7 +131,7 @@
                 <div style="padding: 10px">
                     <h3>No returned found!</h3>
                 </div>
-                <a href="{{ route('user_inventory_rents') }}" style="text-decoration: none; color:#06283D"> <- Rent a service?</a>
+                <a href="{{ route('user_inventory_for_rents') }}" style="text-decoration: none; color:#06283D"> <- Rent a service?</a>
             @endif
             
         </div>

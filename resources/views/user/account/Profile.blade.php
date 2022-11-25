@@ -9,9 +9,12 @@
         </div>
         <div class="error">
             @foreach ($errors->all() as $error)
-            <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
+                <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
             @endforeach
         </div>
+        @if(session()->has('message'))
+                <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
+            @endif
         @if (!Auth::user()->validate && Auth::user()->info)
             <form action="{{ route('user_validate_update') }}" method="POST" enctype="multipart/form-data" style="display: flex;align-items:center; width: 300px">
                 @csrf
@@ -23,8 +26,9 @@
                     <div class="image-container" style="padding: 10px">
                         <img src="https://filipinotimes.net/wp-content/uploads/2018/08/Screen-Shot-2018-08-06-at-5.33.22-PM-1.png" alt="failed to load image" style="width: 350px; height: 200px;object-fit: cover;background-repeat:no-repeat;" >
                     </div>
-                    <div class="input-group" style="border:2px solid #5FD068;">
+                    <div class="input-group" style="border:2px solid #5FD068;position: relative;">
                         <input type="file" accept="image/png,image/jpeg" name="image" style="border-style:none" required>
+                        <span style="position: absolute; bottom:0%;font-size: 14px;color: #1a1a1a;padding: 0px 10px;">Max: 5mb</span>
                     </div>
                     
                     <div class="input-group submit" style="display: block">
@@ -40,7 +44,7 @@
         <form action="{{ route('user_profile_update') }}" method="POST" enctype="multipart/form-data">
             @if (!Auth::user()->info)
                 <div class="">
-                    <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">Please note, you can set your other information once, please double check your info.</div>
+                    <div style="padding: 15px; margin:5px; background-color: #F7A76C; color: #1a1a1a1">Please note, you can set your other information once, please double check your info.</div>
                 </div>
             @endif
             @csrf
@@ -54,12 +58,13 @@
                         <svg style="width: 40px; height: 40px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>                  
-                        <h3>Varified</h3>
+                        <h3>Verified</h3>
                     </div>
                 @endif
                 <div class="form-page">
-                    <div class="input-group" style="border:2px solid #5FD068;">
+                    <div class="input-group" style="border:2px solid #5FD068;position: relative;">
                         <input type="file" accept="image/png,image/jpeg" name="profile" placeholder="Name" style="border-style:none" required>
+                        <span style="position: absolute; bottom:0%;font-size: 14px;color: #1a1a1a;padding: 0px 10px;">Max: 5mb</span>
                     </div>
                     @if (!Auth::user()->info && !Auth::user()->info?->name)
                         <div class="input-group">

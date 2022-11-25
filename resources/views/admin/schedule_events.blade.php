@@ -1,64 +1,103 @@
 @extends('index')
+
 @section('schedule_events')
 <div class="for-schedule-events">
     <div class="for-page-title">
         <h3>Schedule Events</h3>
     </div>
-
     <div class="notes">
         <div class="form-schedule">
             <div class="note-page">
-                <h2 style="padding: 10px;font-size: 30px;color: #F7F7F7;text-align: center;" id="ordinal-date"><span>Date Event</span></h2>
+                <h2 style="padding: 10px;font-size: 30px;color: #F7F7F7;text-align: center;" id="ordinal-date">
+                    @foreach ($filterEvent->slice(0,1) as $event)
+                        @if ($event)
+                            <span>{{date('l', strtotime($event->date)) . ' ' . date('F', strtotime($event->date)) . ' ' . date('jS', strtotime($event->date))}}</span>
+                        @endif
+                    @endforeach
+                </h2>
                 <div class="note-avail">
                     <div class="note-event">
-                        <span></span>
+                        @foreach ($filterEvent as $event)
+                            <span><h3>{{$event->event}}</h3></span>
+                            <br>
+                            <span>{{date('l', strtotime($event->date)) . ' ' . date('F', strtotime($event->date)) . ' ' . date('jS', strtotime($event->date))}}</span>
+                            <hr style="border: 1px solid #D0D0D0;">
+                        @endforeach
                     </div>
                 </div>
             </div>
+
+
             <div class="note-schedule">
                 <div class="date-list">
                     <div class="dayList">
                         <div>
-                            <h2 style="float: right">{{ date('Y') }}</h2> 
+                            <h2 style="float: right">{{ date('Y') }}</h2>
                         </div>
                         <div class="month-list">
-                            @foreach ($months as $month)
-                                <div class="{{ $selectMonth && date('M', strtotime($selectMonth)) == $month ? 'months cur' : (!$selectMonth && date('M') == $month ? 'months cur' : 'months') }}" style="cursor: pointer; padding: 10px" onclick="getDateEvent('{{$month}}')">{{ $month }}</div>
-                            @endforeach
+                            <div class="calendar-month">
+                                <table>
+                                    <tr>
+                                        @foreach ($months as $month)
+                                        <th class="{{ $selectMonth && date('M', strtotime($selectMonth)) == $month ? 'months cur' : (date('M', strtotime($selectMonth)) == $month && date('M') == $month ? 'months cur' : 'months') }}"
+                                            style="cursor: pointer; padding: 10px" onclick="getDateEvent('{{$month}}','{{date('Y-m-d', strtotime($month))}}')">
+                                            {{$month}}</th>
+                                        @endforeach
+                                    </tr>
+                                </table>
+                            </div>
+
                         </div>
                         @foreach ($formatWeek as $day)
-                            <span class="day-label">
-                                {{ $day  }}
-                            </span>
+                        <span class="day-label">
+                            {{ $day }}
+                        </span>
                         @endforeach
                         @if($events->isEmpty())
-                            @while ($startOfCalendar <= $endOfCalendar )
-                                <span class="day today">
-                                    <div class="day-to-day">
-                                        {{ $startOfCalendar->addDays()->format('j') }}
+                        @while ($startOfCalendar <= $endOfCalendar ) <span class="day today">
+                            <div class="day-to-day" style="position: relative">
+                                {{ $startOfCalendar->addDays()->format('j') }}
+                                <span style="position: absolute; top: 0%;left: 50%;">
+                                    @if (Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('M') !=
+                                    date('M', strtotime($selectMonth)))
+                                    <div style="position: absolute; top: 0%;left: 50%;font-size: 10px;color:#344D67">
+                                        {{ Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('M') }}
+                                        @if (Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('Y') !=
+                                        $endOfCalendar->format('Y'))
+                                        {{Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('Y')}}
+                                        @endif
                                     </div>
+                                    @endif
                                 </span>
+                            </div>
+                            </span>
                             @endwhile
-                        @else
-                            @while ($startOfCalendar <= $endOfCalendar )
-                                <span>
-                                    <div style="
+                            @else
+                                @while ($startOfCalendar <= $endOfCalendar )
+                                <span style="position: relative;">                                    
+                                    <div
                                         @foreach ($events as $event)
-                                            {{ Carbon\Carbon::createFromDate($event->date)->addDay(-1)->format('m-j') == $startOfCalendar->format('m-j') ? 'cursor:pointer' : ''  }}
-                                        @endforeach"class="
-                                        @foreach ($events as $event)
-                                            {{ Carbon\Carbon::createFromDate($event->date)->addDay(-1)->format('m-j') == $startOfCalendar->format('m-j') ? 'day-to-day today' : 'day-to-day'  }}
-                                        @endforeach"onclick="
-                                        @foreach ($events as $event)
-                                            @if(Carbon\Carbon::createFromDate($event->date)->addDay(-1)->format('m-j') == $startOfCalendar->format('m-j'))
-                                                getEvent(event,{{$event->id}})
+                                            style="{{ Carbon\Carbon::createFromDate($event->date)->addDays(-1)->format('m-d') == $startOfCalendar->format('m-d') ? 'cursor:pointer' : ''  }}"
+                                            class="{{ Carbon\Carbon::createFromDate($event->date)->addDays(-1)->format('m-d') == $startOfCalendar->format('m-d') ? 'day-to-day today' : 'day-to-day'  }}"
+                                            @if (Carbon\Carbon::createFromDate($event->date)->addDays(-1)->format('m-d') == $startOfCalendar->format('m-d'))
+                                                onclick="getDateEvent('{{Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('M')}}','{{Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('Y-m-d')}}')"
                                             @endif
-                                        @endforeach">
+                                        @endforeach >
+                                        @if (Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('M') !=
+                                            date('M', strtotime($selectMonth)))
+                                            <div style="position: absolute; top: 0%;left: 50%;font-size: 10px;color:#344D67;">
+                                                {{ Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('M') }}
+                                                
+                                                @if (Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('Y') != $endOfCalendar->format('Y'))
+                                                    {{Carbon\Carbon::createFromDate($startOfCalendar)->addDay()->format('Y')}}
+                                                @endif
+                                            </div>
+                                        @endif
                                         {{ $startOfCalendar->addDays()->format('j') }}
                                     </div>
                                 </span>
-                            @endwhile
-                        @endif
+                                @endwhile
+                            @endif
                     </div>
                 </div>
             </div>
@@ -73,16 +112,16 @@
                 </div>
                 <div class="event-list-coming">
                     @foreach ($previousEvents as $prev)
-                        <div class="event-coming">
-                            <p>Client: <b>{{ $prev->info->name }}</b></p>
-                            <div>
-                                <small>{{ $prev->event }}</small>
-                            </div>
-                            <div>
-                                <small>{{ $prev->date }}</small>
-                            </div>
+                    <div class="event-coming">
+                        <p>Client: <b>{{ $prev->info->name }}</b></p>
+                        <div>
+                            <small>{{ $prev->event }}</small>
                         </div>
-                        <hr>
+                        <div>
+                            <small>{{ $prev->date }}</small>
+                        </div>
+                    </div>
+                    <hr>
                     @endforeach
                 </div>
             </div>
@@ -94,16 +133,17 @@
                 </div>
                 <div class="event-list-coming">
                     @foreach ($upcomingEvents as $upcoming)
-                        <div class="event-coming">
-                            <p>Client: <b>{{ $upcoming->info->name }}</b></p>
-                            <div>
-                                <small>{{ $upcoming->event }}</small>
-                            </div>
-                            <div>
-                                <small>{{ date('Y-m-d', strtotime($upcoming->date)) == date('Y-m-d') ? 'Today' : $upcoming->date }}</small>
-                            </div>
+                    <div class="event-coming">
+                        <p>Client: <b>{{ $upcoming->info->name }}</b></p>
+                        <div>
+                            <small>{{ $upcoming->event }}</small>
                         </div>
-                        <hr>
+                        <div>
+                            <small>{{ date('Y-m-d', strtotime($upcoming->date)) == date('Y-m-d') ? 'Today' :
+                                $upcoming->date }}</small>
+                        </div>
+                    </div>
+                    <hr>
                     @endforeach
                 </div>
             </div>
@@ -113,24 +153,19 @@
 
 @endsection
 <script>
-    function getEvent(e,event) {
-        e.preventDefault()
+    // function getEvent(event) {
+    //     $.ajax({
+    //         type: "get",
+    //         success: function (response) {
+    //             location.href = "?&filter=" + event
+    //         }
+    //     });
+    // }
+    function getDateEvent(month, date) {
         $.ajax({
             type: "get",
-            url: "/admin/get-event/" + event,
-            data: `_token = {{ csrf_token() }}`,
             success: function (response) {
-                $('.note-event span').html(response.event.event + "<br>" + response.today)
-                $('#ordinal-date span').html(response.event.date)
-            }
-        });
-    }
-    function getDateEvent(month) {
-        $.ajax({
-            type: "get",
-            url: "{{route('schedule_events')}}",
-            success: function (response) {
-                location.href = "?month_of=" + month
+                location.href = `?filter=${date}&month_of=${month}`
             }
         });
     }

@@ -38,7 +38,9 @@ class ScheduleController extends Controller
                 'user_reserve_id' => $reserve->id,
                 'status' => 'pending'
             ]);
-            return back();
+            return back()->with([
+                'message' => 'Reservation successful, please wait for admin approval.'
+            ]);
         }
         
 
@@ -48,7 +50,7 @@ class ScheduleController extends Controller
         ForReserve::where('id', $id)->update([
             'status' => 'approved'
         ]);
-        return redirect()->back()->withErrors([
+        return redirect()->back()->with([
             'message' => "Reservation approved"
         ]);
     }
@@ -56,8 +58,8 @@ class ScheduleController extends Controller
         ForReserve::where('id', $id)->update([
             'status' => 'declined'
         ]);
-        return redirect()->back()->withErrors([
-            'message' => "Reservation declined"
+        return redirect()->back()->with([
+            'reject' => "Reservation declined"
         ]);
     }
     protected function getEvent($id) {

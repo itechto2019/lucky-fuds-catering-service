@@ -9,7 +9,11 @@
             @foreach ($errors->all() as $error)
                 <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #FFFFFF">{{$error}}</div>
             @endforeach
+           
         </div>
+        @if(session()->has('message'))
+                <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
+            @endif
         <div style="padding: 10px">
             <h3>Items</h3>
         </div>
@@ -38,7 +42,7 @@
                     <td>{{ $rent->info->name }}</td>
                     <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
                     <td>{{ $rent->address }}</td>
-                    <td>{{ (int) $rent->amount / $rent->stock->price }}</td>
+                    <td>{{ $rent->quantity }}</td>
                     <td>₱{{ $rent->amount }}</td>
                     <td>{{ $rent->date }}</td>
                     <td>{{ $rent->return }}</td>

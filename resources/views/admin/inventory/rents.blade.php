@@ -10,6 +10,12 @@
                 <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #FFFFFF">{{$error}}</div>
             @endforeach
         </div>
+        @if(session()->has('message'))
+                <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
+            @endif
+            @if(session()->has('decline'))
+                <div style="padding: 15px; margin:5px; background-color: #F7A76C; color: #1a1a1a1">{{ session()->get('decline') }}</div>
+            @endif
         <div class="table-form">
             @if (!$rents->isEmpty())
             <table>
@@ -38,7 +44,7 @@
                     <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                     <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
                     <td>₱{{ $rent->amount }}</td>
-                    <td>{{ $rent->amount / $rent->stock->price }}</td>
+                    <td>{{ $rent->quantity }}</td>
                     <td>{{ $rent->status }}</td>
                     <td>
                         <div class="action-form">

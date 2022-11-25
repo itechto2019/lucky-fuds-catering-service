@@ -59,9 +59,9 @@ class UserController extends Controller
 
 
 
-        $reserves = UserReserve::with(['reserve' => function ($q) {
+        $reserves = UserReserve::with('reserve')->whereHas('reserve', function ($q) {
             $q->where('status', 'approved');
-        }])->where('user_info_id', $id)->whereMonth('date', $date->format('m'))->get();
+        })->where('user_info_id', $id)->whereMonth('date', $date->format('m'))->get();
 
 
         $user = Auth::user();
@@ -104,7 +104,7 @@ class UserController extends Controller
     }
     public function ScheduleEvents(Request $request)
     {
-        $selectMonth = $request->has('month_of') ? $request->input('month_of') : today()->month;
+        $selectMonth = $request->has('month_of') ? $request->input('month_of') : Carbon::now()->format('M');
         $date = empty($selectMonth) ? Carbon::today() : Carbon::createFromDate($selectMonth);
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
@@ -116,15 +116,17 @@ class UserController extends Controller
 
         $id = Auth::user()->info ? Auth::user()->info->id : null;
 
-        $previousEvents = UserReserve::with(['reserve' => function ($q) {
+        $previousEvents = UserReserve::whereHas('reserve', function ($q) {
             $q->where('status', 'approved');
-        }])->where('user_info_id', $id)->whereDate('date', '<', today()->format('Y-m-d'))->get();
+        })->where('user_info_id', $id)->whereDate('date', '<', today()->format('Y-m-d'))->get();
 
-        $upcomingEvents = UserReserve::with(['reserve' => function ($q) {
+        $upcomingEvents = UserReserve::whereHas('reserve', function ($q) {
             $q->where('status', 'approved');
-        }])->where('user_info_id', $id)->whereDate('date', '>=', today()->format('Y-m-d'))->get();
+        })->where('user_info_id', $id)->whereDate('date', '>=', today()->format('Y-m-d'))->get();
 
-
+        $filterEvent = UserReserve::with('reserve')->whereHas('reserve', function ($q){
+            $q->where('status', 'approved');
+        })->where('user_info_id', $id)->whereDate('date', $request->input('filter'))->get();
         $events = UserReserve::with('reserve')->whereHas('reserve', function ($q) {
             $q->where('status', 'approved');
         })->where('user_info_id', $id)->get();
@@ -139,7 +141,8 @@ class UserController extends Controller
             'endOfCalendar',
             'events',
             'previousEvents',
-            'upcomingEvents'
+            'upcomingEvents',
+            'filterEvent'
         ]));
     }
     public function ScheduleReservation()
@@ -151,7 +154,7 @@ class UserController extends Controller
     {
         $search = $request->has('search') ? $request->input('search') : null;
         $supplies = ForRent::whereNot('quantity', 0)->whereHas('stock', function ($q) use($search) {
-            $q->where('item', 'LIKE', '%' . $search . '%');
+            $q->where(strtolower('item'), 'LIKE', '%' . $search . '%');
         })->get();
         return view('user.inventory.for_rents')->with(compact(['supplies']));
     }
@@ -203,7 +206,7 @@ class UserController extends Controller
             'method',
             'birthday'
         ), [
-            'profile' => 'mimes:png,jpg,jpeg|nullable',
+            'profile' => 'mimes:png,jpg,jpeg|nullable|max:5000',
             'name' => 'nullable',
             'contact' => 'nullable',
             'email' => 'email|nullable',
@@ -212,9 +215,7 @@ class UserController extends Controller
             'birthday' => 'nullable:date'
         ]);
         if ($validator->fails()) {
-            return back()->withErrors([
-                'message' => 'Please check your fields'
-            ]);
+            return back();
         } else {
             $form = $validator->validated();
             if ($request->hasFile('profile')) {
@@ -258,7 +259,7 @@ class UserController extends Controller
                         'birthday' => $form['birthday'],
                     ]);
                 }
-                return back()->withErrors([
+                return back()->with([
                     'message' => 'Profile updated'
                 ]);
             } else {
@@ -293,13 +294,13 @@ class UserController extends Controller
         $validator = Validator::make($request->only(
             'image'
         ), [
-            'image' => 'mimes:png,jpg,jpeg|nullable',
+            'image' => 'mimes:png,jpg,jpeg|nullable|max:5000',
         ]);
 
         $form = $validator->validated();
         if ($validator->fails()) {
             return back()->withErrors([
-                'message' => 'Please check your file'
+                'message' => 'The maximum file upload is 5 MegaBytes (5MB)'
             ]);
         } else {
             $filename = time() . '_indentity.' . $form['image']->extension();
@@ -331,7 +332,8 @@ class UserController extends Controller
                     'status' => false
                 ]);
             }
-            return back()->withErrors([
+            
+            return back()->with([
                 'message' => 'Your ID has been uploaded, wait for admin approval.'
             ]);
         }

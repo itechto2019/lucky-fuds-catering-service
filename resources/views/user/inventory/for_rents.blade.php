@@ -21,6 +21,9 @@
                 <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
                 @endforeach
             </div>
+            @if(session()->has('message'))
+                <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
+            @endif
             <div class="search-form" style="padding: 10px">
                 <form action="?search=">
                     <div class="input-group">

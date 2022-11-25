@@ -10,12 +10,10 @@ use App\Models\ExtendApprove;
 use App\Models\ExtendDecline;
 use App\Models\ForRent;
 use App\Models\Pickup;
-use App\Models\Rent;
 use App\Models\RentApprove;
 use App\Models\RentDecline;
 use App\Models\Returns;
 use App\Models\Stock;
-use App\Models\Report;
 use App\Models\UserRent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -33,7 +31,7 @@ class StockController extends Controller
     {
         $form = $request->validate([
             'item' => "required|min:8",
-            'image' => "nullable|min:1|max:4096|mimes:jpg,png,jpeg",
+            'image' => "nullable|min:1|max:4096|mimes:jpg,png,jpeg|max:5000",
             'price' => "required|min:0",
             'quantity' => "required|min:0",
         ]);
@@ -58,6 +56,7 @@ class StockController extends Controller
                 'quantity' => $form['quantity'],
                 'price' => $form['price'],
             ]);
+
         } else {
             Stock::create([
                 'item' => $form['item'],
@@ -65,8 +64,8 @@ class StockController extends Controller
                 'price' => $form['price'],
             ]);
         }
-        return redirect()->back()->withErrors([
-            'message' => "New item created"
+        return redirect()->back()->with([
+            'message' => 'New item added'
         ]);
     }
     protected function updateSupply(Request $request, $id)
@@ -129,15 +128,15 @@ class StockController extends Controller
             }
         }
 
-        return redirect()->back()->withErrors([
+        return redirect()->back()->with([
             'message' => "Item is updated"
         ]);
     }
     protected function deleteSupply($id)
     {
         Stock::where('id', $id)->delete();
-        return redirect()->back()->withErrors([
-            'message' => "Item sucessfully removed"
+        return redirect()->back()->with([
+            'message' => "Item has been removed on your inventory"
         ]);
     }
     protected function toRent(Request $request, $id)
@@ -163,8 +162,8 @@ class StockController extends Controller
                 'quantity' => 0
             ]);
         }
-
-        return redirect()->back()->withErrors([
+        
+        return redirect()->back()->with([
             'message' => "Item is now rentable"
         ]);
     }
@@ -193,6 +192,7 @@ class StockController extends Controller
             'stock_id' => $stockId,
             'for_rent_id' => $rentId,
             'amount' => $form['quantity'] * $stock->price,
+            'quantity' => $form['quantity'],
             'address' => $address,
             'date' => $form['date'],
             'return' => $form['return'],
@@ -212,7 +212,7 @@ class StockController extends Controller
                     'user_rent_id' => $result->id
                 ]);
             }
-            return redirect()->back()->withErrors([
+            return redirect()->back()->with([
                 'message' => 'Successfully rent, wait for approval.'
             ]);
         }
@@ -232,7 +232,7 @@ class StockController extends Controller
                 'user_rent_id' => $rent->id
             ]);
 
-            return redirect()->back()->withErrors([
+            return redirect()->back()->with([
                 'message' => "Rent Approved"
             ]);
         }
@@ -244,8 +244,8 @@ class StockController extends Controller
                 'user_rent_id' => $rent->id
             ]);
 
-            return redirect()->back()->withErrors([
-                'message' => "Rent extends"
+            return redirect()->back()->with([
+                'message' => "Extend Approved"
             ]);
         }
     }
@@ -261,7 +261,10 @@ class StockController extends Controller
                 'user_rent_id' => $rent->id
             ]);
             ForRent::where('id', $rent->for_rent_id)->update([
-                'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
+                'quantity' => $rent->for_rent->quantity + $rent->quantity
+            ]);
+            return redirect()->back()->with([
+                'decline' => "Rent Declined",
             ]);
         }
         if ($rent->status == "extending") {
@@ -272,11 +275,11 @@ class StockController extends Controller
                 'user_rent_id' => $rent->id
             ]);
             Extend::where('id', $rent->extends->id)->delete();
+            return redirect()->back()->with([
+                'decline' => "Extend Declined",
+            ]);
         }
-
-        return redirect()->back()->withErrors([
-            'message' => "Rent Declined"
-        ]);
+        return redirect()->back();
     }
     protected function userExtends(Request $request, $id)
     {
@@ -292,8 +295,7 @@ class StockController extends Controller
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
-
-        return redirect()->back()->withErrors([
+        return redirect()->back()->with([
             'message' => "Rent extends, wait for approval"
         ]);
     }
@@ -322,7 +324,7 @@ class StockController extends Controller
                     'user_rent_id' => $rent->id,
                     'date' => $rent->extend && $rent->extend->date ? $rent->extend->date : $rent->date,
                     'return' => $rent->extend && $rent->extend->return ? $rent->extend->return : $rent->return,
-                    'quantity' => $rent->amount / $rent->stock->price,
+                    'quantity' => $rent->quantity,
                 ]);
             }
         }
@@ -335,11 +337,11 @@ class StockController extends Controller
                     'user_rent_id' => $rent->id,
                     'date' => $rent->extend && $rent->extend->date ? $rent->extend->date : $rent->date,
                     'return' => $rent->extend && $rent->extend->return ? $rent->extend->return : $rent->return,
-                    'quantity' => $rent->amount / $rent->stock->price,
+                    'quantity' => $rent->quantity,
                 ]);
             }
         }
-        return redirect()->back()->withErrors([
+        return redirect()->back()->with([
             'message' => "Rent returned, check to your returns page"
         ]);
     }
@@ -349,26 +351,26 @@ class StockController extends Controller
         $rent = UserRent::where('id', $id)->get()->first();
 
         Stock::where('id', $rent->stock->id)->update([
-            'quantity' => $rent->stock->quantity + $rent->amount / $rent->stock->price
+            'quantity' => $rent->stock->quantity + $rent->quantity,
         ]);
         UserRent::where('id', $id)->update([
             'is_returned' => 1
         ]);
-        return redirect()->back()->withErrors([
-            'message' => "Item successfully added in the inventory"
+        return redirect()->back()->with([
+            'message' => "Item has been added in the inventory"
         ]);
     }
     protected function addToRents(Request $request, $id)
     {
         $rent = UserRent::where('id', $id)->get()->first();
         ForRent::where('id', $rent->for_rent_id)->update([
-            'quantity' => $rent->for_rent->quantity + $rent->amount / $rent->stock->price
+            'quantity' => $rent->for_rent->quantity + $rent->quantity,
         ]);
         UserRent::where('id', $id)->update([
             'is_returned' => 1
         ]);
-        return redirect()->back()->withErrors([
-            'message' => "Item is applied to rentable items."
+        return redirect()->back()->with([
+            'message' => "Item has been applied to a rentable items."
         ]);
     }
 }

@@ -29,7 +29,7 @@
                             <td>{{ $rent->address }}</td>
                             <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
                             <td>₱{{ $rent->amount }}</td>
-                            <td>{{ $rent->amount / $rent->stock->price }}</td>
+                            <td>{{ $rent->quantity }}</td>
                             <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
                             <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
                         </tr>
@@ -39,7 +39,7 @@
                 <div style="padding: 10px">
                     <h3><i>No extended</i></h3>
                 </div>
-                <a href="{{ route('inventory_for_rents') }}" style="text-decoration: none; color:#06283D"> <- Check approved items</a>
+                <a href="{{ route('inventory_rents') }}" style="text-decoration: none; color:#06283D"> <- Check approved items</a>
             @endif
         </div>
     </div>

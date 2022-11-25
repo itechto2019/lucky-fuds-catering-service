@@ -49,7 +49,7 @@ class AdminController extends Controller
         $confirmedRent = count(UserRent::whereHas('rent_approve')->get());
         $pendingRent = count(UserRent::where('status', 'pending')->get());
         $declinedRent = count(UserRent::whereHas('rent_decline')->get());
-        $totalRequest = count(UserRent::doesntHave('extends')->get());
+        $totalRequest = count(UserRent::get());
 
         // extend requests
         $confirmedExtend = count(UserRent::whereHas('extend_approve')->get());
@@ -87,25 +87,33 @@ class AdminController extends Controller
     }
     public function ScheduleEvents(Request $request)
     {
-        $selectMonth = $request->has('month_of') ? $request->input('month_of') : today()->month;
-        $date = empty($selectMonth) ? Carbon::now() : Carbon::createFromDate($selectMonth);
+        $selectMonth = $request->has('month_of') ? $request->input('month_of') : Carbon::now()->format('M');
+        $date = empty($selectMonth) ? today()->month : Carbon::createFromDate($selectMonth);
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $months[] = Carbon::createFromDate(today()->month, $i)->format('M');
         }
         $formatWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-        $startOfCalendar = $date->copy()->firstOfMonth()->startOfWeek(Carbon::SUNDAY);
-        $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY);
+        $startOfCalendar = $date->copy()->firstOfMonth()->startOfWeek(Carbon::SUNDAY)->startOfDay();
+        $endOfCalendar = $date->copy()->lastOfMonth()->endOfWeek(Carbon::SATURDAY)->endOfDay();
 
-        $previousEvents = UserReserve::with(['reserve' => function($q) {
+        $previousEvents = UserReserve::whereHas('reserve', function ($q) {
             $q->where('status', 'approved');
-        }])->whereDate('date', '<', today()->format('Y-m-d'))->get();
+        })->whereDate('date', '<', today()->format('Y-m-d'))->get();
 
 
-        $upcomingEvents = UserReserve::with(['reserve' => function($q) {
+        $upcomingEvents = UserReserve::whereHas('reserve', function ($q) {
             $q->where('status', 'approved');
-        }])->whereDate('date', '>=', today()->format('Y-m-d'))->get();
+        })->whereDate('date', '>=', today()->format('Y-m-d'))->get();
 
+        $events = UserReserve::with('reserve')->whereHas('reserve', function ($q){
+            $q->where('status', 'approved');
+        })->get();
+
+        $filterEvent = UserReserve::with('reserve')->whereHas('reserve', function ($q){
+            $q->where('status', 'approved');
+        })->whereDate('date', $request->input('filter'))->get();
+        
         $events = UserReserve::with('reserve')->whereHas('reserve', function ($q){
             $q->where('status', 'approved');
         })->get();
@@ -120,7 +128,8 @@ class AdminController extends Controller
             'endOfCalendar',
             'events',
             'previousEvents',
-            'upcomingEvents'
+            'upcomingEvents',
+            'filterEvent'
         ]));
     }
 
@@ -145,13 +154,12 @@ class AdminController extends Controller
             'reports'
         ]));
     }
-
     // stocks
     protected function InventoryStocks(Request $request)
     {
         $search = $request->has('search') ? $request->input('search') : null;
         $packages = Package::get();
-        $supplies = Stock::where('item', 'LIKE', '%' . $search . '%')->get();
+        $supplies = Stock::where(strtolower('item'), 'LIKE', '%' . $search . '%')->get();
         return view('admin.inventory.stocks')->with(compact(['packages', 'supplies']));
     }
     // for rents
@@ -159,7 +167,7 @@ class AdminController extends Controller
     {
         $search = $request->has('search') ? $request->input('search') : null;
         $supplies = ForRent::whereNot('quantity' , 0)->whereHas('stock', function ($q) use($search) {
-            $q->where('item', 'LIKE', '%' . $search . '%');
+            $q->where(strtolower('item'), 'LIKE', '%' . $search . '%');
         })->get();
         return view('admin.inventory.for_rents')->with(compact(['supplies']));
     }
@@ -219,14 +227,14 @@ class AdminController extends Controller
         Validate::where('id', $id)->update([
             'status' => true
         ]);
-        return throw ValidationException::withMessages([
+        return back()->with([
             'message' => 'Verification confirmed'
         ]);
     }
     public function rejectVerification($id){
         Validate::where('id', $id)->delete();
-        return throw ValidationException::withMessages([
-            'message' => 'Verification failed'
+        return back()->with([
+            'reject' => 'Verification failed'
         ]);
     }
 }
