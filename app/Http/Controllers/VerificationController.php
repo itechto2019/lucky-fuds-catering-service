@@ -13,10 +13,10 @@ class VerificationController extends Controller
 {
     public function VerifyNow($token) {
         $verifiedUser = Verify::where('token', $token)->first();
-        $result = User::where('id', $verifiedUser->user_id)->update([
-            'email_verified_at' => now()
-        ]);
-        if($result) {
+        if($verifiedUser) {
+            User::where('id', $verifiedUser->user_id)->update([
+                'email_verified_at' => now()
+            ]);
             Verify::where('token', $token)->delete();
             return redirect()->route('login')->with([
                 'message' => 'Email verified'
