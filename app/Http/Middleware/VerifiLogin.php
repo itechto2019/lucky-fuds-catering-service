@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class isUser
+class VerifiLogin
 {
     /**
      * Handle an incoming request.
@@ -17,13 +17,14 @@ class isUser
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && !Auth::user()->is_admin) {
-            return $next($request);
+        if (Auth::check()) {
+            if (Auth::user()->is_admin) {
+                return redirect()->route('dashboard');
+            } else {
+                return redirect()->route('user_dashboard');
+            }
         } else {
-            return redirect()->route('dashboard');
+            return redirect()->route('login');
         }
-        return redirect()->route('login')->withErrors([
-            'message' => 'Please login'
-        ]);
     }
 }

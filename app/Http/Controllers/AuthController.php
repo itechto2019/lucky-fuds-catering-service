@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use App\Models\Verify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use TypeError;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -28,7 +31,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credential, $remember)) {
             if ($terms && $policy) {
-                return redirect('')->with([
+                return redirect('/')->with([
                     'message' => 'Login successfully'
                 ]);
             } else {
@@ -56,10 +59,20 @@ class AuthController extends Controller
                 'password' => 'required|confirmed|min:8',
             ]);
             $form = $validator->validated();
-            User::create([
+            $user = User::create([
                 'email' => $form['email'],
                 'password' => password_hash($form['password'], PASSWORD_BCRYPT),
             ]);
+            $token = Str::random(100);
+            Verify::create([
+                'user_id' => $user->id,
+                'token' => $token
+            ]);
+
+            Mail::send('user.mail', ['verifyToken' => $token, 'user' => $user], function ($m) use($user) {
+                $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Verification');
+            });
             return redirect('/login')->withErrors([
                 'message' => 'Registration complete'
             ]);

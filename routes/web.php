@@ -7,13 +7,10 @@ use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VerificationController;
 use App\Models\Package;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 
 
@@ -98,7 +95,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
 });
 
-Route::middleware(['auth', 'user', 'verified'])->prefix('user')->group(function () {
+Route::middleware(['auth', 'user', 'is_verified'])->prefix('user')->group(function () {
     // USER
     Route::get('/dashboard', [UserController::class, 'index'])->name('user_dashboard');
 
@@ -131,35 +128,21 @@ Route::middleware(['auth', 'user', 'verified'])->prefix('user')->group(function 
     // Extends
     Route::post('/rent-extends/{id}', [StockController::class, 'userExtends'])->name('user_extends');
 });
-Route::get('/', function () {
-    if(Auth::check()) {
-        if (Auth::user()->is_admin) {
-            return redirect()->intended(route('dashboard'));
-        } else {
-            return redirect()->intended(route('user_dashboard'));
-        }
-    } else {
-        return view('auth.login');
-    }
-});
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/register', [AuthController::class, 'register'])->name('register');
 
-Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
-Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/', function () {
+        return redirect('/');
+    });
+    Route::get('/login', [AuthController::class, 'login'])->name('login');
+    Route::get('/register', [AuthController::class, 'register'])->name('register');
+
+    Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
+    Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+});
 Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
 
-// Route::get('/verify', function () {
-//     // $verifyToken = Str::random(100);
-//     // $user = Auth::user();
-//     // Mail::send('user.mail', ['verifyToken' => $verifyToken, 'user' => $user], function ($m) use($user) {
-//     //     $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
-//     //     $m->to($user->email)->subject('Lucky Fuds Service Catering System | Verification');
-//     // });
-//     // return view('user.verification')->with(compact(['verifyToken', 'user']));
-    
-// })->name('verify_first');
 
+Route::get('/email/verify/{token}', [VerificationController::class, 'VerifyNow'])->name('verify_now');
 // Route::get('/verified', function () {
     
 // })->name('verification.verify');
