@@ -20,9 +20,11 @@ class isUser
         if(Auth::check()) {
             if(!Auth::user()->is_admin) {
                 return $next($request);
-            }else if (!Auth::user()->is_admin && !Auth::user()->email_verified_at) {
-                return route('verify_first');
-            }else {
+            }
+            // else if (!Auth::user()->is_admin && !Auth::user()->email_verified_at) {
+            //     return route('verify_first');
+            // }
+            else {
                 return route('dashboard');
             }
         }else {

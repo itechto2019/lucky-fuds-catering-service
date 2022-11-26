@@ -8,7 +8,6 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use App\Models\Package;
-use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -150,21 +149,20 @@ Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
 
-Route::get('/verify', function () {
-    $verifyToken = Str::random(100);
-    $user = Auth::user();
-    Mail::send('user.mail', ['verifyToken' => $verifyToken, 'user' => $user], function ($m) use($user) {
-        $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
-        $m->to($user->email)->subject('Lucky Fuds Service Catering System | Verification');
-    });
-    return view('user.verification')->with(compact(['verifyToken', 'user']));
-})->name('verify_first');
+// Route::get('/verify', function () {
+//     // $verifyToken = Str::random(100);
+//     // $user = Auth::user();
+//     // Mail::send('user.mail', ['verifyToken' => $verifyToken, 'user' => $user], function ($m) use($user) {
+//     //     $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+//     //     $m->to($user->email)->subject('Lucky Fuds Service Catering System | Verification');
+//     // });
+//     // return view('user.verification')->with(compact(['verifyToken', 'user']));
+    
+// })->name('verify_first');
 
-Route::get('/verified/{token}', function (Request $request, $token) {
-    User::where('id', $request->user()->id)->update([
-        'email_verified_at' => now()
-    ]);
-})->name('verified');
+// Route::get('/verified', function () {
+    
+// })->name('verification.verify');
 
 Route::get('/terms', function () {
     return view('terms');
