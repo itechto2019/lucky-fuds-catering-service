@@ -12,15 +12,11 @@
         place-content: center;
         place-items: center
     }
-
 </style>
 
 <div class="email-box" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
     <div class="email-info">
         <img src="{{asset('assets/logo.jpg')}}" alt="Logo" border="0" width="400" style="display: block; width: 400px;">
-        <p>Confirmation link has been sent to your email.</p>
-        <p>{{$user->email}}</p>
-        <p>{{date('Y-m-d')}}</p>
-        <p>If link doesn't work, click the resend button. <a href="{{route('verify_first')}}" style="color: #F7F7F7; font-weigh: bold;">Resend</a></p>
+        <h1>Email verified</h1>
     </div>
 </div>

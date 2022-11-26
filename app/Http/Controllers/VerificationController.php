@@ -18,8 +18,10 @@ class VerificationController extends Controller
         ]);
         if($result) {
             Verify::where('token', $token)->delete();
+            return redirect()->route('login')->with([
+                'message' => 'Email verified'
+            ]);
         }
-
-        return view('user.verification');
+        abort(404);
     }
 }
