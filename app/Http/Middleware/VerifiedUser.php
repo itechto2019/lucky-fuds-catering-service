@@ -18,10 +18,7 @@ class VerifiedUser
     public function handle(Request $request, Closure $next)
     {
         if(Auth::check() && !Auth::user()->email_verified_at) {
-            Auth::logout();
-            return redirect()->route('login')->withErrors([
-                'message' => 'You must verify your email first.'
-            ]);
+            return redirect()->route('resend_verification');
         }
         return $next($request);
     }

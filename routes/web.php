@@ -143,9 +143,7 @@ Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->midd
 
 
 Route::get('/email/verify/{token}', [VerificationController::class, 'VerifyNow'])->name('verify_now');
-// Route::get('/verified', function () {
-    
-// })->name('verification.verify');
+Route::get('/email/confirmation', [VerificationController::class, 'ResendVerification'])->name('resend_verification');
 
 Route::get('/terms', function () {
     return view('terms');
