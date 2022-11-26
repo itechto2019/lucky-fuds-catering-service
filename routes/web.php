@@ -8,6 +8,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use App\Models\Package;
+use App\Models\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -160,7 +161,9 @@ Route::get('/verify', function () {
 })->name('verify_first');
 
 Route::get('/verified/{token}', function (Request $request, $token) {
-    $request->user()->markEmailAsVerified();
+    User::where('id', $request->user()->id)->update([
+        'email_verified_at' => now()
+    ]);
 })->name('verified');
 
 Route::get('/terms', function () {
