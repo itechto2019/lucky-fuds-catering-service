@@ -19,14 +19,14 @@ class AuthController extends Controller
     {
         return view('auth.register');
     }
-    public function signin(Request $request)
+    public function signin(LoginRequest $request)
     {
-        // $credential = $request->validate();
+        $credential = $request->validated();
         $remember = $request['remember'] ? true : false;
         $terms = $request['agree-terms'] ? true : false;
         $policy = $request['agree-policy'] ? true : false;
 
-        if (Auth::attempt($request->only('email', 'password'), $remember)) {
+        if (Auth::attempt($credential, $remember)) {
             if ($terms && $policy) {
                 return redirect('')->with([
                     'message' => 'Login successfully'

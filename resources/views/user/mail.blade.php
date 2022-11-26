@@ -103,7 +103,6 @@
   <!-- start body -->
   <table border="0" cellpadding="0" cellspacing="0" width="100%">
 
-    <!-- start logo -->
     <tr>
       <td align="center" bgcolor="#e9ecef">
         <!--[if (gte mso 9)|(IE)]>
@@ -120,11 +119,6 @@
             </td>
           </tr>
         </table>
-        <!--[if (gte mso 9)|(IE)]>
-        </td>
-        </tr>
-        </table>
-        <![endif]-->
       </td>
     </tr>
     <!-- end logo -->
@@ -167,7 +161,7 @@
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
               <p style="margin: 0;">Tap the button below to confirm your email address.<a href="{{env('APP_URL')}}"></a></p>
-              <p style="color:red">Please note! Do not share this code, otherwise your account will be invalidate.</p>
+              <p style="color:red">Please note! Do not share this link, otherwise your account will be invalidate.</p>
 
             </td>
           </tr>
@@ -180,22 +174,18 @@
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                          <a href="{{env('APP_URL')}}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Verify Email</a>
+                          <a href="{{route('verified', ['token' => $verifyToken])}}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Verify Email</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p>If doesn't work, copy this link and paste on your browser. <a href="{{route('verified', ['token' => $verifyToken])}}" target="_blank" style="font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff;">Click here</a></p>
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
               </table>
-            </td>
-          </tr>
-          <!-- end button -->
-
-          <!-- start copy -->
-          <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">If that doesn't work, copy and paste the following link in your browser:</p>
-              <p style="margin: 0;"><a href="{{ route('verify_email', ['token'=>$verifyToken])}}" target="_blank">Click here</a></p>
             </td>
           </tr>
 

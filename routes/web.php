@@ -8,6 +8,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use App\Models\Package;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -150,14 +151,18 @@ Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->midd
 
 Route::get('/verify', function () {
     $verifyToken = Str::random(100);
-    Mail::send('user.mail', ['verifyToken' => $verifyToken], function ($m) {
+    $user = Auth::user();
+    Mail::send('user.mail', ['verifyToken' => $verifyToken, 'user' => $user], function ($m) use($user) {
         $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
-        $m->to("keuriseutian15@gmail.com")->subject('Lucky Fuds Service Catering System | Verification');
+        $m->to($user->email)->subject('Lucky Fuds Service Catering System | Verification');
     });
-})->name('verify');
-Route::post('/verify/email/{token}', function (Request $request, $token) {
-    return response($token);
-})->name('verify_email');
+    return view('user.verification')->with(compact(['verifyToken', 'user']));
+})->name('verify_first');
+
+Route::get('/verified/{token}', function (Request $request, $token) {
+    $request->user()->markEmailAsVerified();
+})->name('verified');
+
 Route::get('/terms', function () {
     return view('terms');
 })->name('terms');
