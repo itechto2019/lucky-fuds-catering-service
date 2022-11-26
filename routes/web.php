@@ -8,10 +8,12 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use App\Models\Package;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+
 
 
 
@@ -94,7 +96,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     })->name('delete_package');
 
 });
-Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
+
+Route::middleware(['auth', 'user', 'verified'])->prefix('user')->group(function () {
     // USER
     Route::get('/dashboard', [UserController::class, 'index'])->name('user_dashboard');
 
@@ -126,7 +129,6 @@ Route::middleware(['auth', 'user'])->prefix('user')->group(function () {
     
     // Extends
     Route::post('/rent-extends/{id}', [StockController::class, 'userExtends'])->name('user_extends');
-
 });
 Route::get('/', function () {
     if(Auth::check()) {
@@ -146,6 +148,16 @@ Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
 
+Route::get('/verify', function () {
+    $verifyToken = Str::random(100);
+    Mail::send('user.mail', ['verifyToken' => $verifyToken], function ($m) {
+        $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+        $m->to("keuriseutian15@gmail.com")->subject('Lucky Fuds Service Catering System | Verification');
+    });
+})->name('verify');
+Route::post('/verify/email/{token}', function (Request $request, $token) {
+    return response($token);
+})->name('verify_email');
 Route::get('/terms', function () {
     return view('terms');
 })->name('terms');

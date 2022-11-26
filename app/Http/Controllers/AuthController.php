@@ -19,14 +19,14 @@ class AuthController extends Controller
     {
         return view('auth.register');
     }
-    public function signin(LoginRequest $request)
+    public function signin(Request $request)
     {
-        $credential = $request->validated();
+        // $credential = $request->validate();
         $remember = $request['remember'] ? true : false;
         $terms = $request['agree-terms'] ? true : false;
         $policy = $request['agree-policy'] ? true : false;
 
-        if (Auth::attempt($credential, $remember)) {
+        if (Auth::attempt($request->only('email', 'password'), $remember)) {
             if ($terms && $policy) {
                 return redirect('')->with([
                     'message' => 'Login successfully'
@@ -51,13 +51,13 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         try {
-            $validator = Validator::make($request->only('username', 'password','password_confirmation'), [
-                'username' => 'required',
+            $validator = Validator::make($request->only('email', 'password','password_confirmation'), [
+                'email' => 'required|email',
                 'password' => 'required|confirmed|min:8',
             ]);
             $form = $validator->validated();
             User::create([
-                'username' => $form['username'],
+                'email' => $form['email'],
                 'password' => password_hash($form['password'], PASSWORD_BCRYPT),
             ]);
             return redirect('/login')->withErrors([

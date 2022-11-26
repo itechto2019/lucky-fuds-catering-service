@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('user');
+        $this->middleware(['user', 'verified']);
     }
 
     public function index(Request $request)

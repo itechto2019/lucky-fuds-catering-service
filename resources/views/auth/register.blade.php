@@ -25,7 +25,7 @@
                     @error('username') 
                         style="border: 2px solid #EB1D36"
                     @enderror>
-                    <input type="username" name="username" class="for-input" placeholder="Username" value="{{ old('email') }}">
+                    <input type="email" name="email" class="for-input" placeholder="Email" value="{{ old('email') }}">
                 </div>
                 <div class="for-group-input"
                     @error('password') 
@@ -43,7 +43,6 @@
                 <div class="for-group-input submit">
                     <input type="submit" class="for-input" value="Sign up">
                 </div>
-    
             </form>
         </div>
     </div>
