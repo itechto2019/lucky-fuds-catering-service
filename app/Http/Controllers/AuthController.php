@@ -73,7 +73,7 @@ class AuthController extends Controller
                 $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
                 $m->to($user->email)->subject('Lucky Fuds Service Catering System | Verification');
             });
-            return redirect('/login')->withErrors([
+            return redirect('/login')->with([
                 'message' => 'Registration complete'
             ]);
         } catch (TypeError $e) {
