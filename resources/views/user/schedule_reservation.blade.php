@@ -41,7 +41,7 @@
                             <label for=""><b>Contact: </b>{{ Auth::user()->info->contact }}</label>
                         </div>
                         <div class="input-group">
-                            <label for=""><b>Email: </b>{{ Auth::user()->info->email }}</label>
+                            <label for=""><b>Email: </b>{{ Auth::user()->email }}</label>
                         </div>
                         @if (!$packages->isEmpty())
                         <div class="package-description">

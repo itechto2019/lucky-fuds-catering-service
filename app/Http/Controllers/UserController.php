@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ForRent;
 use Carbon\Carbon;
 use App\Models\Package;
+use App\Models\Stock;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\UserRent;
@@ -74,6 +75,9 @@ class UserController extends Controller
         $rentRequestCount = count(UserRent::where('user_info_id', $id)->get());
         $extendRequestCount = count(UserRent::whereHas('extends')->where('user_info_id', $id)->where('status', 'pending')->get());
 
+
+        $products = Stock::paginate(20);
+
         return view('user.dashboard')->with(compact([
             'noOfDays',
             'months',
@@ -91,7 +95,8 @@ class UserController extends Controller
             'rentRequestCount',
             'extendRequestCount',
             'selectedMonth',
-            'date'
+            'date',
+            'products'
         ]));
     }
     public function ConfirmationRequest()
@@ -201,7 +206,6 @@ class UserController extends Controller
             'profile',
             'name',
             'contact',
-            'email',
             'address',
             'method',
             'birthday'
@@ -209,7 +213,6 @@ class UserController extends Controller
             'profile' => 'mimes:png,jpg,jpeg|nullable|max:5000',
             'name' => 'nullable',
             'contact' => 'nullable',
-            'email' => 'email|nullable',
             'address' => 'nullable',
             'method' => 'nullable',
             'birthday' => 'nullable:date'
@@ -241,7 +244,6 @@ class UserController extends Controller
                         'temp_name' => $filename,
                         'name' => Auth::user()->info->name,
                         'contact' => Auth::user()->info->contact,
-                        'email' => Auth::user()->info->email,
                         'address' => $form['address'],
                         'method' => $form['method'],
                         'birthday' => $form['birthday'],
@@ -253,7 +255,6 @@ class UserController extends Controller
                         'temp_name' => $filename,
                         'name' => $form['name'],
                         'contact' => $form['contact'],
-                        'email' => $form['email'],
                         'address' => $form['address'],
                         'method' => $form['method'],
                         'birthday' => $form['birthday'],
@@ -268,7 +269,6 @@ class UserController extends Controller
                         'user_id' => Auth::id(),
                         'name' => Auth::user()->info->name,
                         'contact' => Auth::user()->info->contact,
-                        'email' => Auth::user()->info->email,
                         'address' => $form['address'],
                         'method' => $form['method'],
                         'birthday' => $form['birthday'],
@@ -279,7 +279,6 @@ class UserController extends Controller
                         'user_id' => Auth::id(),
                         'name' => $form['name'],
                         'contact' => $form['contact'],
-                        'email' => $form['email'],
                         'address' => $form['address'],
                         'method' => $form['method'],
                         'birthday' => $form['birthday'],

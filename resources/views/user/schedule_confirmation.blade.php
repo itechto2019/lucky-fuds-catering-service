@@ -37,9 +37,9 @@
                             <br>
                             <b>Contact: </b>{{ $reservation->info->contact }}
                             <br>
-                            <b>Email: </b>{{ $reservation->info->email }}
+                            <b>Email: </b>{{ $reservation->email }}
                             <br>
-                            <b>Prefered contact: </b>{{ $reservation->info->method == "email" ? $reservation->info->email : ($reservation->info->method == "contact" ? $reservation->info->contact : "Not Set") }}
+                            <b>Prefered contact: </b>{{ $reservation->info->method == "email" ? $reservation->email : ($reservation->info->method == "contact" ? $reservation->info->contact : "Not Set") }}
                             <br>
                             <b>Address: </b>{{ $reservation->address }}
                             <br>

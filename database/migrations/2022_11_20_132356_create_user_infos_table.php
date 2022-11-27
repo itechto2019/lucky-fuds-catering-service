@@ -16,7 +16,6 @@ return new class extends Migration
             $table->text('temp_name')->nullable(true);
             $table->string('name');
             $table->string('contact');
-            $table->string('email');
             $table->string('address');
             $table->date('birthday');
             $table->string('method');

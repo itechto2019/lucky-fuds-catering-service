@@ -8,6 +8,7 @@ use App\Models\Reservation;
 use App\Models\UserReserve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ScheduleController extends Controller
 {
@@ -26,13 +27,14 @@ class ScheduleController extends Controller
                 'user_info_id' => Auth::user()->info->id,
                 'package_id' => $request->package_id,
                 'contact' => Auth::user()->info->contact ,
-                'email' => Auth::user()->info->email ,
+                'email' => Auth::user()->email ,
                 'date' =>$request->date,
                 'time' => $request->time,
                 'address' => $request->address,
                 'guest' => $request->guest,
                 'event' => $request->event
             ]);
+            
             ForReserve::create([
                 'user_info_id' => Auth::user()->info->id,
                 'user_reserve_id' => $reserve->id,
@@ -50,6 +52,13 @@ class ScheduleController extends Controller
         ForReserve::where('id', $id)->update([
             'status' => 'approved'
         ]);
+
+        $reserve = ForReserve::with(['info'])->where('id', $id)->first();
+        $user = $reserve->user_reserve;
+        Mail::send('admin.reservation-report-email', ['client' => $user, 'status' => 'APPROVE'], function ($m) use($user) {
+            $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+            $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+        });
         return redirect()->back()->with([
             'message' => "Reservation approved"
         ]);
@@ -58,6 +67,12 @@ class ScheduleController extends Controller
         ForReserve::where('id', $id)->update([
             'status' => 'declined'
         ]);
+        $reserve = ForReserve::with(['info'])->where('id', $id)->first();
+        $user = $reserve->user_reserve;
+        Mail::send('admin.reservation-report-email', ['client' => $user, 'status' => 'DECLINED'], function ($m) use($user) {
+            $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+            $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+        });
         return redirect()->back()->with([
             'reject' => "Reservation declined"
         ]);

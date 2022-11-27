@@ -66,7 +66,7 @@
             </tr>
             <tr>
                 <td>Prefered Contact</td>
-                <td align="right">{{ $client->info->method == "email" ? $client->info->email : ($client->info->method == "contact" ? $client->info->contact : "N/A" )}}</td>
+                <td align="right">{{ $client->info->method == "email" ? $client->email : ($client->info->method == "contact" ? $client->info->contact : "N/A" )}}</td>
             </tr>
         </table>
     </div>

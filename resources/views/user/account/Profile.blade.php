@@ -91,7 +91,8 @@
                         <input type="date" name="birthday" id="" value="{{ Auth::user()->info ? Auth::user()->info->birthday : old('birthday') }}" max={{now()}} required>
                     </div>
                     <div class="input-group">
-                        <input type="email" name="email" id="" placeholder="Email Address" value="{{ Auth::user()->info ? Auth::user()->info->email : old('email') }}" required @disabled(Auth::user()->info ? true : false)>
+                        <b>Email: </b>
+                        <p>{{ Auth::user()->email }}</p>
                     </div>
                     <div class="input-group" style="display: flex;justify-content:center">
                         <label for="">Preferred Contact Method:&nbsp;</label>

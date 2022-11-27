@@ -50,7 +50,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Reservation
     Route::put('/reserve-to-approve/{id}', [ScheduleController::class, 'ApproveReserve'])->name('to_approve');
     Route::put('/reserve-to-reject/{id}', [ScheduleController::class, 'RejectReserve'])->name('to_reject_reserve');
-    
 
     // Approve / Decline
     Route::put('/add-to-checkout/{id}', [StockController::class, 'toCheckOut'])->name('to_checkout');
@@ -131,7 +130,7 @@ Route::middleware(['auth', 'user', 'is_verified'])->prefix('user')->group(functi
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
-        return redirect('/');
+        return redirect('/login');
     });
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::get('/register', [AuthController::class, 'register'])->name('register');

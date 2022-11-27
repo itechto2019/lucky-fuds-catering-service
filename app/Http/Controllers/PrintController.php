@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserRent;
 use App\Models\UserReserve;
+use Illuminate\Support\Facades\Mail;
 use PDF;
 
 class PrintController extends Controller
@@ -12,6 +13,7 @@ class PrintController extends Controller
         $rent = UserRent::where('id', $id)->get()->first();
         $pdf = PDF::loadView('admin.pdf',['rent' => $rent])->setPaper('a4', 'landscape');
         // return $pdf->download('teknowize.pdf');
+        
         return $pdf->stream();
     }
     protected function InventoryReportDownload($id) {

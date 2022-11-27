@@ -23,15 +23,15 @@
     <div class="home-control-body">
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_schedule_reservation') }}">Reservation</a>
-            
         </div>
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_inventory_for_rents') }}">Rent</a>
-            
         </div>
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_schedule_confirmation') }}">Confirmation Request</a>
-            
+            <span>
+                <div class="notif-count">{{$rentConfirmCount}}</div>
+            </span>
         </div>
         <div class="dashboard-group">
             <a type="button" href="{{ route('user_inventory_rents') }}">Rent Request</a>
@@ -99,6 +99,25 @@
     </div>
 </div>
 </div>
+@if (!$products->isEmpty())
+<div class="products-container">
+    <div class="product-title" style="padding: 10px">
+        <h1>Products</h1>
+    </div>
+    <div class="products-list">
+        @foreach ($products as $product)
+        <div class="product-box">
+            <img src="{{$product->image}}" alt="">
+            <div class="product-info">
+                <span>₱{{$product->price}}</span>
+                <p>{{strlen($product->item) > 50 ? substr($product->item, 0, 50) . '...': $product->item}}</p>
+            </div>
+        </div>
+        @endforeach
+        {{$products->links()}}
+    </div>
+</div>
+@endif
 <script>
     function getDateEvent(eventMonth) {
         window.location.href = `?month=${eventMonth}`

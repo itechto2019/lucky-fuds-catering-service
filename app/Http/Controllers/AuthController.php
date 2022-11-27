@@ -60,6 +60,12 @@ class AuthController extends Controller
                 'password' => 'required|confirmed|min:8',
             ]);
             $form = $validator->validated();
+            $findEmail = User::where('email', $form['email'])->first();
+            if($findEmail) {
+                return back()->withErrors([
+                    'email' => 'Email already exist'
+                ]);
+            }
             $user = User::create([
                 'email' => $form['email'],
                 'password' => password_hash($form['password'], PASSWORD_BCRYPT),

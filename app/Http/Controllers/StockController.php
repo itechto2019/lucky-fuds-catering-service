@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Firebase;
+use Illuminate\Support\Facades\Mail;
 
 class StockController extends Controller
 {
@@ -202,6 +203,7 @@ class StockController extends Controller
             ForRent::where('id', $rentId)->update([
                 'quantity' => $forrent->quantity - $form['quantity']
             ]);
+            
             if ($method == "deliver") {
                 Deliver::create([
                     'user_rent_id' => $result->id
@@ -228,10 +230,17 @@ class StockController extends Controller
             UserRent::where('id', $id)->update([
                 'status' => 'approved'
             ]);
+            $userRent = UserRent::where('id', $id)->first();
+            $userInfo = $userRent->info;
+            $user = $userInfo->user;
+            Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'APPROVED'], function ($m) use($user) {
+                $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+            });
             RentApprove::create([
                 'user_rent_id' => $rent->id
             ]);
-
+            
             return redirect()->back()->with([
                 'message' => "Rent Approved"
             ]);
@@ -242,6 +251,13 @@ class StockController extends Controller
                 'status' => 'extended',
                 'amount' => $extendRate * $rentPerDay
             ]);
+            $userRent = UserRent::where('id', $id)->first();
+            $userInfo = $userRent->info;
+            $user = $userInfo->user;
+            Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'APPROVED EXTENSION'], function ($m) use($user) {
+                $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+            });
             ExtendApprove::create([
                 'user_rent_id' => $rent->id
             ]);
@@ -259,6 +275,13 @@ class StockController extends Controller
             UserRent::where('id', $id)->update([
                 'status' => 'declined',
             ]);
+            $userRent = UserRent::where('id', $id)->first();
+            $userInfo = $userRent->info;
+            $user = $userInfo->user;
+            Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'DECLINED'], function ($m) use($user) {
+                $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+            });
             RentDecline::create([
                 'user_rent_id' => $rent->id
             ]);
@@ -273,6 +296,13 @@ class StockController extends Controller
             UserRent::where('id', $id)->update([
                 'status' => 'extend declined',
             ]);
+            $userRent = UserRent::where('id', $id)->first();
+            $userInfo = $userRent->info;
+            $user = $userInfo->user;
+            Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'DECLINE EXTENSION'], function ($m) use($user) {
+                $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+            });
             ExtendDecline::create([
                 'user_rent_id' => $rent->id
             ]);

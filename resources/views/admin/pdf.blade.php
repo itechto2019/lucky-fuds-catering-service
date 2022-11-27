@@ -45,7 +45,7 @@
             </tr>
             <tr>
                 <td>Contact</td>
-                <td align="right">{{ $rent->info->method == "contact" ? $rent->info->contact : ($rent->info->method == "email" ? $rent->info->email : "None")  }}</td>
+                <td align="right">{{ $rent->info->method == "contact" ? $rent->info->contact : ($rent->info->method == "email" ? $rent->info->user->email : "None")  }}</td>
             </tr>
             <tr>
                 <td>Address</td>

@@ -14,7 +14,6 @@ class UserInfo extends Model
         "profile",
         "name",
         "contact",
-        "email",
         'temp_name',
         'birthday',
         "address",

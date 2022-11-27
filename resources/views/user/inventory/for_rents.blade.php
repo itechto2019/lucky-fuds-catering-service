@@ -74,15 +74,15 @@
                                         <h3>Renting Information</h3>
                                         @csrf
                                         <input type="hidden" name="items" value="{{$supply->stock->item}}">
-                                        @if (Auth::user()->info && Auth::user()->info->email && Auth::user()->validate)
+                                        @if (Auth::user()->info && Auth::user()->email && Auth::user()->validate)
                                         <div class="input-group" style="display: block">
                                             <p>
                                                 @if (Auth::user()->info->method == "email")
                                                 <span><b>Contact: </b><a
-                                                        href="mailto:{{ Auth::user()->info->email }}">{{
-                                                        Auth::user()->info->email }}</a></span>
+                                                        href="mailto:{{ Auth::user()->email }}">{{
+                                                        Auth::user()->email }}</a></span>
                                                 @else
-                                                <span><b>Contact: </b>{{ Auth::user()->info->email }}</span>
+                                                <span><b>Contact: </b>{{ Auth::user()->email }}</span>
                                                 @endif
                                             </p>
                                             <p>

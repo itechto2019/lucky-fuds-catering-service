@@ -44,7 +44,7 @@
                         <br>
                         <b>{{ $account->info->contact}}</b>
                         <br>
-                        <b>{{ $account->info->email}}</b>
+                        <b>{{ $account->email}}</b>
                     </td>
                     <td>{{ $account->validate->status == 0 ? "Unverified" : "Verified" }}</td>
                     <td>

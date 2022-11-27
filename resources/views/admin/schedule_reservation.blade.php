@@ -28,9 +28,9 @@
                     <td>
                         <b>Contact: </b>{{ $reservation->info->contact }}
                         <br>
-                        <b>Email: </b>{{ $reservation->info->email }}
+                        <b>Email: </b>{{ $reservation->email }}
                         <br>
-                        <b>Prefered contact: </b>{{ $reservation->info->method == "email" ? $reservation->info->email :
+                        <b>Prefered contact: </b>{{ $reservation->info->method == "email" ? $reservation->email :
                         ($reservation->info->method == "contact" ? $reservation->info->contact : "Not Set") }}
                         <br>
                         <b>Address: </b>{{ $reservation->address }}
@@ -92,8 +92,8 @@
                         <div class="event-approved">
                             <p><b>Client: </b>{{$approve->info->name}}</p>
                             <p><b>Contact: </b> {{ $approve->info->contact }}</p>
-                            <p><b>Email: </b> {{ $approve->info->email }}</p>
-                            <p><b>Prefered: </b> {{ $approve->info->method == "email" ? $approve->info->email :
+                            <p><b>Email: </b> {{ $approve->email }}</p>
+                            <p><b>Prefered: </b> {{ $approve->info->method == "email" ? $approve->email :
                                 ($approve->info->method == "contact" ? $approve->info->contact : "Not Set") }}</p>
                             <p><b>Event: </b> {{ $approve->user_reserve->event }}</p>
                             <p><b>Date: </b><small>({{ $approve->user_reserve->date }})</small></p>
@@ -119,8 +119,8 @@
                                 <div class="event-approved">
                                 <p><b>Client: </b>{{$decline->info->name}}</p>
                                 <p><b>Contact: </b> {{ $decline->info->contact }}</p>
-                                <p><b>Email: </b> {{ $decline->info->email }}</p>
-                                <p><b>Prefered: </b> {{ $decline->info->method == "email" ? $decline->info->email :
+                                <p><b>Email: </b> {{ $decline->email }}</p>
+                                <p><b>Prefered: </b> {{ $decline->info->method == "email" ? $decline->email :
                                     ($decline->info->method == "contact" ? $decline->info->contact : "Not Set") }}</p>
                                 <p style="color: rgb(250, 83, 83)"><b>Event: </b> {{ $decline->user_reserve->event }}</p>
                                 <p><b>Date: </b><small>({{ $decline->user_reserve->date }})</small></p>
