@@ -26,34 +26,30 @@
                     <th>#</th>
                     <th>Image</th>
                     <th>Item</th>
-                    <th>Client</th>
-                    <th>Method</th>
-                    <th>Address</th>
-                    <th>Amount</th>
-                    <th>Quantity</th>
-                    <th>Date for use</th>
-                    <th>Extended use</th>
-                    <th>Date for return</th>
-                    <th>Extended return</th>
+                    <th>Details</th>
                     <th>Status</th>
+                    <th></th>
                 </tr>
                 @foreach ($rents as $rent)
                 <tr>
                     <td>{{ $rent->id }}</td>
                     <td><img src="{{ $rent->stock->image }}" alt=""></td>
                     <td>{{ $rent->stock->item }}</td>
-                    <td>{{ $rent->info->name }}</td>
-                    <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
-                    <td>{{ $rent->address }}</td>
-                    <td>₱{{ $rent->amount }}</td>
-                    <td>{{ $rent->quantity }}</td>
-                    <td>{{ $rent->return }}</td>
-                    <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
-                    <td>{{ $rent->return }}</td>
-                    <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
+                    <td style="width: 40%">
+                        <p><b>Client:</b> {{ $rent->info->name }}</p>
+                        <p><b>Method:</b> {{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</p>
+                        <p><b>Mode of Payment:</b> {{ $rent->transaction->payment_method == 0 ? "Cash Payment" : "Online
+                            Payment"}} / {{ $rent->transaction->extend_online_transaction ? "Online Payment" : "Cash Payment"}}</p>
+                        <p><b>Address:</b> {{ $rent->address }}</p>
+                        <p><b>Date for use:</b> {{ $rent->extends ? $rent->extends->date : $rent->date }}</p>
+                        <p><b>Date for return:</b> {{ $rent->extends ? $rent->extends->return : $rent->return }}</p>
+                        <p><b>Amount: ₱</b>{{ $rent->amount }}</p>
+                        <p><b>Quantity:</b> {{ $rent->quantity }}</p>
+                    </td>
+                    <td>{{ $rent->status }}</td>
                     <td>
                         @if($rent->extend_approve)
-                            <p>Admin approved your extend</p>
+                            <p>Admin approve your extend</p>
                         @elseif($rent->extend_decline)
                             <p>Admin declined your extend</p>
                         @endif

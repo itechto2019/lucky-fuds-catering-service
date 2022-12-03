@@ -1011,3 +1011,18 @@ background-color: #36AE7C;
     align-items: center;
     gap: 5%;
 }
+
+.show-ref {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+}
+.show-ref img {
+    width: 60%;
+    height: 60%;
+}

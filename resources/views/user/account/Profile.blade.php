@@ -9,12 +9,15 @@
         </div>
         <div class="error">
             @foreach ($errors->all() as $error)
-                <div style="padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
+                <div style="padding: 10px; margin:5px; border-radius: 5px; background-color: #FF6464; color: #1a1a1a1">{{$error}}</div>
             @endforeach
         </div>
         @if(session()->has('message'))
-                <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
-            @endif
+            <div style="padding: 15px; margin:5px; border-radius: 5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
+        @endif
+        @if(Auth::user()->validate && Auth::user()->validate->status == false)
+            <div style="padding: 15px; margin:5px; border-radius: 5px; background-color: #FF6464; color: #1a1a1a1">Verification is on process</div>
+        @endif
         @if (!Auth::user()->validate && Auth::user()->info)
             <form action="{{ route('user_validate_update') }}" method="POST" enctype="multipart/form-data" style="display: flex;align-items:center; width: 300px">
                 @csrf

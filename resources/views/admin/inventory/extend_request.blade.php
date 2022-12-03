@@ -24,28 +24,27 @@
                 <tr>
                     <th>#</th>
                     <th>Image</th>
-                    <th>Client</th>
-                    <th>Method</th>
-                    <th>Address</th>
-                    <th>Date for use</th>
-                    <th>Date for return</th>
-                    <th>Amount</th>
-                    <th>Quantity</th>
+                    <th>Item</th>
+                    <th>Details</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
                 @foreach ($rents as $rent)
                 <tr>
                     <td>{{ $rent->id }}</td>
-                    <td><img src="{{ $rent->stock->image }}" alt=""></td>
-                    <td>{{ $rent->info->name }}</td>
-                    <td>{{ $rent->address }}</td>
-                    <td>{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
-                    <td>{{ $rent->extends ? $rent->extends->date : $rent->date }}</td>
-                    <td>{{ $rent->extends ? $rent->extends->return : $rent->return }}</td>
-                    <td>₱{{ $rent->amount }}</td>
-                    <td>{{ $rent->quantity }}</td>
-                    <td>{{ $rent->status }}</td>
+                    <td><img src="{{ $rent->stock->image }}"></td>
+                    <td>{{ $rent->stock->item}}</td>
+                    <td style="width: 40%">
+                        <p><b>Client:</b> {{ $rent->info->name }}</p>
+                        <p><b>Method:</b> {{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</p>
+                        <p><b>Mode of Payment:</b> {{ $rent->transaction->online_transaction ? "Online Payment" : "Cash Payment"}}</p>
+                        <p><b>Address:</b> {{ $rent->address }}</p>
+                        <p><b>Date for use:</b> {{ $rent->extends ? $rent->extends->date : $rent->date }}</p>
+                        <p><b>Date for return:</b> {{ $rent->extends ? $rent->extends->return : $rent->return }}</p>
+                        <p><b>Amount: ₱</b>{{ $rent->amount }}</p>
+                        <p><b>Quantity:</b> {{ $rent->quantity }}</p>
+                    </td>
+                    <td>{{$rent->status}}</td>
                     <td>
                         <div class="action-form">
                             <div class="action-button">

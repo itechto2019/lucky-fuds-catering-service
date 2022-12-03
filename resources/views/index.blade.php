@@ -168,6 +168,7 @@
                                 <a href="{{ route('user_inventory_summary') }}">Summary</a>                        
                             </div>
                         </div>
+                        {{-- Account --}}
                         <div class="for-link {{ Route::currentRouteName() === 'account' ? 'active' : '' }}" id="account">
                             <a href="" onclick="openAccount(event)">
                                 Account Manager
@@ -243,6 +244,8 @@
                     @yield('user_inventory_summary')
                 @elseif(Route::currentRouteName() === "user_account_profile")
                     @yield('user_account_profile')
+                @elseif(Route::currentRouteName() === "user_online_payment")
+                    @yield('user_online_payment')
                 @endif
             </section>
         @endif

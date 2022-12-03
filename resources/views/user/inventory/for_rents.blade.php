@@ -70,12 +70,13 @@
                             <div class="form" id="form-rent-{{ $supply->id }}" class="form-rents" style="display:none">
                                 <div class="form-data">
                                     <form action="{{ route('user_rent', [$supply->id,  $supply->stock_id]) }}"
-                                        method="POST">
+                                        method="POST" style="position: relative">
                                         <h3>Renting Information</h3>
                                         @csrf
+                                        <div style="left: 100%;top: 0%;color: #F7F7F7;width: 300px;position: absolute;padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1; font-size: 13px">Please note: If your choose online payment, submit your payment immediately, otherwise may cancelled out your rent </div>
                                         <input type="hidden" name="items" value="{{$supply->stock->item}}">
-                                        @if (Auth::user()->info && Auth::user()->email && Auth::user()->validate)
-                                        <div class="input-group" style="display: block">
+                                        @if (Auth::user()->info && Auth::user()->email && Auth::user()->validate->status == true)
+                                        {{-- <div class="input-group" style="display: block">
                                             <p>
                                                 @if (Auth::user()->info->method == "email")
                                                 <span><b>Contact: </b><a
@@ -88,12 +89,12 @@
                                             <p>
                                                 <span><b>Address: </b>{{ Auth::user()->info->address }}</span>
                                             </p>
-                                        </div>
+                                        </div> --}}
                                         <div class="input-group" style="display: block">
                                             <input type="number" name="quantity" id="q-{{ $supply->id }}"
                                                 placeholder="Quantity"
                                                 onchange="calculateQuantity({{ $supply->id }}, {{ $supply->quantity }}, {{ $supply->stock->price }})"
-                                                value="{{ $supply->quantity }}" required>
+                                                required>
                                             <div style="padding: 5px 0px">
                                                 <span style="color:#FF1E1E;" id="q-limit-{{ $supply->id }}"></span>
                                             </div>
@@ -101,13 +102,13 @@
                                         <div class="input-group">
                                             <input type="number" name="amount" disabled id="amount-{{ $supply->id }}"
                                                 onchange="amountChangeError({{ $supply->id }}, {{ $supply->quantity }}, {{ $supply->stock->price }})"
-                                                placeholder="Amount" value="{{ $supply->quantity  * $supply->stock->price}}"
+                                                placeholder="Amount"
                                                 required>
                                         </div>
                                         <div class="input-group">
-                                            <label for="">Current</label>
-                                            <input type="radio" name="venue" value="current" checked />
-                                            <label for="">Manual</label>
+                                            <label for="" style="font-size: 14px;">Current</label>
+                                            <input type="radio"  name="venue" value="current" checked />
+                                            <label for="" style="font-size: 14px;">Manual</label>
                                             <input type="radio" name="venue" value="manual"/>
                                         </div>
                                         <div class="input-group" id="show-address">
@@ -116,19 +117,28 @@
                                                 required>
                                         </div>
                                         <div class="input-group">
-                                            <label for="method" style="user-select:none">Pickup</label>
+                                            <label for="method" style="font-size: 14px;user-select:none">Pickup</label>
                                             <input type="radio" name="method" value="pickup" style="cursor: pointer"
-                                                required>
-                                            <label for="method" style="user-select:none">Deliver</label>
+                                                required checked>
+                                            <label for="method" style="font-size: 14px;user-select:none">Deliver</label>
                                             <input type="radio" style="cursor: pointer" value="deliver" name="method"
                                                 required>
                                         </div>
+                                        {{-- payment --}}
                                         <div class="input-group">
-                                            <label for="">Date to use(?): </label>
+                                            <label for="payment" style="font-size: 14px;user-select:none">Cash</label>
+                                            <input type="radio" name="payment" value="cash" style="cursor: pointer"
+                                                required checked>
+                                            <label for="payment" style="font-size: 14px;user-select:none">Online Payment</label>
+                                            <input type="radio" style="cursor: pointer" value="online" name="payment"
+                                                required>
+                                        </div>
+                                        <div class="input-group" style="position: relative">
+                                            <span style="position: absolute; top: 0%">Date to use(?): </span>
                                             <input type="date" name="date" min={{now()}} required>
                                         </div>
-                                        <div class="input-group">
-                                            <label for="">Date to return(?): </label>
+                                        <div class="input-group" style="position: relative">
+                                            <span style="position: absolute; top: 0%">Date to return(?): </span>
                                             <input type="date" name="return" min={{now()}} required>
                                         </div>
                                         <div class="input-group">
@@ -139,14 +149,14 @@
                                             </div>
                                         </div>
                                         @else
-                                        <div class="input-group">
-                                            <span style="color:#FF1E1E">Please complete your profile first</span>
-                                        </div>
-                                        <a href="{{route('user_account_profile')}}" style="text-decoration: underlined; color: #1A1A1A; padding: 10px">Check</a>
-                                        <div class="input-group">
-                                            <button class="cancel" type="button"
-                                                onclick="cancelRent({{ $supply->id }})">Close</button>
-                                        </div>
+                                            <div class="input-group">
+                                                <span style="color:#FF1E1E">Please complete your profile first</span>
+                                            </div>
+                                            <a href="{{route('user_account_profile')}}" style="text-decoration: underlined; color: #1A1A1A; padding: 10px">Check</a>
+                                            <div class="input-group">
+                                                <button class="cancel" type="button"
+                                                    onclick="cancelRent({{ $supply->id }})">Close</button>
+                                            </div>
                                         @endif
                                     </form>
                                 </div>

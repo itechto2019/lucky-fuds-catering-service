@@ -19,7 +19,8 @@ class UserRent extends Model
         'date',
         'return',
         'status',
-        'is_returned'
+        'is_returned',
+        
     ];
     public function info() {
         return $this->belongsTo(UserInfo::class, "user_info_id");
@@ -54,5 +55,11 @@ class UserRent extends Model
     }
     public function extend_decline() {
         return $this->hasOne(ExtendDecline::class);
+    }
+    public function transaction() {
+        return $this->hasOne(Transaction::class, 'user_rent');
+    }
+    public function extend_online_transaction () {
+        return $this->hasOne(ExtendOnlineTransaction::class, 'transaction');
     }
 }

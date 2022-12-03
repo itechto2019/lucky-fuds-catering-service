@@ -24,6 +24,7 @@ class VerificationController extends Controller
                     'message' => 'Email verified'
                 ]);
             }
+            abort(404);
         }catch(Exception $e) {
             abort(404);
         }

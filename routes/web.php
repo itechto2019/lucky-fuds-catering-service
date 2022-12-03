@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StockController;
@@ -74,6 +75,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::patch('/account/request/confirm/{id}', [AdminController::class, 'confirmVerification'])->name('confirm_verification');
     Route::patch('/account/request/reject/{id}', [AdminController::class, 'rejectVerification'])->name('reject_verification');
 
+
+    Route::patch('/payment/receive/{rent_id}', [PaymentController::class, 'acceptPayment'])->name('accept_payment');
+
     Route::put('/edit-package/{id}', function (Request $request, $id) {
         $form = $request->validate([
             'name' => "min:8",
@@ -118,7 +122,6 @@ Route::middleware(['auth', 'user', 'is_verified'])->prefix('user')->group(functi
     Route::get('/account/profile', [UserController::class, 'AccountProfile'])->name('user_account_profile');
     Route::patch('/account/profile/update', [UserController::class, 'UpdateProfile'])->name('user_profile_update');
     Route::patch('/account/profile/validate', [UserController::class, 'validateId'])->name('user_validate_update');
-
     
 
     // User Rent
@@ -126,6 +129,9 @@ Route::middleware(['auth', 'user', 'is_verified'])->prefix('user')->group(functi
     
     // Extends
     Route::post('/rent-extends/{id}', [StockController::class, 'userExtends'])->name('user_extends');
+    Route::post('/payment/{rent_id}', [PaymentController::class, 'rentOnline'])->name('user_online_payment');
+
+
 });
 
 Route::middleware(['guest'])->group(function () {
@@ -139,10 +145,9 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 });
 Route::get('/signout', [AuthController::class, 'logout'])->name('signout')->middleware(['auth']);
-
-
 Route::get('/email/verify/{token}', [VerificationController::class, 'VerifyNow'])->name('verify_now');
 Route::get('/email/confirmation', [VerificationController::class, 'ResendVerification'])->name('resend_verification');
+
 
 Route::get('/terms', function () {
     return view('terms');
@@ -150,4 +155,5 @@ Route::get('/terms', function () {
 Route::get('/policy', function () {
     return view('policy');
 })->name('policy');
+
 

@@ -3,17 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Approve;
+use App\Models\CashPayment;
 use App\Models\Decline;
 use App\Models\Deliver;
 use App\Models\Extend;
 use App\Models\ExtendApprove;
+use App\Models\ExtendCashPayment;
 use App\Models\ExtendDecline;
+use App\Models\ExtendOnlinePayment;
+use App\Models\ExtendOnlineTransaction;
 use App\Models\ForRent;
+use App\Models\OfflineTransaction;
+use App\Models\OnlinePayment;
+use App\Models\OnlineTransaction;
+use App\Models\Payment;
 use App\Models\Pickup;
 use App\Models\RentApprove;
 use App\Models\RentDecline;
 use App\Models\Returns;
 use App\Models\Stock;
+use App\Models\Transaction;
 use App\Models\UserRent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -170,7 +179,6 @@ class StockController extends Controller
     }
     protected function userRent(Request $request, $rentId, $stockId)
     {
-        // user_id, stock_id, for_rent_id
         $user = Auth::user();
 
         $stock = Stock::where('id', $stockId)->get()->first();
@@ -187,6 +195,8 @@ class StockController extends Controller
             'return' => 'required'
         ]);
         $form = $validator->validated();
+
+        $paymentMethod = $request->payment === "online" ? true : false;
         $address = $request->input('venue') == "current" ? $user->info->address : ($request->input('venue') == "manual" ?  $form['address'] : $user->info->address);
         $result = UserRent::create([
             'user_info_id' => $user->info->id,
@@ -198,6 +208,12 @@ class StockController extends Controller
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
+        
+        Transaction::create([
+            'user_rent' => $result->id,
+            'payment_method' => $paymentMethod
+        ]);
+
         if ($result) {
             $method = $request->method;
             ForRent::where('id', $rentId)->update([
@@ -235,16 +251,27 @@ class StockController extends Controller
             $user = $userInfo->user;
             Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'APPROVED'], function ($m) use($user) {
                 $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
-                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Renting Status');
             });
             RentApprove::create([
                 'user_rent_id' => $rent->id
             ]);
-            
+            if($rent->transaction->payment_method == 1){
+                OnlineTransaction::create([
+                    'user_rent'=> $rent->id,
+                    'transaction' => $rent->transaction->id
+                ]);
+            }else {
+                OfflineTransaction::create([
+                    'user_rent'=> $rent->id,
+                    'transaction' => $rent->transaction->id
+                ]);
+            }
             return redirect()->back()->with([
                 'message' => "Rent Approved"
             ]);
         }
+
         if ($rent->status == "extending") {
             $rentPerDay = Carbon::now()->diffInDays($rent->extends->return, false);
             UserRent::where('id', $id)->update([
@@ -256,12 +283,17 @@ class StockController extends Controller
             $user = $userInfo->user;
             Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'APPROVED EXTENSION'], function ($m) use($user) {
                 $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
-                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Renting Status');
             });
             ExtendApprove::create([
                 'user_rent_id' => $rent->id
             ]);
-
+            if($rent->transaction->payment_method == 1) {
+                ExtendOnlineTransaction::create([
+                    'user_rent'=> $rent->id,
+                    'transaction' => $rent->transaction->id,
+                ]);
+            }
             return redirect()->back()->with([
                 'message' => "Extend Approved"
             ]);
@@ -280,7 +312,7 @@ class StockController extends Controller
             $user = $userInfo->user;
             Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'DECLINED'], function ($m) use($user) {
                 $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
-                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Renting Status');
             });
             RentDecline::create([
                 'user_rent_id' => $rent->id
@@ -301,7 +333,7 @@ class StockController extends Controller
             $user = $userInfo->user;
             Mail::send('admin.rent-report-email', ['rent' => $userRent, 'status' => 'DECLINE EXTENSION'], function ($m) use($user) {
                 $m->from(env('MAIL_USERNAME'), 'Lucky Fuds Service Catering System');
-                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Reservation Status');
+                $m->to($user->email)->subject('Lucky Fuds Service Catering System | Renting Status');
             });
             ExtendDecline::create([
                 'user_rent_id' => $rent->id
@@ -319,14 +351,22 @@ class StockController extends Controller
             'date' => 'required',
             'return' => 'required'
         ]);
+        $paymentMethod = $request->payment == "online" ? true : false;
+        $rent = UserRent::where('id', $id)->first();
         UserRent::where('id', $id)->update([
             'status' => 'extending',
         ]);
-        Extend::create([
+        $result = Extend::create([
             'user_rent_id' => $id,
             'date' => $form['date'],
             'return' => $form['return'],
         ]);
+        if($paymentMethod) {
+            ExtendOnlineTransaction::create([
+                'user_rent'=> $rent->id,
+                'transaction' => $rent->transaction->id,
+            ]);
+        }
         return redirect()->back()->with([
             'message' => "Rent extends, wait for approval"
         ]);

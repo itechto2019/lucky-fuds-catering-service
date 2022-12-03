@@ -53,22 +53,25 @@
     </div>
     <div style="padding: 15px; display: flex; gap: 10px;">
         @foreach ($months as $month)
-            <div class="month-selection"  onclick="getDateEvent('{{$month}}')" style="{{ !$selectedMonth && date('M') == date('M', strtotime($month)) ? "background-color:#FA8281;" : (date('M', strtotime($selectedMonth)) == $month ? "background-color:#FA8281;" : "") }}">
-                <h3>{{ $month }}</h3>
-            </div>
+        <div class="month-selection" onclick="getDateEvent('{{$month}}')"
+            style="{{ !$selectedMonth && date('M') == date('M', strtotime($month)) ? " background-color:#FA8281;" :
+            (date('M', strtotime($selectedMonth))==$month ? "background-color:#FA8281;" : "" ) }}">
+            <h3>{{ $month }}</h3>
+        </div>
         @endforeach
-        
+
     </div>
     <div class="events">
         <div class="dates">
             @if(!$reserves->isEmpty())
-                @for($i = 0; $i <= $noOfDays; $i++) <div class="@foreach ($reserves as $reserve){{ date('j', strtotime($reserve->date)) - 1 == $i ? 'date active' : 'date' }} @endforeach">
-                    <div class="month">
-                        <div>{{ Carbon\Carbon::now()->days($i + 1)->format('D') }}</div>
-                        <div>{{ Carbon\Carbon::now()->days($i + 1)->format('j')}}</div>
-                    </div>
+            @for($i = 0; $i <= $noOfDays; $i++) <div
+                class="@foreach ($reserves as $reserve){{ date('j', strtotime($reserve->date)) - 1 == $i ? 'date active' : 'date' }} @endforeach">
+                <div class="month">
+                    <div>{{ Carbon\Carbon::now()->days($i + 1)->format('D') }}</div>
+                    <div>{{ Carbon\Carbon::now()->days($i + 1)->format('j')}}</div>
                 </div>
-            @endfor
+        </div>
+        @endfor
         @endif
     </div>
     <div class="event-items">
@@ -100,7 +103,7 @@
 </div>
 </div>
 @if (!$products->isEmpty())
-<div class="products-container">
+<div class="products-container" style="margin-top: 5%">
     <div class="product-title" style="padding: 10px">
         <h1>Products</h1>
     </div>
