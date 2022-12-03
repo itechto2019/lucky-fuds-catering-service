@@ -54,9 +54,9 @@
                             <b>Quantity: </b>
                             {{ $rent->quantity }}
                             <br>
-                            <p><b>Mode of Payment:</b> {{ $rent->transaction->payment_method == 0 ? "Cash Payment" : "Online
+                            <b>Mode of Payment:</b> {{ $rent->transaction->payment_method == 0 ? "Cash Payment" : "Online
                                 Payment"}} / {{ $rent->transaction->extend_online_transaction ? "Online Payment" : "Cash Payment"}}
-                            </p>
+                            <br>
                             <b>Date Used: </b>
                             {{ $rent->extends ? $rent->extends->date :  $rent->date  }}
                             <br>
