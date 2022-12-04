@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PackageController;
@@ -65,7 +66,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/reservation-reports/{id}', [PrintController::class, 'ReservationReport'])->name('export_reservation');
     Route::get('/reservation-reports-download/{id}', [PrintController::class, 'ReservationReportDownload'])->name('download_reservation');
     
-    
     Route::get('/rentals-reports/{id}', [PrintController::class, 'InventoryReport'])->name('export_inventory');
     Route::get('/rentals-reports-download/{id}', [PrintController::class, 'InventoryReportDownload'])->name('download_report');
 
@@ -74,9 +74,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::patch('/account/request/confirm/{id}', [AdminController::class, 'confirmVerification'])->name('confirm_verification');
     Route::patch('/account/request/reject/{id}', [AdminController::class, 'rejectVerification'])->name('reject_verification');
-
-
-    Route::patch('/payment/receive/{rent_id}', [PaymentController::class, 'acceptPayment'])->name('accept_payment');
+    Route::get('/account/profile', [AdminController::class, 'AccountProfile'])->name('account_profile');
+    Route::patch('/account/profile/update', [AdminController::class, 'UpdateProfile'])->name('profile_update');
+    
+    Route::patch('/payment/gcash/receive/{rent_id}', [PaymentController::class, 'acceptPayment'])->name('accept_payment');
+    Route::patch('/payment/receive/{rent_id}', [PaymentController::class, 'acceptReservation'])->name('accept_reservation');
 
     Route::put('/edit-package/{id}', function (Request $request, $id) {
         $form = $request->validate([
@@ -96,6 +98,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         return back();
     })->name('delete_package');
 
+    Route::get('/settings/update-about', [AboutController::class, 'view'])->name('about_page');
+    Route::post('/settings/update/about', [AboutController::class, 'create_about'])->name('create_about');
 });
 
 Route::middleware(['auth', 'user', 'is_verified'])->prefix('user')->group(function () {
@@ -131,6 +135,7 @@ Route::middleware(['auth', 'user', 'is_verified'])->prefix('user')->group(functi
     Route::post('/rent-extends/{id}', [StockController::class, 'userExtends'])->name('user_extends');
     Route::post('/payment/{rent_id}', [PaymentController::class, 'rentOnline'])->name('user_online_payment');
 
+    Route::post('/reservation/payment/{reservation_id}', [PaymentController::class, 'pay_reserve'])->name('user_pay_reservation');
 
 });
 
@@ -152,6 +157,7 @@ Route::get('/email/confirmation', [VerificationController::class, 'ResendVerific
 Route::get('/terms', function () {
     return view('terms');
 })->name('terms');
+Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/policy', function () {
     return view('policy');
 })->name('policy');

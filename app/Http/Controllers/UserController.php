@@ -103,8 +103,10 @@ class UserController extends Controller
     {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
         $reservations = UserReserve::with(['info', 'package', 'reserve'])->where('user_info_id', $id)->get();
+        $admin = User::where('id', 1)->first();
         return view('user.schedule_confirmation')->with(compact([
             'reservations',
+            'admin'
         ]));
     }
     public function ScheduleEvents(Request $request)
@@ -166,9 +168,10 @@ class UserController extends Controller
     public function Rented()
     {
         $id = Auth::user()->info ? Auth::user()->info->id : null;
+        $admin = User::where('id', 1)->first();
 
         $rents = UserRent::where('user_info_id', $id)->get();
-        return view('user.inventory.rents')->with(compact(['rents']));
+        return view('user.inventory.rents')->with(compact(['rents','admin']));
     }
     public function Extends()
     {

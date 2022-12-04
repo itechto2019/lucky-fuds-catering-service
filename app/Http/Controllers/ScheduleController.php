@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\ForReserve;
+use App\Models\OnlineReserve;
 use App\Models\Reserve;
 use App\Models\Reservation;
+use App\Models\ReservationPayment;
 use App\Models\UserReserve;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,7 @@ class ScheduleController extends Controller
                 "message" => "Please choose a package"
             ]);
         }else {
+            $payment_method = $request->payment === "online" ? true : false;
             $reserve = UserReserve::create([
                 'user_info_id' => Auth::user()->info->id,
                 'package_id' => $request->package_id,
@@ -34,7 +37,16 @@ class ScheduleController extends Controller
                 'guest' => $request->guest,
                 'event' => $request->event
             ]);
-            
+            $payment = ReservationPayment::create([
+                'user_reserve' => $reserve->id,
+                'payment_method' => $payment_method
+            ]);
+            if($payment){
+                OnlineReserve::create([
+                    'reservation_payment' => $payment->id,
+                    'user_reserve' => $reserve->id,
+                ]);
+            }
             ForReserve::create([
                 'user_info_id' => Auth::user()->info->id,
                 'user_reserve_id' => $reserve->id,

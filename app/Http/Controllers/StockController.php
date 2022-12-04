@@ -276,7 +276,7 @@ class StockController extends Controller
             $rentPerDay = Carbon::now()->diffInDays($rent->extends->return, false);
             UserRent::where('id', $id)->update([
                 'status' => 'extended',
-                'amount' => $extendRate * $rentPerDay
+                'amount' => $extendRate * $rentPerDay == 0 ? $rent->amount : $extendRate * $rentPerDay
             ]);
             $userRent = UserRent::where('id', $id)->first();
             $userInfo = $userRent->info;

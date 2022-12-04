@@ -44,6 +44,13 @@
                 <td align="right">{{ $rent->delivers ? "Deliver" : ($rent->pickups ? "Pickup" : "") }}</td>
             </tr>
             <tr>
+                <td>Mode of Payment:</td>
+                <td align="right">
+                    {{ $rent->transaction->payment_method == 0 ? "Cash Payment" : "Online
+                    Payment"}} / {{ $rent->transaction->extend_online_transaction ? "Online Payment" : "Cash Payment"}}
+                </td>
+            </tr>
+            <tr>
                 <td>Contact</td>
                 <td align="right">{{ $rent->info->method == "contact" ? $rent->info->contact : ($rent->info->method == "email" ? $rent->info->user->email : "None")  }}</td>
             </tr>

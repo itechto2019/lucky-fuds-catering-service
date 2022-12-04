@@ -405,6 +405,15 @@ main {
     align-items: center;
     padding: 10px;
 }
+.input-group textarea {
+    background-color: transparent;
+    border: 1px solid #28A745;
+    font-size: 17px;
+    border-radius: 10px;
+}
+.input-group textarea:focus {
+    outline: none;
+}
 .home-control-body {
     display: flex;
     justify-content: center;

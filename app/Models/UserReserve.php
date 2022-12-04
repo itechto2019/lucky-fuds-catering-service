@@ -23,7 +23,7 @@ class UserReserve extends Model
         'created_at',
         'updated_at'
     ];
-
+   
     public function info() {
         return $this->belongsTo(UserInfo::class, "user_info_id");
     }
@@ -32,5 +32,14 @@ class UserReserve extends Model
     }
     public function package() {
         return $this->belongsTo(Package::class);
+    }
+    public function payment() {
+        return $this->hasOne(ReservationPayment::class, 'user_reserve');
+    }
+    public function online_payment() {
+        return $this->hasOne(OnlineReserve::class, 'user_reserve');
+    }
+    public function variant() {
+        return $this->hasOne(ReservationDiscount::class, 'user_reserve');
     }
 }

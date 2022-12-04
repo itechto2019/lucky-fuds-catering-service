@@ -66,7 +66,7 @@
             </form>
         </div>
     </div>
-    <div class="form-pop-up" style="display: none">
+    <div class="form-pop-up" style="display: none;z-index:1">
         <div class="form-inputs">
             <form action="{{ route('add_supply') }}" method="POST" enctype="multipart/form-data">
                 <div class="input-group">
@@ -102,17 +102,20 @@
         </div>
     </div>
     <div class="table-reservation" id="table-supply">
-        <div class="input-group" style="width:fit-content" onclick="openAddItem()">
-            <button type="button">Add Item</button>
+        <div class="input-search" style="display: flex;align-items:center;">
+            <form action="?search=" style="width:100%;display: flex;align-items:center">
+                <div class="input-group" style="width:80%;position: relative">
+                    <input type="text" name="search" style="padding-left: 15px;border-style:none;border-radius: 5px;background-color: #A8CD96" placeholder="Search item" />
+                    <svg style="position: absolute;right: 0;padding: 23px;width: 25px; height: 25px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                </div>
+                <div class="input-group" onclick="openAddItem()">
+                    <button type="button" style="width: 100%">Add Item</button>
+                </div>
+            </form>
         </div>
         <div class="table-form">
-            <div class="search-form" style="padding: 10px">
-                <form action="?search=">
-                    <div class="input-group">
-                        <input type="search" name="search" placeholder="Search item" />
-                    </div>
-                </form>
-            </div>
             @if(!$supplies->isEmpty())
 
             <table>

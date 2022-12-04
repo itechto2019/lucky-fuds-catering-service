@@ -24,13 +24,14 @@
             @if(session()->has('message'))
                 <div style="padding: 15px; margin:5px; background-color: #38E54D; color: #1a1a1a1">{{ session()->get('message') }}</div>
             @endif
-            <div class="search-form" style="padding: 10px">
-                <form action="?search=">
-                    <div class="input-group">
-                        <input type="search" name="search" placeholder="Search item" />
-                    </div>
-                </form>
-            </div>
+            <form action="?search=" style="width:100%;display: flex;align-items:center">
+                <div class="input-group" style="width:80%;position: relative">
+                    <input type="text" name="search" style="padding-left: 15px;border-style:none;border-radius: 5px;background-color: #A8CD96" placeholder="Search item" />
+                    <svg style="position: absolute;right: 0;padding: 23px;width: 25px; height: 25px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                </div>
+            </form>
             @if (!$supplies->isEmpty())
             <table>
                 <tr>
@@ -76,20 +77,6 @@
                                         <div style="left: 100%;top: 0%;color: #F7F7F7;width: 300px;position: absolute;padding: 10px; margin:5px; background-color: #FF6464; color: #1a1a1a1; font-size: 13px">Please note: If your choose online payment, submit your payment immediately, otherwise may cancelled out your rent </div>
                                         <input type="hidden" name="items" value="{{$supply->stock->item}}">
                                         @if (Auth::user()->info && Auth::user()->email && Auth::user()->validate->status == true)
-                                        {{-- <div class="input-group" style="display: block">
-                                            <p>
-                                                @if (Auth::user()->info->method == "email")
-                                                <span><b>Contact: </b><a
-                                                        href="mailto:{{ Auth::user()->email }}">{{
-                                                        Auth::user()->email }}</a></span>
-                                                @else
-                                                <span><b>Contact: </b>{{ Auth::user()->email }}</span>
-                                                @endif
-                                            </p>
-                                            <p>
-                                                <span><b>Address: </b>{{ Auth::user()->info->address }}</span>
-                                            </p>
-                                        </div> --}}
                                         <div class="input-group" style="display: block">
                                             <input type="number" name="quantity" id="q-{{ $supply->id }}"
                                                 placeholder="Quantity"

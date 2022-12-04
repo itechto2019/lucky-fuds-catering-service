@@ -12,16 +12,17 @@
 </head>
 <body>
     <main>
+        <div class="modal" style="position: fixed;z-index: 1"></div>
         <section class="for-nav">
-            {{-- header --}}
-            @if (Auth::user()->is_admin)
-                <nav class="for-navbar">
-                    <div class="for-logo">
-                        <div class="for-image">
-                            <img src={{ asset('assets/logo.jpg') }} width="230" alt="">
-                        </div>
+        {{-- header --}}
+            <nav class="for-nav">
+                <div class="for-logo">
+                    <div class="for-image">
+                        <img src={{ asset('assets/logo.jpg') }} width="230" alt="">
                     </div>
-                    <div class="for-link-container">
+                </div>
+                <div class="for-link-container">
+                    @if (Auth::user()->is_admin)
                         <div class="for-link {{ Route::currentRouteName() === 'dashboard' ? 'active' : '' }}" id="dashboard">
                             <a href="{{ route('dashboard') }}">Dashboard</a>                                          
                         </div> 
@@ -106,20 +107,24 @@
                             <div class="for-sub-link {{ Route::currentRouteName() === 'account_verified' ? 'active' : '' }}">
                                 <a href="{{ route('account_verified') }}">Verified</a>                        
                             </div>
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'account_profile' ? 'active' : '' }}">
+                                <a href="{{ route('account_profile') }}">Admin Profile</a>                        
+                            </div>
                         </div>
-                        <div class="for-link">
-                            <a href="{{ route('signout') }}">Logout</a>
+                        <div class="for-link {{ Route::currentRouteName() === 'settings' ? 'active' : '' }}" id="settings">
+                            <a href="" onclick="openSettings(event)">
+                                Settings
+                                <svg id="settings_icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </a>
                         </div>
-                    </div>
-                </nav>
-            @else
-                <nav class="for-navbar">
-                    <div class="for-logo">
-                        <div class="for-image">
-                            <img src={{ asset('assets/logo.jpg') }} width="250" alt="">
+                        <div class="for-link-panel active" id="settings-active">
+                            <div class="for-sub-link {{ Route::currentRouteName() === 'about_page' ? 'active' : '' }}">
+                                <a href="{{ route('about_page') }}">Update about</a>                        
+                            </div>
                         </div>
-                    </div>
-                    <div class="for-link-container">
+                    @else
                         <div class="for-link {{ Route::currentRouteName() === 'user_dashboard' ? 'active' : '' }}" id="dashboard">
                             <a href="{{ route('user_dashboard') }}">Dashboard</a>                                          
                         </div> 
@@ -182,12 +187,15 @@
                                 <a href="{{ route('user_account_profile') }}">Profile</a>                        
                             </div>
                         </div>
-                        <div class="for-link">
-                            <a href="{{ route('signout') }}">Logout</a>
-                        </div>
+                    @endif
+                    <div class="for-link">
+                        <a href="#about" onclick="openAbout(event)">About</a>
                     </div>
-                </nav>
-            @endif
+                    <div class="for-link">
+                        <a href="{{ route('signout') }}">Logout</a>
+                    </div>
+                </div>
+            </nav>
             
         </section>
         @if (Auth::user()->is_admin)
@@ -216,10 +224,14 @@
                     @yield('inventory_return')
                 @elseif(Route::currentRouteName() === "inventory_reports")
                     @yield('inventory_reports')
+                @elseif(Route::currentRouteName() === "account_profile")
+                    @yield('account_profile')
                 @elseif(Route::currentRouteName() === "account_request")
                     @yield('account_request')
                 @elseif(Route::currentRouteName() === "account_verified")
                     @yield('account_verified')
+                @elseif(Route::currentRouteName() === "about_page")
+                    @yield('about_page')
                 @endif
             </section>
         @else
@@ -291,7 +303,19 @@
         $('#rental_icon').show()
         $('#account_icon').toggle()
     })
+    $('#settings').click(()=> {
+        $('#reservation-active').hide()
+        $('#inventory-active').hide()
+        $('#rentals-active').hide()
+        $('#account-active').hide()
+        $('#settings-active').toggle()
 
+        $('#reservation_icon').show()
+        $('#inventory_icon').show()
+        $('#rental_icon').show()
+        $('#account_icon').show()
+        $('#settings_icon').toggle()
+    })
     function openInventory(e) {
         e.preventDefault();
     }
@@ -301,7 +325,29 @@
     function openAccount(e) {
         e.preventDefault();
     }
+    function openSettings(e) {
+        e.preventDefault();
+    }
     setTimeout(() => {
        $('.error-message').fadeOut() 
     }, 3000);
+    function openAbout(e) {
+        e.preventDefault()
+        $.ajax({
+            type: "get",
+            url: "/about",
+            success: function (response) {
+                $('.modal').css({
+                    display: 'block'
+                })
+                $('.modal').html(response)
+            }
+        });
+    }
+    function closeAbout() {
+        $('.modal').css({
+            display: 'none'
+        })
+    }
+
 </script>

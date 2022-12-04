@@ -38,4 +38,10 @@ class User extends Authenticatable
     public function verify() {
         return $this->hasOne(Verify::class);
     }
+    public function admin_info() {
+        return $this->hasOne(AdminInfo::class);
+    }
+    public function about() {
+        return $this->hasOne(AboutInfo::class, 'user');
+    }
 }

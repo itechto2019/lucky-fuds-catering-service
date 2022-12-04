@@ -83,31 +83,35 @@
                                         
                                     @else
                                         @if ($rent->transaction->online_transaction && !$rent->transaction->online_transaction->payment_status)
-                                            <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
-                                                <h3>Proof Of Payment</h3>
-                                                <p><b>Reference number:</b><br>{{$rent->transaction->online_transaction->reference}}
-                                                </p>
-                                                <img src="{{$rent->transaction->online_transaction->image}}"
-                                                    style="width: 200px; cursor: pointer;"
-                                                    onclick="openImage({{$rent->id}},'{{$rent->transaction->online_transaction->image}}')">
-                                                    <form action="{{ route('accept_payment', $rent->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('patch')
-                                                        <button class="action-print">
-                                                            Receive
-                                                        </button>
-                                                    </form>
-                                                <div class="show-ref" id="ref-{{$rent->id}}" style="display: none">
-                                                    <svg onclick="hide('{{$rent->id}}')"
-                                                        style="cursor: pointer;position: absolute; top: 0; right: 0; width: 50px; height: 50px; color: #F7F7F7"
-                                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    <img src="" id="proof-{{$rent->id}}">
+                                            @if ($rent->transaction->online_transaction && $rent->transaction->online_transaction->image)
+                                                <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
+                                                    <h3>Proof Of Payment</h3>
+                                                    <p><b>Reference number:</b><br>{{$rent->transaction->online_transaction->reference}}
+                                                    </p>
+                                                    <img src="{{$rent->transaction->online_transaction->image}}"
+                                                        style="width: 200px; cursor: pointer;"
+                                                        onclick="openImage({{$rent->id}},'{{$rent->transaction->online_transaction->image}}')">
+                                                        <form action="{{ route('accept_payment', $rent->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('patch')
+                                                            <button class="action-print">
+                                                                Receive
+                                                            </button>
+                                                        </form>
+                                                    <div class="show-ref" id="ref-{{$rent->id}}" style="display: none">
+                                                        <svg onclick="hide('{{$rent->id}}')"
+                                                            style="cursor: pointer;position: absolute; top: 0; right: 0; width: 50px; height: 50px; color: #F7F7F7"
+                                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                        <img src="" id="proof-{{$rent->id}}">
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <p style="text-align: center">You've approve this rent request, wait for the proof of payment</p>
+                                            @endif
                                         @else
                                             <div class="action-form">
                                                 <div class="action-button">
@@ -155,11 +159,38 @@
                                         </div>
                                     @elseif ($rent->transaction->online_transaction && $rent->extend_online_transaction && !$rent->extend_online_transaction->payment_status)
                                         @if (!$rent->transaction->extend_online_transaction->payment_status && !$rent->transaction->extend_online_transaction->image)
-                                            <p style="text-align: center">You've approve this extension request, wait for the proof of payment</p>
+                                            <p style="text-align: center">You've approved this extension request, wait for the proof of payment</p>
                                         @else
+                                            <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
+                                                <h3>Proof Of Payment</h3>
+                                                <p><b>Reference numbers:</b><br>{{$rent->extend_online_transaction->reference}}
+                                                </p>
+                                                <img src="{{$rent->extend_online_transaction->image}}"
+                                                    style="width: 200px; cursor: pointer;"
+                                                    onclick="openImage({{$rent->id}},'{{$rent->extend_online_transaction->image}}')">
+                                                    <form action="{{ route('accept_payment', $rent->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('patch')
+                                                        <button class="action-print">
+                                                            Receive
+                                                        </button>
+                                                    </form>
+                                                <div class="show-ref" id="ref-{{$rent->id}}" style="display: none">
+                                                    <svg onclick="hide('{{$rent->id}}')"
+                                                        style="cursor: pointer;position: absolute; top: 0; right: 0; width: 50px; height: 50px; color: #F7F7F7"
+                                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    <img src="" id="proof-{{$rent->id}}">
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @elseif($rent->extend_online_transaction && $rent->extend_online_transaction->image)
                                         <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
                                             <h3>Proof Of Payment</h3>
-                                            <p><b>Reference numberss:</b><br>{{$rent->extend_online_transaction->reference}}
+                                            <p><b>Reference numbers:</b><br>{{$rent->extend_online_transaction->reference}}
                                             </p>
                                             <img src="{{$rent->extend_online_transaction->image}}"
                                                 style="width: 200px; cursor: pointer;"
@@ -182,20 +213,38 @@
                                                 <img src="" id="proof-{{$rent->id}}">
                                             </div>
                                         </div>
-                                        @endif
                                     @else
-                                        <p style="text-align: center">You've approve this extension.</p>
-                                        <div class="action-form">
-                                            <div class="action-button">
-                                                <form action="{{ route('to_return', $rent->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('put')
-                                                    <button class="action-print">
-                                                        Returned
-                                                    </button>
-                                                </form>
+                                        @if ($rent->extend_online_transaction && $rent->extend_online_transaction->payment_status)
+                                            <p style="text-align: center">You've approved this extension, wait for the proof of payment</p>
+                                            <div class="action-form">
+                                                <div class="action-button">
+                                                    <form action="{{ route('to_return', $rent->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                        <button class="action-print">
+                                                            Returned
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @else
+                                            @if (!$rent->transaction->extend_online_transaction && !$rent->transaction->payment_method)
+                                                <p style="text-align: center">You've approved this extension</p>
+                                                <div class="action-form">
+                                                    <div class="action-button">
+                                                        <form action="{{ route('to_return', $rent->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('put')
+                                                            <button class="action-print">
+                                                                Returned
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <p style="text-align: center">You've approved this extension request, wait for the proof of payment</p>
+                                            @endif
+                                        @endif
                                     @endif
                                 @else
                                     @if($rent?->return)

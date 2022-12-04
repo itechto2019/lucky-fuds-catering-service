@@ -33,12 +33,14 @@
                         <b>Prefered contact: </b>{{ $reservation->info->method == "email" ? $reservation->email :
                         ($reservation->info->method == "contact" ? $reservation->info->contact : "Not Set") }}
                         <br>
+                        <b>Mode of payment: </b>{{ $reservation->payment->payment_method ? "Online Payment" : "Cash Payment"; }}
+                        <br>
                         <b>Address: </b>{{ $reservation->address }}
                         <br>
                         <b>Event: </b>{{ $reservation->event }}
                         <br>
-                        <b>No. of guest/s: </b>{{ $reservation->guest }}
                         <br>
+                        <b>No. of guest/s: </b>{{ $reservation->guest }}
                         <br>
                         <b>Package: </b>{{ $reservation->package->name }}
                         <br>
@@ -64,7 +66,46 @@
                             </div>
                         </div>
                         @elseif($reservation->reserve->status == "approved")
-                            <p>You've approved a reservation</p>
+                            @if ($reservation->payment->payment_method)
+                                @if ($reservation->online_payment->image && !$reservation->online_payment->payment_status)
+                                    <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
+                                        <h3>Proof Of Payment</h3>
+                                        <b>{{$reservation->variant->variant}}</b>
+                                        <p><b>Reference number:</b><br>{{$reservation->online_payment->reference}}
+                                        </p>
+                                        <img src="{{$reservation->online_payment->image}}"
+                                            style="width: 200px; cursor: pointer;"
+                                            onclick="openImage({{$reservation->id}},'{{$reservation->online_payment->image}}')">
+                                            <form action="{{ route('accept_reservation', $reservation->id) }}" method="POST">
+                                                @csrf
+                                                @method('patch')
+                                                <div class="input-group">
+                                                    <button class="action-print">
+                                                        Receive
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        <div class="show-ref" id="ref-{{$reservation->id}}" style="display: none">
+                                            <svg onclick="hide('{{$reservation->id}}')"
+                                                style="cursor: pointer;position: absolute; top: 0; right: 0; width: 50px; height: 50px; color: #F7F7F7"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            <img src="" id="proof-{{$reservation->id}}">
+                                        </div>
+                                    </div>
+                                @else
+                                    @if (!$reservation->online_payment->payment_status)
+                                        <p>You've approved this reservation, wait for the proof of payment</p>
+                                    @else
+                                        <p>Proof of payment received</p>
+                                    @endif
+                                @endif
+                            @else
+                                <p>You've approved a reservation</p>
+                            @endif
                         @elseif($reservation->reserve->status == "declined")
                             <p>You've declined a reservation</p>
                         @endif
@@ -92,8 +133,8 @@
                         <div class="event-approved">
                             <p><b>Client: </b>{{$approve->info->name}}</p>
                             <p><b>Contact: </b> {{ $approve->info->contact }}</p>
-                            <p><b>Email: </b> {{ $approve->email }}</p>
-                            <p><b>Prefered: </b> {{ $approve->info->method == "email" ? $approve->email :
+                            <p><b>Email: </b> {{ $approve->info->user->email }}</p>
+                            <p><b>Prefered: </b> {{ $approve->info->method == "email" ? $approve->info->user->email :
                                 ($approve->info->method == "contact" ? $approve->info->contact : "Not Set") }}</p>
                             <p><b>Event: </b> {{ $approve->user_reserve->event }}</p>
                             <p><b>Date: </b><small>({{ $approve->user_reserve->date }})</small></p>
@@ -137,4 +178,13 @@
         </div>
     </div>
 </div>
+<script>
+    function openImage(id,url) {
+        $(`#ref-${id}`).show()
+        $(`#proof-${id}`).attr('src', url)
+    }
+    function hide(id) {
+        $(`#ref-${id}`).hide()
+    }
+</script>
 @endsection

@@ -50,6 +50,12 @@
                     <td align="right">₱{{ $client->package->price }}</td>
                 </tr>
                 <tr>
+                    <td>Mode of Payment:</td>
+                    <td align="right">
+                        {{ $client->payment->payment_method == 0 ? "Cash Payment" : "Online Payment"}}
+                    </td>
+                </tr>
+                <tr>
                     <td>Date</td>
                     <td align="right">{{ $client->date }}</td>
                 </tr>

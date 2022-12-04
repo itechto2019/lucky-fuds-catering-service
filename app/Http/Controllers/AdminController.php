@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminInfo;
 use Carbon\Carbon;
 use App\Models\Stock;
 use App\Models\ForRent;
 use App\Models\ForReserve;
 use App\Models\Package;
 use App\Models\User;
+use App\Models\UserInfo;
 use App\Models\UserRent;
 use App\Models\UserReserve;
 use App\Models\Validate;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Firebase;
 
 class AdminController extends Controller
 {
@@ -137,11 +141,10 @@ class AdminController extends Controller
         $reservations = UserReserve::get();
         $approves = ForReserve::with(['user_reserve'])->where('status', 'approved')->get();
         $declines = ForReserve::with(['user_reserve'])->where('status', 'declined')->get();
-        
         return view('admin.schedule_reservation')->with(compact([
             'reservations',
             'approves',
-            'declines'
+            'declines',
         ]));
     }
     public function ScheduleReports()
@@ -235,5 +238,75 @@ class AdminController extends Controller
         return back()->with([
             'reject' => 'Verification failed'
         ]);
+    }
+    public function AccountProfile() {
+        return view('admin.account.Profile');
+    }
+    public function UpdateProfile(Request $request)
+    {
+        $validator = Validator::make($request->only(
+            'user_id',
+            'profile',
+            'name',
+            'contact',
+        ), [
+            'profile' => 'mimes:png,jpg,jpeg|nullable|max:5000',
+            'name' => 'nullable',
+            'contact' => 'nullable',
+        ]);
+        if ($validator->fails()) {
+            return back();
+        } else {
+            $form = $validator->validated();
+            if ($request->hasFile('profile')) {
+                $filename = time() . 'profile.' . $form['profile']->extension();
+                $form['profile']->move(public_path('profile'), $filename);
+
+                $file = fopen(public_path('profile/') . $filename, 'r');
+                $storage = Firebase::storage();
+                $storage->getBucket()->upload($file, ['name' => 'admin/'  . $filename]);
+
+                $imageReference = app('firebase.storage')->getBucket()->object("admin/" . $filename);
+                $image = $imageReference->signedUrl(Carbon::now()->addCenturies(1));
+
+                unlink(public_path('profile/') . $filename);
+
+                if (Auth::user()->admin_info) {
+                    app('firebase.storage')->getBucket()->object("profile/" . Auth::user()->admin_info->temp_name)->delete();
+                    AdminInfo::where('user_id', Auth::id())->update([
+                        'user_id' => Auth::id(),
+                        'profile' => $image,
+                        'temp_name' => $filename,
+                        'name' => Auth::user()->admin_info->name,
+                        'contact' => Auth::user()->admin_info->contact,
+                    ]);
+                } else {
+                    AdminInfo::create([
+                        'user_id' => Auth::id(),
+                        'profile' => $image,
+                        'temp_name' => $filename,
+                        'name' => $form['name'],
+                        'contact' => $form['contact'],
+                    ]);
+                }
+                return back()->with([
+                    'message' => 'Profile updated'
+                ]);
+            } else {
+                if (Auth::user()->admin_info) {
+                    AdminInfo::where('user_id', Auth::id())->update([
+                        'user_id' => Auth::id(),
+                        'name' => Auth::user()->admin_info->name,
+                        'contact' => Auth::user()->admin_info->contact,
+                    ]);
+                } else {
+                    AdminInfo::create([
+                        'user_id' => Auth::id(),
+                        'name' => $form['name'],
+                        'contact' => $form['contact'],
+                    ]);
+                }
+            }
+        }
     }
 }

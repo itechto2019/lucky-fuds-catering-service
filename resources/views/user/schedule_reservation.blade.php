@@ -77,6 +77,14 @@
                             <input type="text" name="event" id="" placeholder="Event type" value="{{ old('event') }}"
                                 required>
                         </div>
+                        <div class="input-group">
+                            <label for="payment" style="font-size: 14px;user-select:none">Cash</label>
+                            <input type="radio" name="payment" value="cash" style="cursor: pointer"
+                                required checked>
+                            <label for="payment" style="font-size: 14px;user-select:none">Online Payment</label>
+                            <input type="radio" style="cursor: pointer" value="online" name="payment"
+                                required>
+                        </div>
                         @if (!$packages->isEmpty())
                         <div class="input-group">
                             <label for="">Package:&nbsp;</label>

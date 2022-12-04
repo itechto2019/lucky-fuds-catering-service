@@ -80,8 +80,8 @@
                                                 <form action="{{ route('user_online_payment', $rent->id) }}" method="POST"
                                                     enctype="multipart/form-data">
                                                     <h3>Proof of Payment</h3>
-                                                    <div style="padding: 10px">Admin GCash Number: <b>09772180562</b></div>
-                                                    <div style="padding: 10px">Admin GCASH Name: Danielle<b></b></div>
+                                                    <div style="padding: 10px">Admin GCash Number: <b>{{$admin->admin_info && $admin->admin_info->contact ? : "Not set" }}</b></div>
+                                                    <div style="padding: 10px">Admin GCASH Name: {{$admin->admin_info && $admin->admin_info->name ? : "Not set" }}<b></b></div>
                                                     @csrf
                                                     <div class="input-group">
                                                         <input type="text" name="ref" placeholder="Reference number">
@@ -113,8 +113,8 @@
                                                 <form action="{{ route('user_online_payment', $rent->id) }}" method="POST"
                                                     enctype="multipart/form-data">
                                                     <h3>Proof of Payment</h3>
-                                                    <div style="padding: 10px">Admin GCash Number: <b>09772180562</b></div>
-                                                    <div style="padding: 10px">Admin GCASH Name: Danielle<b></b></div>
+                                                    <div style="padding: 10px">Admin GCash Number: <b>{{$admin->admin_info && $admin->admin_info->contact ? $admin->admin_info->contact : "Not set" }}</b></div>
+                                                    <div style="padding: 10px">Admin GCASH Name: {{$admin->admin_info && $admin->admin_info->name ?  $admin->admin_info->name : "Not set" }}<b></b></div>
                                                     @csrf
                                                     <div class="input-group">
                                                         <input type="text" name="ref" placeholder="Reference number">
@@ -155,38 +155,42 @@
                                             </div>
                                         </div>
                                     @else
-                                        <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
-                                            <p style="margin: 5px">Your extension is approved,<br>pay via GCASH and submit <br>proof
-                                                of payment here</p>
-                                            <button onclick="payment({{ $rent->id }})"
-                                                style="padding: 10px; display:flex;justify-content: center;">
-                                                Submit
-                                            </button>
-                                        </div>
-                                        <div class="form" id="form-payment-{{ $rent->id }}" class="form-rents"
-                                            style="display:none">
-                                            <div class="form-data">
-                                                <form action="{{ route('user_online_payment', $rent->id) }}" method="POST"
-                                                    enctype="multipart/form-data">
-                                                    <h3>Proof of Payment</h3>
-                                                    <div style="padding: 10px">Admin GCash Number: <b>09772180562</b></div>
-                                                    <div style="padding: 10px">Admin GCASH Name: Danielle<b></b></div>
-                                                    @csrf
-                                                    <div class="input-group">
-                                                        <input type="text" name="ref" placeholder="Reference number">
-                                                    </div>
-                                                    <div class="input-group">
-                                                        <input type="file" name="image">
-                                                    </div>
-                                                    <div class="input-group" style="gap: 10px">
-                                                        <button type="submit" style="width: auto">Submit</button>
-                                                        <button class="cancel" type="button"
-                                                            onclick="cancelPayment({{ $rent->id }})"
-                                                            style="background-color: gray; width: auto">Cancel</button>
-                                                    </div>
-                                                </form>
+                                        @if ($rent->transaction->payment_method)
+                                            <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
+                                                <p style="margin: 5px">Your extension is approved,<br>pay via GCASH and submit <br>proof
+                                                    of payment here</p>
+                                                <button onclick="payment({{ $rent->id }})"
+                                                    style="padding: 10px; display:flex;justify-content: center;" @disabled(!$admin->admin_info)>
+                                                    Submit
+                                                </button>
                                             </div>
-                                        </div>
+                                            <div class="form" id="form-payment-{{ $rent->id }}" class="form-rents"
+                                                style="display:none">
+                                                <div class="form-data">
+                                                    <form action="{{ route('user_online_payment', $rent->id) }}" method="POST"
+                                                        enctype="multipart/form-data">
+                                                        <h3>Proof of Payment</h3>
+                                                        <div style="padding: 10px">Admin GCash Number: <b>{{$admin->admin_info && $admin->admin_info->contact ? $admin->admin_info->contact : "Not set" }}</b></div>
+                                                        <div style="padding: 10px">Admin GCASH Name: {{$admin->admin_info && $admin->admin_info->name ?  $admin->admin_info->name : "Not set" }}<b></b></div>
+                                                        @csrf
+                                                        <div class="input-group">
+                                                            <input type="text" name="ref" placeholder="Reference number" @disabled(!$admin->admin_info)>
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <input type="file" name="image" @disabled(!$admin->admin_info)>
+                                                        </div>
+                                                        <div class="input-group" style="gap: 10px" >
+                                                            <button type="submit" style="width: auto" @disabled(!$admin->admin_info)>Submit</button>
+                                                            <button class="cancel" type="button"
+                                                                onclick="cancelPayment({{ $rent->id }})"
+                                                                style="background-color: gray; width: auto" @disabled(!$admin->admin_info)>Cancel</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <p>Admin approved your extension.</p>
+                                        @endif
                                     @endif
 
                                 @elseif($rent?->extend_decline)
@@ -200,7 +204,7 @@
                                         <div style="display: grid;place-content: center;place-items:center; gap: 10px;">
                                             <p style="margin: 5px">Your rent is approved,<br>pay via GCASH and submit <br>proof of payment here</p>
                                             <button onclick="payment({{ $rent->id }})"
-                                                style="padding: 10px; display:flex;justify-content: center;">
+                                                style="padding: 10px; display:flex;justify-content: center;" @disabled(!$admin->admin_info)>
                                                 Submit
                                             </button>
                                         </div>
@@ -210,20 +214,20 @@
                                                 <form action="{{ route('user_online_payment', $rent->id) }}" method="POST"
                                                     enctype="multipart/form-data">
                                                     <h3>Proof of Payment</h3>
-                                                    <div style="padding: 10px">Admin GCash Number: <b>09772180562</b></div>
-                                                    <div style="padding: 10px">Admin GCASH Name: Danielle<b></b></div>
-                                                    @csrf
+                                                    <div style="padding: 10px">Admin GCash Number: <b>{{$admin->admin_info && $admin->admin_info->contact ? $admin->admin_info->contact : "Not set" }}</b></div>
+                                                    <div style="padding: 10px">Admin GCASH Name: <b>{{$admin->admin_info && $admin->admin_info->name ? $admin->admin_info->name: "Not set" }}</b></div>
+                                                    @csrf 
                                                     <div class="input-group">
-                                                        <input type="text" name="ref" placeholder="Reference number">
+                                                        <input type="text" name="ref" placeholder="Reference number" @disabled(!$admin->admin_info)>
                                                     </div>
                                                     <div class="input-group">
-                                                        <input type="file" name="image">
+                                                        <input type="file" name="image" @disabled(!$admin->admin_info)>
                                                     </div>
                                                     <div class="input-group" style="gap: 10px">
-                                                        <button type="submit" style="width: auto">Submit</button>
+                                                        <button type="submit" style="width: auto" @disabled(!$admin->admin_info)>Submit</button>
                                                         <button class="cancel" type="button"
                                                             onclick="cancelPayment({{ $rent->id }})"
-                                                            style="background-color: gray; width: auto">Cancel</button>
+                                                            style="background-color: gray; width: auto" @disabled(!$admin->admin_info)>Cancel</button>
                                                     </div>
                                                 </form>
                                             </div>
